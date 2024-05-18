@@ -1,0 +1,489 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`livechess test fetchGame should successful return data 1`] = `
+[
+  [
+    "e4",
+    "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+    "1810+80",
+  ],
+  [
+    "c5",
+    "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2",
+    "1818",
+  ],
+  [
+    "c3",
+    "rnbqkbnr/pp1ppppp/8/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR b KQkq - 0 2",
+    "1822+5",
+  ],
+  [
+    "d6",
+    "rnbqkbnr/pp2pppp/3p4/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR w KQkq - 0 3",
+    "1817+11",
+  ],
+  [
+    "d4",
+    "rnbqkbnr/pp2pppp/3p4/2p5/3PP3/2P5/PP3PPP/RNBQKBNR b KQkq - 0 3",
+    "1828+3",
+  ],
+  [
+    "cxd4",
+    "rnbqkbnr/pp2pppp/3p4/8/3pP3/2P5/PP3PPP/RNBQKBNR w KQkq - 0 4",
+    "1815+12",
+  ],
+  [
+    "cxd4",
+    "rnbqkbnr/pp2pppp/3p4/8/3PP3/8/PP3PPP/RNBQKBNR b KQkq - 0 4",
+    "1836+2",
+  ],
+  [
+    "Nc6",
+    "r1bqkbnr/pp2pppp/2np4/8/3PP3/8/PP3PPP/RNBQKBNR w KQkq - 1 5",
+    "1815+11",
+  ],
+  [
+    "Nc3",
+    "r1bqkbnr/pp2pppp/2np4/8/3PP3/2N5/PP3PPP/R1BQKBNR b KQkq - 2 5",
+    "1840+5",
+  ],
+  [
+    "Nf6",
+    "r1bqkb1r/pp2pppp/2np1n2/8/3PP3/2N5/PP3PPP/R1BQKBNR w KQkq - 3 6",
+    "1794+31",
+  ],
+  [
+    "h3",
+    "r1bqkb1r/pp2pppp/2np1n2/8/3PP3/2N4P/PP3PP1/R1BQKBNR b KQkq - 0 6",
+    "1827+23",
+  ],
+  [
+    "e5",
+    "r1bqkb1r/pp3ppp/2np1n2/4p3/3PP3/2N4P/PP3PP1/R1BQKBNR w KQkq - 0 7",
+    "1767+648",
+  ],
+  [
+    "Nf3",
+    "r1bqkb1r/pp3ppp/2np1n2/4p3/3PP3/2N2N1P/PP3PP1/R1BQKB1R b KQkq - 1 7",
+    "1803",
+  ],
+  [
+    "exd4",
+    "r1bqkb1r/pp3ppp/2np1n2/8/3pP3/2N2N1P/PP3PP1/R1BQKB1R w KQkq - 0 8",
+    "1731",
+  ],
+  [
+    "Nxd4",
+    "r1bqkb1r/pp3ppp/2np1n2/8/3NP3/2N4P/PP3PP1/R1BQKB1R b KQkq - 0 8",
+    "1808",
+  ],
+  [
+    "Nxd4",
+    "r1bqkb1r/pp3ppp/3p1n2/8/3nP3/2N4P/PP3PP1/R1BQKB1R w KQkq - 0 9",
+    undefined,
+  ],
+  [
+    "Qxd4",
+    "r1bqkb1r/pp3ppp/3p1n2/8/3QP3/2N4P/PP3PP1/R1B1KB1R b KQkq - 0 9",
+    "1813",
+  ],
+  [
+    "Be7",
+    "r1bqk2r/pp2bppp/3p1n2/8/3QP3/2N4P/PP3PP1/R1B1KB1R w KQkq - 1 10",
+    "1642",
+  ],
+  [
+    "Bf4",
+    "r1bqk2r/pp2bppp/3p1n2/8/3QPB2/2N4P/PP3PP1/R3KB1R b KQkq - 2 10",
+    "1798",
+  ],
+  [
+    "O-O",
+    "r1bq1rk1/pp2bppp/3p1n2/8/3QPB2/2N4P/PP3PP1/R3KB1R w KQ - 3 11",
+    "1615",
+  ],
+  [
+    "O-O-O",
+    "r1bq1rk1/pp2bppp/3p1n2/8/3QPB2/2N4P/PP3PP1/2KR1B1R b - - 4 11",
+    "1783",
+  ],
+  [
+    "b6",
+    "r1bq1rk1/p3bppp/1p1p1n2/8/3QPB2/2N4P/PP3PP1/2KR1B1R w - - 0 12",
+    "1560",
+  ],
+  [
+    "Bxd6",
+    "r1bq1rk1/p3bppp/1p1B1n2/8/3QP3/2N4P/PP3PP1/2KR1B1R b - - 0 12",
+    "1763",
+  ],
+  [
+    "Bxd6",
+    "r1bq1rk1/p4ppp/1p1b1n2/8/3QP3/2N4P/PP3PP1/2KR1B1R w - - 0 13",
+    "1468",
+  ],
+  [
+    "Qxd6",
+    "r1bq1rk1/p4ppp/1p1Q1n2/8/4P3/2N4P/PP3PP1/2KR1B1R b - - 0 13",
+    "1765",
+  ],
+  [
+    "Qxd6",
+    "r1b2rk1/p4ppp/1p1q1n2/8/4P3/2N4P/PP3PP1/2KR1B1R w - - 0 14",
+    "1357+1",
+  ],
+  [
+    "Rxd6",
+    "r1b2rk1/p4ppp/1p1R1n2/8/4P3/2N4P/PP3PP1/2K2B1R b - - 0 14",
+    "1767+9",
+  ],
+  [
+    "h6",
+    "r1b2rk1/p4pp1/1p1R1n1p/8/4P3/2N4P/PP3PP1/2K2B1R w - - 0 15",
+    "1320+47",
+  ],
+  [
+    "Bc4",
+    "r1b2rk1/p4pp1/1p1R1n1p/8/2B1P3/2N4P/PP3PP1/2K4R b - - 1 15",
+    "1765+10",
+  ],
+  [
+    "Bb7",
+    "r4rk1/pb3pp1/1p1R1n1p/8/2B1P3/2N4P/PP3PP1/2K4R w - - 2 16",
+    "1307+73",
+  ],
+  [
+    "f3",
+    "r4rk1/pb3pp1/1p1R1n1p/8/2B1P3/2N2P1P/PP4P1/2K4R b - - 0 16",
+    "1751",
+  ],
+  [
+    "Ne8",
+    "r3nrk1/pb3pp1/1p1R3p/8/2B1P3/2N2P1P/PP4P1/2K4R w - - 1 17",
+    "1286+6",
+  ],
+  [
+    "Rd7",
+    "r3nrk1/pb1R1pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2K4R b - - 2 17",
+    "1687+74",
+  ],
+  [
+    "Bc8",
+    "r1b1nrk1/p2R1pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2K4R w - - 3 18",
+    "1275+22",
+  ],
+  [
+    "Rd8",
+    "r1bRnrk1/p4pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2K4R b - - 4 18",
+    "1675+20",
+  ],
+  [
+    "Bb7",
+    "r2Rnrk1/pb3pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2K4R w - - 5 19",
+    "1263+912",
+  ],
+  [
+    "Rxa8",
+    "R3nrk1/pb3pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2K4R b - - 0 19",
+    "1649",
+  ],
+  [
+    "Bxa8",
+    "b3nrk1/p4pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2K4R w - - 0 20",
+    "1262",
+  ],
+  [
+    "Rd1",
+    "b3nrk1/p4pp1/1p5p/8/2B1P3/2N2P1P/PP4P1/2KR4 b - - 1 20",
+    "1654",
+  ],
+  [
+    "Nf6",
+    "b4rk1/p4pp1/1p3n1p/8/2B1P3/2N2P1P/PP4P1/2KR4 w - - 2 21",
+    "1233",
+  ],
+  [
+    "Nb5",
+    "b4rk1/p4pp1/1p3n1p/1N6/2B1P3/5P1P/PP4P1/2KR4 b - - 3 21",
+    "1567",
+  ],
+  [
+    "a6",
+    "b4rk1/5pp1/pp3n1p/1N6/2B1P3/5P1P/PP4P1/2KR4 w - - 0 22",
+    "1174",
+  ],
+  [
+    "Nd6",
+    "b4rk1/5pp1/pp1N1n1p/8/2B1P3/5P1P/PP4P1/2KR4 b - - 1 22",
+    "1549",
+  ],
+  [
+    "b5",
+    "b4rk1/5pp1/p2N1n1p/1p6/2B1P3/5P1P/PP4P1/2KR4 w - - 0 23",
+    "1139",
+  ],
+  [
+    "Bb3",
+    "b4rk1/5pp1/p2N1n1p/1p6/4P3/1B3P1P/PP4P1/2KR4 b - - 1 23",
+    "1547",
+  ],
+  [
+    "Rd8",
+    "b2r2k1/5pp1/p2N1n1p/1p6/4P3/1B3P1P/PP4P1/2KR4 w - - 2 24",
+    "1142",
+  ],
+  [
+    "Nxf7",
+    "b2r2k1/5Np1/p4n1p/1p6/4P3/1B3P1P/PP4P1/2KR4 b - - 0 24",
+    "1527",
+  ],
+  [
+    "Rxd1+",
+    "b5k1/5Np1/p4n1p/1p6/4P3/1B3P1P/PP4P1/2Kr4 w - - 0 25",
+    "1123",
+  ],
+  [
+    "Kxd1",
+    "b5k1/5Np1/p4n1p/1p6/4P3/1B3P1P/PP4P1/3K4 b - - 0 25",
+    "1532",
+  ],
+  [
+    "a5",
+    "b5k1/5Np1/5n1p/pp6/4P3/1B3P1P/PP4P1/3K4 w - - 0 26",
+    "1078",
+  ],
+  [
+    "Nd6+",
+    "b5k1/6p1/3N1n1p/pp6/4P3/1B3P1P/PP4P1/3K4 b - - 1 26",
+    "1510",
+  ],
+  [
+    "Kh7",
+    "b7/6pk/3N1n1p/pp6/4P3/1B3P1P/PP4P1/3K4 w - - 2 27",
+    "1029",
+  ],
+  [
+    "Nxb5",
+    "b7/6pk/5n1p/pN6/4P3/1B3P1P/PP4P1/3K4 b - - 0 27",
+    "1508",
+  ],
+  [
+    "Bc6",
+    "8/6pk/2b2n1p/pN6/4P3/1B3P1P/PP4P1/3K4 w - - 1 28",
+    "1023",
+  ],
+  [
+    "Nd4",
+    "8/6pk/2b2n1p/p7/3NP3/1B3P1P/PP4P1/3K4 b - - 2 28",
+    "1496",
+  ],
+  [
+    "Bd7",
+    "8/3b2pk/5n1p/p7/3NP3/1B3P1P/PP4P1/3K4 w - - 3 29",
+    "1008",
+  ],
+  [
+    "Kd2",
+    "8/3b2pk/5n1p/p7/3NP3/1B3P1P/PP1K2P1/8 b - - 4 29",
+    "1480",
+  ],
+  [
+    "Kg6",
+    "8/3b2p1/5nkp/p7/3NP3/1B3P1P/PP1K2P1/8 w - - 5 30",
+    "985",
+  ],
+  [
+    "Ke3",
+    "8/3b2p1/5nkp/p7/3NP3/1B2KP1P/PP4P1/8 b - - 6 30",
+    "1450",
+  ],
+  [
+    "a4",
+    "8/3b2p1/5nkp/8/p2NP3/1B2KP1P/PP4P1/8 w - - 0 31",
+    "949",
+  ],
+  [
+    "Bc4",
+    "8/3b2p1/5nkp/8/p1BNP3/4KP1P/PP4P1/8 b - - 1 31",
+    "1429",
+  ],
+  [
+    "h5",
+    "8/3b2p1/5nk1/7p/p1BNP3/4KP1P/PP4P1/8 w - - 0 32",
+    "919",
+  ],
+  [
+    "g4",
+    "8/3b2p1/5nk1/7p/p1BNP1P1/4KP1P/PP6/8 b - - 0 32",
+    "1376+504",
+  ],
+  [
+    "Kg5",
+    "8/3b2p1/5n2/6kp/p1BNP1P1/4KP1P/PP6/8 w - - 1 33",
+    "855",
+  ],
+  [
+    "Ne6+",
+    "8/3b2p1/4Nn2/6kp/p1B1P1P1/4KP1P/PP6/8 b - - 2 33",
+    "1258",
+  ],
+  [
+    "Kg6",
+    "8/3b2p1/4Nnk1/7p/p1B1P1P1/4KP1P/PP6/8 w - - 3 34",
+    "855",
+  ],
+  [
+    "Nf8+",
+    "5N2/3b2p1/5nk1/7p/p1B1P1P1/4KP1P/PP6/8 b - - 4 34",
+    "1281",
+  ],
+  [
+    "Kg5",
+    "5N2/3b2p1/5n2/6kp/p1B1P1P1/4KP1P/PP6/8 w - - 5 35",
+    "845",
+  ],
+  [
+    "f4+",
+    "5N2/3b2p1/5n2/6kp/p1B1PPP1/4K2P/PP6/8 b - - 0 35",
+    "1272+18",
+  ],
+  [
+    "Kh4",
+    "5N2/3b2p1/5n2/7p/p1B1PPPk/4K2P/PP6/8 w - - 1 36",
+    "829+26",
+  ],
+  [
+    "g5",
+    "5N2/3b2p1/5n2/6Pp/p1B1PP1k/4K2P/PP6/8 b - - 0 36",
+    "1274+7",
+  ],
+  [
+    "Ne8",
+    "4nN2/3b2p1/8/6Pp/p1B1PP1k/4K2P/PP6/8 w - - 1 37",
+    "791+49",
+  ],
+  [
+    "Nxd7",
+    "4n3/3N2p1/8/6Pp/p1B1PP1k/4K2P/PP6/8 b - - 0 37",
+    "1265+19",
+  ],
+  [
+    "Nd6",
+    "8/3N2p1/3n4/6Pp/p1B1PP1k/4K2P/PP6/8 w - - 1 38",
+    "782+19",
+  ],
+  [
+    "Be6",
+    "8/3N2p1/3nB3/6Pp/p3PP1k/4K2P/PP6/8 b - - 2 38",
+    "1237+37",
+  ],
+  [
+    "Kg3",
+    "8/3N2p1/3nB3/6Pp/p3PP2/4K1kP/PP6/8 w - - 3 39",
+    "+51",
+  ],
+  [
+    "Nc5",
+    "8/6p1/3nB3/2N3Pp/p3PP2/4K1kP/PP6/8 b - - 4 39",
+    "1228+13",
+  ],
+  [
+    "Kh4",
+    "8/6p1/3nB3/2N3Pp/p3PP1k/4K2P/PP6/8 w - - 5 40",
+    "650+109",
+  ],
+  [
+    "Nxa4",
+    "8/6p1/3nB3/6Pp/N3PP1k/4K2P/PP6/8 b - - 0 40",
+    "1211+27",
+  ],
+  [
+    "Kg3",
+    "8/6p1/3nB3/6Pp/N3PP2/4K1kP/PP6/8 w - - 1 41",
+    "+60",
+  ],
+  [
+    "Nc3",
+    "8/6p1/3nB3/6Pp/4PP2/2N1K1kP/PP6/8 b - - 2 41",
+    undefined,
+  ],
+  [
+    "g6",
+    "8/8/3nB1p1/6Pp/4PP2/2N1K1kP/PP6/8 w - - 0 42",
+    "536+81",
+  ],
+  [
+    "a4",
+    "8/8/3nB1p1/6Pp/P3PP2/2N1K1kP/1P6/8 b - - 0 42",
+    "+34",
+  ],
+]
+`;
+
+exports[`livechess test fetchRound should successful return data 1`] = `
+{
+  "date": "2024-04-30",
+  "pairings": [
+    {
+      "black": {
+        "federation": null,
+        "fideid": null,
+        "fname": "Arvind",
+        "gender": "MALE",
+        "lname": "Venkatesh",
+        "mname": null,
+        "title": null,
+      },
+      "live": false,
+      "result": "1-0",
+      "white": {
+        "federation": null,
+        "fideid": null,
+        "fname": "Kiet Anh",
+        "gender": "MALE",
+        "lname": "Nguyen",
+        "mname": null,
+        "title": null,
+      },
+    },
+  ],
+}
+`;
+
+exports[`livechess test fetchTournament should successful return data 1`] = `
+{
+  "chess960": "STANDARD",
+  "country": "AU",
+  "eboards": [
+    "45753",
+  ],
+  "id": "Western Masters Juniors 2024",
+  "location": "Hobsons Bay Chess Club",
+  "name": "Western Masters Juniors 2024",
+  "rounds": [
+    {
+      "count": 1,
+      "live": 0,
+    },
+    {
+      "count": 1,
+      "live": 0,
+    },
+    {
+      "count": 1,
+      "live": 0,
+    },
+    {
+      "count": 0,
+      "live": 0,
+    },
+    {
+      "count": 0,
+      "live": 0,
+    },
+  ],
+  "rules": "STANDARD",
+  "timecontrol": "30|10",
+  "website": null,
+}
+`;
