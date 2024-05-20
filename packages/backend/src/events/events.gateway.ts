@@ -1,16 +1,52 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketServer } from '@nestjs/websockets';
 import { EventsService } from './events.service';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { LoadGameDto } from './dto/game-event.dto';
 
 @WebSocketGateway()
-export class EventsGateway  {
-  constructor(private readonly eventsService: EventsService) {}
+export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+  
+  @WebSocketServer() private server: any;
+  private liveGames: any [] = [];
 
-  @SubscribeMessage('createEvent')
-  create(@MessageBody() createEventDto: CreateEventDto) {
-    return this.eventsService.create(createEventDto);
+  wsClients=[];
+
+  constructor(private readonly eventsService: EventsService) {
+    setInterval(() => this.intervalCheck(), 1000)
   }
+
+  private async intervalCheck() {
+    for await(const game of this.liveGames) {
+         const data = await this.eventsService.loadGame(game);
+         this.broadcast("game",data)
+         // check if game already finished then removed it from live game
+    }
+  }
+
+
+  afterInit() {
+    this.server.emit('welcome', { text: 'Hello world' });
+  }
+
+  handleConnection(client: any) {
+    this.wsClients.push(client);
+  }
+
+  handleDisconnect(client) {
+    for (let i = 0; i < this.wsClients.length; i++) {
+      if (this.wsClients[i] === client) {
+        this.wsClients.splice(i, 1);
+        break;
+      }
+    }
+    this.broadcast('disconnect',{});
+  }
+  private broadcast(event, message: any) {
+    const broadCastMessage = JSON.stringify(message);
+    for (let c of this.wsClients) {
+      c.send(event, broadCastMessage);
+    }
+  }
+  
 
   @SubscribeMessage('hello')
   async hello() {
@@ -20,18 +56,19 @@ export class EventsGateway  {
 
   }
 
-  @SubscribeMessage('findOneEvent')
-  findOne(@MessageBody() id: number) {
-    return this.eventsService.findOne(id);
+  @SubscribeMessage('game')
+  async game(@MessageBody() game: LoadGameDto) {
+
+    // setInterval(() => {
+    //   this.broadcast('test', {});
+    // }, 1000)
+    const data = await this.eventsService.loadGame(game);
+    if(data.isLive) {
+      this.liveGames.push(data);
+    }
+    return {
+      event: 'game',
+      data}
   }
 
-  @SubscribeMessage('updateEvent')
-  update(@MessageBody() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(updateEventDto.id, updateEventDto);
-  }
-
-  @SubscribeMessage('removeEvent')
-  remove(@MessageBody() id: number) {
-    return this.eventsService.remove(id);
-  }
 }

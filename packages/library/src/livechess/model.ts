@@ -1,13 +1,9 @@
-export interface Tournament {
-    name: string;
-    title: string;
-}
-export interface LookupResult {
+export interface LookupResultData {
     host: string;
     format: string;
 }
 
-export interface Tournament {
+export interface TournamentData {
     id: string;
     name: string;
     location: string;
@@ -16,17 +12,17 @@ export interface Tournament {
     rules: string;
     chess960: string;
     timecontrol: string;
-    rounds: Round[];
+    rounds: RoundData[];
     eboards: string[];
 }
 
-export interface Round {
+export interface RoundData {
     count: number;
     live: number;
 }
 
 
-export interface RoundPairing {
+export interface RoundPairingData {
     date: Date;
     pairings: Pairing[];
 }
@@ -49,7 +45,7 @@ export interface Player {
 }
 
 
-export interface Game {
+export interface GameData{
     live: boolean;
     serialNr: string;
     firstMove: number;

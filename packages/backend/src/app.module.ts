@@ -4,9 +4,17 @@ import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from './config/configuration';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 
 @Module({
-  imports: [EventsModule, ConfigModule.forRoot({load: [configuration]})],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../..', 'frontend/out'),
+      serveRoot:'/'
+    }),
+    EventsModule, ConfigModule.forRoot({load: [configuration]})],
   controllers: [AppController],
   providers: [AppService],
 })

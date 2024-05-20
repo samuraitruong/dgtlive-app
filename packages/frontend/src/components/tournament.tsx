@@ -3,26 +3,60 @@
 import { useWebSocket } from '@/hooks/useWebSocket';
 import consrtants from '@/model/consrtants';
 import { useEffect, useState } from 'react';
+import Schedule from './Schedule';
+import GameViewer from './GameViewer';
+import { Pair } from 'library';
+import Loading from './Loading';
 
 
-export default function Tournament(){
-    const [socketUrl, setSocketUrl] = useState('http://localhost:3001');
-    const { sendMessage, lastMessage, readyState, tournament} = useWebSocket(socketUrl)
+export default function Tournament() {
+    const [socketUrl, setSocketUrl] = useState(process.env.NEXT_PUBLIC_WS_URL|| 'http://localhost:3001');
+    const { sendMessage, lastMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl)
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
 
-    console.log(tournament)
+    const [selectedGame, setSelectedGame] = useState<string>();
+
+    const [selectedPair, setSelectedPair] = useState<Pair>();
+
+    const onSelectGame = (round: number, game: number) => {
+        sendMessage('game', {round, game})
+        setSelectedGame(`${round}_${game}`)
+        const pair = tournament?.rounds[round-1].pairs[game-1]
+        setSelectedPair(pair)
+    }
     useEffect(() => {
         if (lastMessage) {
-          setMessageHistory((prev) => prev.concat(lastMessage as any));
+            setMessageHistory((prev) => prev.concat(lastMessage as any));
         }
         else {
-            if(readyState) {
-                sendMessage(consrtants.EventNames.Hello , {})
+            if (readyState) {
+                sendMessage(consrtants.EventNames.Hello, {})
             }
         }
-      }, [lastMessage, readyState]);
-      
-    return <div>
-        <h1>{tournament?.name}</h1>
-    </div>
+    }, [lastMessage, readyState]);
+
+    useEffect(() => {
+    }, [selectedGame, games])
+
+    console.log("debug",games, selectedGame, games[selectedGame as string])
+    if(!readyState || !tournament || loading) {
+        return <Loading />
+    }
+    return (
+        <div className="container mx-auto mt-0">
+            <div className='p-1 bg-slate-800 text-white'>
+            <h1 className="text-3xl font-bold mb-4 bg-black-50 text-center">{tournament?.name}</h1>
+
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-3">
+                <div className="md:col-span-3">
+                    {tournament && <Schedule data={tournament.rounds} onSelect={onSelectGame} />}
+                </div>
+                <div className="md:col-span-9">
+                    {games && selectedGame && games[selectedGame] && <GameViewer data={games[selectedGame]} pair={selectedPair as Pair}/>}
+                </div>
+            </div>
+
+        </div>
+    )
 }

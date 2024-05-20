@@ -1,10 +1,10 @@
 import axios from "axios";
-import { Game, LookupResult, RoundPairing, Tournament } from "./model";
 import { Chess } from 'chess.js'
+import { GameData, LookupResultData, RoundPairingData, TournamentData } from "./model";
 
 export class LiveChessTournament {
-    private lookupResult?: LookupResult = undefined;
-    private tournament?: Tournament = undefined;
+    private lookupResult?: LookupResultData = undefined;
+    private tournament?: TournamentData = undefined;
     constructor(private  tournamentId: string){
 
     }
@@ -13,31 +13,34 @@ export class LiveChessTournament {
             return this.tournament
         }
         const lookupUrl = "https://lookup.livechesscloud.com/meta/"+ this.tournamentId
-        const {data:lookupData} = await axios.get<LookupResult>(lookupUrl);
+        const {data:lookupData} = await axios.get<LookupResultData>(lookupUrl);
         this.lookupResult = lookupData;
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/tournament.json`
 
-        const {data: tournamentData} = await axios.get<Tournament>(url);
+        const {data: tournamentData} = await axios.get<TournamentData>(url);
         this.tournament = tournamentData;
         return tournamentData;
     }
 
     public async fetchRound(round: number) {
         const url =`https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/index.json`
-        const {data} = await axios.get<RoundPairing>(url);
+        const {data} = await axios.get<RoundPairingData>(url);
         return data;
     }
 
     public async fetchGame(round: number, game: number) {
+        if(!this.tournament) {
+            await this.fetchTournament()
+        }
         const url =`https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/game-${game}.json?poll`
-        const {data} = await axios.get<Game>(url);
+        const {data} = await axios.get<GameData>(url);
         const chess = new Chess()
         const moves = [];
         for(const move of data.moves) {
             const [m, time] = move.split(' ')
-            chess.move(m);
+            var m1 = chess.move(m);
             moves.push([
-                m, chess.fen(), time
+                m, chess.fen(), time, m1.from, m1.to
             ])
         }
         return moves;

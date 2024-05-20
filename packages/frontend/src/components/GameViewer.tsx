@@ -1,0 +1,94 @@
+import { GameEventResponse, Pair } from 'library';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Chessboard } from 'react-chessboard';
+import Clock from './Clock';
+import MoveList from './MoveList';
+import GameController from './Controller'
+import { useWindowSize } from '@uidotdev/usehooks';
+import { FaChessKing } from "react-icons/fa";
+import { FaRegChessKing } from "react-icons/fa6";
+
+interface GameViewerProps {
+  data: GameEventResponse
+  pair: Pair
+}
+
+const GameViewer = ({ data: { moves }, pair }: GameViewerProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
+  const {height} = useWindowSize()
+  const [time, setTime] = useState({ black: 0, white: 0 });
+
+  const handlePrevMove = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+    }
+  };
+
+  const handleNextMove = () => {
+    if (currentIndex < moves.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+    }
+  };
+  useEffect(() => {
+    if (currentIndex % 2 === 0) {
+      setTime({ ...time, white: moves[currentIndex].time })
+    }
+    else {
+      setTime({ ...time, black: moves[currentIndex].time })
+    }
+  }, [currentIndex])
+
+  const boardWidth = useMemo(() => {
+    if(!height) {
+      return 500
+    }
+    if(!fullscreen) {
+      return height -160
+    }
+    return height-110
+  }, [height, fullscreen])
+  return (
+    <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen p-2 bg-slate-200 z-100 text-black' : ''}>
+      <div className={fullscreen?'flex justify-center': 'flex justify-center'}>
+        <div>
+          <div className="flex justify-between">
+            <div className='font-bold'>
+              <FaChessKing className='inline' />{pair.black}
+            </div>
+            <Clock time={time.black} ></Clock>
+          </div>
+
+          <Chessboard
+            boardWidth={boardWidth}
+            position={moves[currentIndex].fen}
+            showBoardNotation={true}
+            areArrowsAllowed={true}
+            arePiecesDraggable={false}
+            customArrows={[moves[currentIndex].arrow] as any}
+
+          />
+
+          <div className="flex justify-between">
+          <div className='font-bold'>
+              <FaRegChessKing className='inline'/>{pair.white}
+            </div>
+            <Clock time={time.white} ></Clock>
+          </div>
+
+          <GameController handleNextMove={handleNextMove}
+            handlePrevMove={handlePrevMove}
+            currentIndex={currentIndex}
+            total={moves.length}
+            handleMaxSize={() => setFullscreen(!fullscreen)} />
+        </div>
+        <div>
+
+          <MoveList maxHeight={boardWidth} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GameViewer;

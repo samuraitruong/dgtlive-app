@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "pnpm --stream -r start",
-    "start:dev": "pnpm --parallel --stream -r run start:dev"
+    "start": "pnpm --stream -r start:prod",
+    "start:dev": "pnpm --parallel --stream -r run start:dev",
+    "build": "pnpm --parallel --stream -r run build",
+    "build-publish":"pnpm --parallel --stream -r run build-publish"
   },
   "keywords": [],
   "author": "",
