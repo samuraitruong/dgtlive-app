@@ -4,21 +4,26 @@ import { LoadGameDto } from './dto/game-event.dto';
 
 @WebSocketGateway()
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
-  
-  @WebSocketServer() private server: any;
-  private liveGames: any [] = [];
 
-  wsClients=[];
+  @WebSocketServer() private server: any;
+  private liveGames: any[] = [];
+
+  wsClients = [];
 
   constructor(private readonly eventsService: EventsService) {
-    setInterval(() => this.intervalCheck(), 1000)
+    setInterval(() => this.intervalCheck(), 5000)
+    setInterval(() => this.refreshTournament(), 6000)
   }
 
+  private async refreshTournament() {
+    const t = await this.eventsService.hello(true)
+    this.broadcast('tournament', t);
+  }
   private async intervalCheck() {
-    for await(const game of this.liveGames) {
-         const data = await this.eventsService.loadGame(game);
-         this.broadcast("game",data)
-         // check if game already finished then removed it from live game
+    for await (const game of this.liveGames) {
+      const data = await this.eventsService.loadGame(game);
+      this.broadcast("game", data)
+      // check if game already finished then removed it from live game
     }
   }
 
@@ -38,37 +43,34 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
         break;
       }
     }
-    this.broadcast('disconnect',{});
+    this.broadcast('disconnect', {});
   }
-  private broadcast(event, message: any) {
-    const broadCastMessage = JSON.stringify(message);
+  private broadcast(event, data: any) {
     for (let c of this.wsClients) {
-      c.send(event, broadCastMessage);
+      c.send({ event, data });
     }
   }
-  
+
 
   @SubscribeMessage('hello')
   async hello() {
     return {
       event: 'hello',
-      data: await this.eventsService.hello()}
+      data: await this.eventsService.hello()
+    }
 
   }
 
   @SubscribeMessage('game')
   async game(@MessageBody() game: LoadGameDto) {
-
-    // setInterval(() => {
-    //   this.broadcast('test', {});
-    // }, 1000)
     const data = await this.eventsService.loadGame(game);
-    if(data.isLive) {
+    if (data.isLive) {
       this.liveGames.push(data);
     }
     return {
       event: 'game',
-      data}
+      data
+    }
   }
 
 }

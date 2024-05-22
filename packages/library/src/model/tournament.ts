@@ -1,11 +1,12 @@
-export interface Tournament{
+export interface Tournament {
     name: string;
     location: string;
     rounds: Round[]
 }
-export interface Round{
+export interface Round {
     date: string;
-    pairs: Pair[]
+    live?: boolean;
+    pairs: Pair[];
 }
 
 export interface Pair {
@@ -22,12 +23,13 @@ export interface Move {
 }
 
 export type GameMap = {
-    [x:string]: GameEventResponse
+    [x: string]: GameEventResponse
 }
 
 
-export interface GameEventResponse{
+export interface GameEventResponse {
     isLive: boolean;
+    delayedMoves?: number;
     round: number,
     game: number;
     moves: Move[]

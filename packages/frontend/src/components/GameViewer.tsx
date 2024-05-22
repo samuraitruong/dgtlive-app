@@ -14,7 +14,8 @@ interface GameViewerProps {
   pair: Pair
 }
 
-const GameViewer = ({ data: { moves }, pair }: GameViewerProps) => {
+const GameViewer = ({ data: { moves, delayedMoves }, pair }: GameViewerProps) => {
+  console.log("moves", moves)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const { height } = useWindowSize()
@@ -37,13 +38,22 @@ const GameViewer = ({ data: { moves }, pair }: GameViewerProps) => {
   useKeyPress('ArrowRight', handleNextMove)
   useEffect(() => {
     if (currentIndex % 2 === 0) {
-      setTime({ ...time, white: moves[currentIndex].time })
+      setTime({
+        white: moves[currentIndex].time,
+        black: moves[Math.max(1, currentIndex - 1)].time
+      })
     }
     else {
-      setTime({ ...time, black: moves[currentIndex].time })
+      setTime({
+        white: moves[currentIndex - 1].time,
+        black: moves[currentIndex].time
+      })
     }
   }, [currentIndex])
 
+  useEffect(() => {
+    setCurrentIndex(moves.length - 1)
+  }, [moves])
   const boardWidth = useMemo(() => {
     if (!height) {
       return 500
@@ -58,7 +68,7 @@ const GameViewer = ({ data: { moves }, pair }: GameViewerProps) => {
       <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'}>
         {fullscreen && <div className='flex p-5 items-center justify-center align-middle h-100 flex-col mr-10'>
           <div className="flex items-center justify-center text-4xl">
-            <div className="flex justify-between flex-col justify-center">
+            <div className="flex justify-between flex-col">
               <div className='font-bold mb-5'>
                 <FaChessKing className='inline' />{pair.black}
               </div>
@@ -115,7 +125,7 @@ const GameViewer = ({ data: { moves }, pair }: GameViewerProps) => {
         </div>
         <div>
 
-          <MoveList maxHeight={boardWidth} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} />
+          <MoveList maxHeight={boardWidth} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
         </div>
       </div>
     </div>

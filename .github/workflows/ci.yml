@@ -18,6 +18,9 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t samuraitruong/dgtapp:latest .
-
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_AUTH_TOKEN }}
     #   - name: Push Docker image
     #     run: docker push your_username/your_image_name:latest
