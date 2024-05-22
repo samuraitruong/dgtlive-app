@@ -6,6 +6,10 @@ import { LoadGameDto } from './dto/game-event.dto';
 
 @Injectable()
 export class EventsService {
+  setGameId(gameId: string) {
+    this.game.setGame(gameId);
+
+  }
 
   readonly game: LiveChessTournament;
   constructor() {

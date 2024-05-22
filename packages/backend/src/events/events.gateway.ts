@@ -1,12 +1,14 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketServer } from '@nestjs/websockets';
 import { EventsService } from './events.service';
 import { LoadGameDto } from './dto/game-event.dto';
+import { AdminDto } from './dto/admin.dto';
+import { GameEventResponse } from 'library';
 
 @WebSocketGateway()
 export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
 
   @WebSocketServer() private server: any;
-  private liveGames: any[] = [];
+  private liveGames: GameEventResponse[] = [];
 
   wsClients = [];
 
@@ -65,12 +67,29 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
   async game(@MessageBody() game: LoadGameDto) {
     const data = await this.eventsService.loadGame(game);
     if (data.isLive) {
-      this.liveGames.push(data);
+      const findGame = this.liveGames.find(x => x.game == data.game && x.round == data.round);
+      if (!findGame) {
+        this.liveGames.push(data);
+      }
     }
     return {
       event: 'game',
       data
     }
   }
+
+  @SubscribeMessage('admin')
+  async admin(@MessageBody() game: AdminDto) {
+    await this.eventsService.setGameId(game.gameId);
+
+    await this.refreshTournament()
+    return {
+      event: 'admin',
+      data: {
+        status: true
+      }
+    }
+  }
+
 
 }

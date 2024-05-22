@@ -9,6 +9,9 @@ export class LiveChessTournament {
     constructor(private tournamentId: string) {
 
     }
+    public async setGame(id: string) {
+        this.tournamentId = id;
+    }
     public async fetchTournament(force: boolean = false) {
         if (this.tournament && this.refreshTimeAt < new Date().getTime() && !force) {
             return this.tournament
