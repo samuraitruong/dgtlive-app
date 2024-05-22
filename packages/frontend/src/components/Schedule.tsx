@@ -7,7 +7,6 @@ interface ScheduleProps {
   onSelect: (round: number, gameId: number) => void
 }
 const Schedule = ({ data, onSelect }: ScheduleProps) => {
-  console.log(data)
   return (
     <div className="container mx-auto max-h-screen overflow-y-auto">
       <h1 className="text-2xl font-bold mb-4">Schedules</h1>

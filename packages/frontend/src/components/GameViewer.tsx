@@ -15,7 +15,6 @@ interface GameViewerProps {
 }
 
 const GameViewer = ({ data: { moves, delayedMoves }, pair }: GameViewerProps) => {
-  console.log("moves", moves)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const { height } = useWindowSize()
