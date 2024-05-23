@@ -43,13 +43,13 @@ export default function Tournament() {
         return <Loading />
     }
     return (
-        <div className="container mx-auto mt-0">
+        <div className="mx-auto mt-0 w-full">
             <div className='pt-2 pb-2 bg-slate-800 text-white'>
                 <h1 className="text-3xl font-boldbg-black-50 text-center">{tournament?.name}</h1>
 
             </div>
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-3">
-                <div className="md:col-span-3">
+                <div className="md:col-span-3 pl-2">
                     {tournament && <Schedule data={tournament.rounds} onSelect={onSelectGame} />}
                 </div>
                 <div className="md:col-span-9">
