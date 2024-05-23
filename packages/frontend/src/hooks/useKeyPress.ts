@@ -25,7 +25,7 @@ const useKeyPress = (targetKey: string, callback: () => void) => {
             window.removeEventListener('keydown', downHandler);
             // window.removeEventListener('keyup', upHandler);
         };
-    }, [targetKey, callback]); // Re-run effect if targetKey changes
+    }, [targetKey, callback, downHandler]); // Re-run effect if targetKey changes
 
     return keyPressed;
 };

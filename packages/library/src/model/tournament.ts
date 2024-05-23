@@ -4,6 +4,7 @@ export interface Tournament {
     rounds: Round[]
 }
 export interface Round {
+    index?: number;
     date: string;
     live?: boolean;
     pairs: Pair[];

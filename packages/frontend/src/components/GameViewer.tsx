@@ -48,7 +48,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair }: GameViewerProps) =>
         black: moves[currentIndex].time
       })
     }
-  }, [currentIndex])
+  }, [currentIndex, moves])
 
   useEffect(() => {
     setCurrentIndex(moves.length - 1)

@@ -72,7 +72,7 @@ export function useWebSocket(url: string) {
             }
         }
 
-    }, [url, socket])
+    }, [url, socket, games])
     return {
         loading,
         sendMessage,
