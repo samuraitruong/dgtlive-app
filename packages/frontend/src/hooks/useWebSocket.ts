@@ -1,7 +1,8 @@
 import { GameEventResponse, GameMap, Tournament } from "library/src/model/tournament";
 import { useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
-export function useWebSocket(url: string) {
+export function useWebSocket(url: string, path = '/') {
+    console.log("socket", url, path)
     const socketRef = useRef(null); // Create a mutable reference for the WebSocket instance
 
     const [socket, setSocket] = useState<Socket>();
@@ -21,11 +22,13 @@ export function useWebSocket(url: string) {
 
         if (!socket) {
             const client = io(url, {
+                path: path + "/socket.io",
+
                 transports: ["websocket", "polling"],
             });
 
             setSocket(client)
-
+            console.log("connecting....")
             client.connect();
 
             client.on("hello", (data: any) => {
@@ -72,7 +75,7 @@ export function useWebSocket(url: string) {
             }
         }
 
-    }, [url, socket, games])
+    }, [url, socket, games, path])
     return {
         loading,
         sendMessage,

@@ -7,7 +7,8 @@ export default function Admin() {
   const router = useRouter()
 
   const [socketUrl, setSocketUrl] = useState(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001');
-  const { sendMessage, lastMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl)
+
+  const { sendMessage, lastMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, 'senior')
   const [inputValue, setInputValue] = useState('');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {

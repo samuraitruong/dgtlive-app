@@ -8,10 +8,12 @@ import GameViewer from './GameViewer';
 import { Pair } from 'library';
 import Loading from './Loading';
 
-
-export default function Tournament() {
+interface TournamentProps {
+    category: string
+}
+export default function Tournament({ category = 'junior' }: TournamentProps) {
     const [socketUrl, setSocketUrl] = useState(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001');
-    const { sendMessage, lastMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl)
+    const { sendMessage, lastMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, category)
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
 
     const [selectedGame, setSelectedGame] = useState<string>();

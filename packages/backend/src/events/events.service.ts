@@ -8,12 +8,11 @@ import { LoadGameDto } from './dto/game-event.dto';
 export class EventsService {
   setGameId(gameId: string) {
     this.game.setGame(gameId);
-
   }
 
   readonly game: LiveChessTournament;
   constructor() {
-    this.game = new LiveChessTournament(configuration().game.id)
+    this.game = new LiveChessTournament(configuration().game.juniorTournamentId)
 
   }
 
