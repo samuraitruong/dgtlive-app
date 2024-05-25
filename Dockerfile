@@ -23,6 +23,7 @@ WORKDIR /app
 COPY . .
 
 RUN pnpm install
+RUN npm run lint
 
 ENV NEXT_PUBLIC_WS_URL=/
 ENV NEXTJS_BUILD_MODE=1
