@@ -1,5 +1,4 @@
 export class LoadGameDto {
-
-    round: number;
-    game: number;
+  round: number;
+  game: number;
 }

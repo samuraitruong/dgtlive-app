@@ -8,4 +8,4 @@ import { CacheModule } from '@nestjs/cache-manager';
   imports: [CacheModule.register()],
   providers: [JuniorEventsGateway, SeniorEventsGateway, EventsService],
 })
-export class EventsModule { }
+export class EventsModule {}
