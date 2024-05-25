@@ -1,25 +1,30 @@
 import { GameEventResponse, Pair } from 'library';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Chessboard } from 'react-chessboard';
-import Clock from './Clock';
 import MoveList from './MoveList';
 import GameController from './Controller'
 import { useWindowSize } from '@uidotdev/usehooks';
-import { FaChessKing } from "react-icons/fa";
-import { FaRegChessKing } from "react-icons/fa6";
 import useKeyPress from '@/hooks/useKeyPress';
+import Board from './Board';
+import { BoardOrientation } from 'react-chessboard/dist/chessboard/types';
+import PlayerDisplay from './SmallPlayerDisplay';
+import BigPlayerDisplay from './BigPlayerDisplay';
 
 interface GameViewerProps {
   data: GameEventResponse
-  pair: Pair
+  pair: Pair,
+  tournamentName: string;
 }
 
-const GameViewer = ({ data: { moves, delayedMoves }, pair }: GameViewerProps) => {
+const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: GameViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const { height } = useWindowSize()
   const [time, setTime] = useState({ black: 0, white: 0 });
+  const [orientation, setOrientation] = useState<BoardOrientation>('white')
 
+  const onBoardOrientationChanged = (d: BoardOrientation) => {
+    setOrientation(d)
+  }
 
   const handlePrevMove = () => {
     if (currentIndex > 0) {
@@ -62,61 +67,31 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair }: GameViewerProps) =>
     }
     return height - 50
   }, [height, fullscreen])
+
   return (
     <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen bg-slate-200 z-100 text-black' : ''}>
       <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'}>
-        {fullscreen && <div className='flex p-5 items-center justify-center align-middle h-100 flex-col mr-10'>
-          <div className="flex items-center justify-center text-4xl">
-            <div className="flex justify-between flex-col">
-              <div className='font-bold mb-5'>
-                <FaChessKing className='inline' />{pair.black}
-              </div>
-              <div className='flex justify-around'>
-                <Clock time={time.black} ></Clock>
-              </div>
-            </div>
-          </div>
+        {fullscreen && <div className='flex p-5 items-center justify-center align-middle h-100 flex-col mr-10 relative'>
+          <h2 className='mb-10 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold '>{tournamentName}</h2>
+
+          <BigPlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
           <div className="flex items-center justify-center mt-20 mb-20 size-10 text-6xl font-semibold">vs</div>
-          <div className="flex items-center justify-center text-4xl">
-
-            <div className="flex justify-between flex-col">
-              <div className='font-bold mb-5'>
-                <FaRegChessKing className='inline' />{pair.white}
-              </div>
-              <div className='flex justify-around'>
-                <Clock time={time.white} ></Clock>
-              </div>
-            </div>
-
-          </div>
-        </div>}
+          <BigPlayerDisplay pair={pair} time={time} color={orientation} />
+        </div>
+        }
         <div>
           {!fullscreen &&
-            <div className="flex justify-between">
-              <div className='font-bold'>
-                <FaChessKing className='inline' />{pair.black}
-              </div>
-              <Clock time={time.black} ></Clock>
-            </div>
-          }
-          <Chessboard
-            boardWidth={boardWidth}
-            position={moves[currentIndex].fen}
-            showBoardNotation={true}
-            areArrowsAllowed={true}
-            arePiecesDraggable={false}
-            customArrows={[moves[currentIndex].arrow] as any}
+            <PlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
 
-          />
+          }
+          <Board move={moves[currentIndex]} boardWidth={boardWidth} direction={orientation} />
+
           {!fullscreen &&
-            <div className="flex justify-between">
-              <div className='font-bold'>
-                <FaRegChessKing className='inline' />{pair.white}
-              </div>
-              <Clock time={time.white} ></Clock>
-            </div>}
+            <PlayerDisplay pair={pair} time={time} color={orientation} />
+          }
 
           <GameController handleNextMove={handleNextMove}
+            onBoardOrientationChanged={onBoardOrientationChanged}
             handlePrevMove={handlePrevMove}
             currentIndex={currentIndex}
             total={moves.length}

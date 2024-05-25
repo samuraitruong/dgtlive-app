@@ -53,7 +53,7 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                     {tournament && <Schedule data={tournament.rounds} onSelect={onSelectGame} selectedRound={selectedRound} />}
                 </div>
                 <div className="md:col-span-9">
-                    {games && selectedGame && games[selectedGame] && <GameViewer data={games[selectedGame]} pair={selectedPair as Pair} />}
+                    {games && selectedGame && games[selectedGame] && <GameViewer tournamentName={tournament.name} data={games[selectedGame]} pair={selectedPair as Pair} />}
                 </div>
             </div>
 

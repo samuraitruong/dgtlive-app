@@ -21,6 +21,7 @@ export interface Move {
     san: string;
     fen: string;
     time: number;
+    moveTime: number;
     arrow: string[]
 }
 

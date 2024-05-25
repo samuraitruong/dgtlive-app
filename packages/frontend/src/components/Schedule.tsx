@@ -45,10 +45,10 @@ export default function Schedule({ data, onSelect, selectedRound }: ScheduleProp
                   <li key={pairIndex} className="mb-2 cursor-pointer hover:bg-slate-400">
                     <div className="flex justify-between items-center" onClick={() => onSelect(item.index || 0 + 1, pairIndex + 1)}>
                       <div>
-                        {pair.black} {' '}
+                        {pair.white} {' '}
                         vs
                         {' '}
-                        {pair.white} - {pair.result}
+                        {pair.black} - {pair.result}
                       </div>
                       <div>
                         <BiSolidChess />

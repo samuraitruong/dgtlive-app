@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Chess } from 'chess.js'
 import { GameData, LookupResultData, RoundPairingData, TournamentData } from "./model";
+// import fs from 'fs'
 
 const axiosInstance = axios.create();
 
@@ -52,7 +53,9 @@ export class LiveChessTournament {
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/game-${game}.json?poll`
 
         console.log("fetch game", url)
+
         const { data } = await axiosInstance.get<GameData>(url);
+        // fs.writeFileSync('debug.json', JSON.stringify(data, null, 2))
         const chess = new Chess()
         const moves = [];
         for (const move of data.moves) {

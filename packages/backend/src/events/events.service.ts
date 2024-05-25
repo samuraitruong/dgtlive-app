@@ -32,13 +32,21 @@ export class EventsService {
       return tour;
     }
     const { moves, live } = await this.game.fetchGame(game.round, game.game);
+    const extractTime = (t: string) => {
+      const [time, spent] = t.split('+');
+      return {
+        time: +time,
+        moveTime: +spent
+
+      }
+    }
     const t: GameEventResponse = {
       isLive: live,
       ...game,
       moves: moves.map((x) => ({
+        ...extractTime(x[2]),
         san: x[0],
         fen: x[1],
-        time: +x[2]?.split('+')[0],
         arrow: [x[3], x[4]],
       })),
     };
