@@ -57,7 +57,7 @@ export class LiveChessTournament {
         const moves = [];
         for (const move of data.moves) {
             const [m, time] = move.split(' ')
-            var m1 = chess.move(m);
+            const m1 = chess.move(m);
             moves.push([
                 m, chess.fen(), time, m1.from, m1.to
             ])

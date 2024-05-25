@@ -15,7 +15,6 @@ jobs:
 
     #   - name: Docker Login
     #     run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
       - name: Build Docker image
         run: docker build -t samuraitruong/dgtapp:latest .
       - uses: superfly/flyctl-actions/setup-flyctl@master

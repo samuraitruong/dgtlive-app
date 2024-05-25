@@ -1,20 +1,3 @@
-# FROM node as build
-# RUN npm install -g pnpm
-# WORKDIR /app
-
-# copy . .
-
-# RUN pnpm install
-
-# ENV PORT=3000
-# ENV NEXT_PUBLIC_WS_URL=/
-# ENV NEXTJS_BUILD_MODE=1
-# RUN npm run build-publish
-
-# EXPOSE 3000
-# CMD npm start
-
-
 # Stage 1: Build Stage
 FROM node as build
 RUN npm install -g pnpm
