@@ -76,7 +76,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
 
           <BigPlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
           <div className="flex items-center justify-center mt-20 mb-20 size-10 text-6xl font-semibold">vs</div>
-          <BigPlayerDisplay pair={pair} time={time} color={orientation} />
+          <BigPlayerDisplay pair={pair} time={time} color={orientation} reverse={true} />
         </div>
         }
         <div>
