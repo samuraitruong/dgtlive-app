@@ -19,6 +19,7 @@ export class EventsService {
   }
 
   async setGameId(tournamentId: string) {
+    console.log("Overwritting game id to ", tournamentId);
     this.tournamentId = tournamentId;
     this.game.setGame(tournamentId);
     await this.hello(true);

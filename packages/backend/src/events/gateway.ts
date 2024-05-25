@@ -12,8 +12,7 @@ import { AdminDto } from './dto/admin.dto';
 import { GameEventResponse } from 'library';
 
 export class BaseGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer() private server: any;
   private liveGames: GameEventResponse[] = [];
 
@@ -87,6 +86,7 @@ export class BaseGateway
 
   @SubscribeMessage('admin')
   async admin(@MessageBody() game: AdminDto) {
+    console.log(game)
     await this.eventsService.setGameId(game.gameId);
 
     await this.refreshTournament();
