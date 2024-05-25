@@ -7,11 +7,12 @@ import { MdOutlineExpandCircleDown } from "react-icons/md";
 
 interface ScheduleProps {
   data: Round[]
+  selectedRound: number;
   onSelect: (round: number, gameId: number) => void
 }
 
-const Schedule = ({ data, onSelect }: ScheduleProps) => {
-  const [openRoundIndex, setOpenRoundIndex] = useState<number | null>(null);
+const Schedule = React.memo(({ data, onSelect, selectedRound }: ScheduleProps) => {
+  const [openRoundIndex, setOpenRoundIndex] = useState<number>(selectedRound);
 
   const sortedData = useMemo<Round[]>(() => {
     return [...data].reverse().map((x, index) => ({
@@ -20,11 +21,7 @@ const Schedule = ({ data, onSelect }: ScheduleProps) => {
   }, [data]);
 
   const toggleRound = (index: number) => {
-    if (openRoundIndex === index) {
-      setOpenRoundIndex(null);
-    } else {
-      setOpenRoundIndex(index);
-    }
+    setOpenRoundIndex(prevIndex => (prevIndex === index ? -1 : index));
   };
 
   return (
@@ -34,19 +31,19 @@ const Schedule = ({ data, onSelect }: ScheduleProps) => {
         {sortedData.map((item, index) => (
           <div key={index} className={"bg-gray-100 p-2 relative" + (item.live ? ' border border-green-500 bg-green-200' : '') + ' ' + (item.pairs.length === 0 ? 'opacity-35' : '')}>
             <h2 className="text-xl font-bold mb-2 cursor-pointer">R{item.index || 0 + 1} - {item.date}</h2>
-            {!item.live && openRoundIndex !== index &&
-              <MdOutlineExpandCircleDown className='absolute top-2 right-2 cursor-pointer text-xl text-green-700' onClick={() => toggleRound(index)} />
+            {!item.live && openRoundIndex !== item.index &&
+              <MdOutlineExpandCircleDown className='absolute top-2 right-2 cursor-pointer text-xl text-green-700' onClick={() => toggleRound(item.index || 0)} />
             }
-            {!item.live && openRoundIndex === index &&
-              <IoChevronUpCircleOutline className='absolute top-2 right-2 cursor-pointer text-xl text-red-500' onClick={() => toggleRound(index)} />
+            {!item.live && openRoundIndex === item.index &&
+              <IoChevronUpCircleOutline className='absolute top-2 right-2 cursor-pointer text-xl text-red-500' onClick={() => toggleRound(item.index || 0)} />
             }
 
             {item.live && <CiStreamOn className='absolute top-0 right-0 text-green-600' />}
-            {openRoundIndex === index && item.pairs.length > 0 && !item.live && (
+            {openRoundIndex === item.index && item.pairs.length > 0 && !item.live && (
               <ul>
                 {item.pairs.map((pair, pairIndex) => (
                   <li key={pairIndex} className="mb-2 cursor-pointer hover:bg-slate-400">
-                    <div className="flex justify-between items-center" onClick={() => onSelect(index + 1, pairIndex + 1)}>
+                    <div className="flex justify-between items-center" onClick={() => onSelect(item.index || 0 + 1, pairIndex + 1)}>
                       <div>
                         {pair.black} {' '}
                         vs
@@ -61,7 +58,7 @@ const Schedule = ({ data, onSelect }: ScheduleProps) => {
                 ))}
               </ul>
             )}
-            {openRoundIndex === index && item.pairs.length === 0 && (
+            {openRoundIndex === item.index && item.pairs.length === 0 && (
               <p>No pairs scheduled</p>
             )}
           </div>
@@ -69,6 +66,6 @@ const Schedule = ({ data, onSelect }: ScheduleProps) => {
       </div>
     </div>
   );
-};
+});
 
 export default Schedule;

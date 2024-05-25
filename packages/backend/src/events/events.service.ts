@@ -1,23 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import configuration from 'src/config/configuration';
 
 import { LiveChessTournament, GameEventResponse } from 'library';
 import { LoadGameDto } from './dto/game-event.dto';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from '@nestjs/cache-manager';
 
 @Injectable()
 export class EventsService {
-  setGameId(gameId: string) {
-    this.game.setGame(gameId);
-  }
+  private tournamentId: string;
+
+
 
   readonly game: LiveChessTournament;
-  constructor() {
-    this.game = new LiveChessTournament(configuration().game.juniorTournamentId)
 
+  constructor(private cacheManager: Cache) {
+    this.tournamentId = configuration().game.juniorTournamentId;
+    this.game = new LiveChessTournament(configuration().game.juniorTournamentId)
+  }
+
+  async setGameId(tournamentId: string) {
+    this.tournamentId = tournamentId;
+    this.game.setGame(tournamentId);
+    await this.hello(true);
   }
 
   async loadGame(game: LoadGameDto): Promise<GameEventResponse> {
-    const tour = await this.game.fetchTournament();
+    // const tour = await this.cacheManager.get(this.tournamentId);
     const { moves, live } = await this.game.fetchGame(game.round, game.game);
     const t: GameEventResponse = {
       isLive: live,
@@ -38,12 +47,18 @@ export class EventsService {
   }
 
   async hello(force = false) {
-    const t = await this.game.fetchTournament(force);
+    if (!force) {
+      const cacheData = await this.cacheManager.get(this.tournamentId);
+      console.log("Return tournament data from cache")
+      return cacheData;
+    }
+
+    const t = await this.game.fetchTournament();
 
     const fetchTask = t.rounds.map((r, index) => this.game.fetchRound(index + 1))
     const rounds = await Promise.all(fetchTask)
 
-    return {
+    const data = {
       name: t.name,
       location: t.location,
 
@@ -58,6 +73,9 @@ export class EventsService {
           live: p.live
         }))
       }))
+
     }
+    this.cacheManager.set(this.tournamentId, data, configuration().cache.tournamentTTL);
+    return data;
   }
 }

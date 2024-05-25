@@ -2,34 +2,46 @@ import axios from "axios";
 import { Chess } from 'chess.js'
 import { GameData, LookupResultData, RoundPairingData, TournamentData } from "./model";
 
+const axiosInstance = axios.create();
+
+// Add a response interceptor
+axiosInstance.interceptors.response.use(
+    response => {
+        // Return a successful response
+        return response;
+    },
+    error => {
+        // Log the error and the URL
+        console.error('Request failed with URL:', error.config.url);
+        return Promise.reject(error);
+    }
+);
+
 export class LiveChessTournament {
     private lookupResult?: LookupResultData = undefined;
     private tournament?: TournamentData = undefined;
-    private refreshTimeAt = -1;
     constructor(private tournamentId: string) {
 
     }
     public async setGame(id: string) {
         this.tournamentId = id;
     }
-    public async fetchTournament(force: boolean = false) {
-        if (this.tournament && this.refreshTimeAt < new Date().getTime() && !force) {
-            return this.tournament
-        }
+    public async fetchTournament() {
         const lookupUrl = "https://lookup.livechesscloud.com/meta/" + this.tournamentId
-        const { data: lookupData } = await axios.get<LookupResultData>(lookupUrl);
+        const { data: lookupData } = await axiosInstance.get<LookupResultData>(lookupUrl);
+        console.log("lookupUrl", lookupUrl)
         this.lookupResult = lookupData;
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/tournament.json`
-
-        const { data: tournamentData } = await axios.get<TournamentData>(url);
+        console.log("url", url)
+        const { data: tournamentData } = await axiosInstance.get<TournamentData>(url);
         this.tournament = tournamentData;
-        this.refreshTimeAt = new Date().getTime() + 60000;
         return tournamentData;
     }
 
     public async fetchRound(round: number) {
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/index.json`
-        const { data } = await axios.get<RoundPairingData>(url);
+        console.log("round", url)
+        const { data } = await axiosInstance.get<RoundPairingData>(url);
         return data;
     }
 
@@ -38,7 +50,9 @@ export class LiveChessTournament {
             await this.fetchTournament()
         }
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/game-${game}.json?poll`
-        const { data } = await axios.get<GameData>(url);
+
+        console.log("fetch game", url)
+        const { data } = await axiosInstance.get<GameData>(url);
         const chess = new Chess()
         const moves = [];
         for (const move of data.moves) {

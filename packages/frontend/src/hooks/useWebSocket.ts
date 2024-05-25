@@ -1,87 +1,84 @@
-import { GameEventResponse, GameMap, Tournament } from "library/src/model/tournament";
-import { useEffect, useRef, useState } from "react";
+import { GameMap, Tournament, GameEventResponse } from "library";
+import { useMemo, useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
-export function useWebSocket(url: string, path = '/') {
-    console.log("socket", url, path)
-    const socketRef = useRef(null); // Create a mutable reference for the WebSocket instance
 
-    const [socket, setSocket] = useState<Socket>();
+export function useWebSocket(url: string, path = '/') {
+    const socketRef = useRef<Socket | null>(null);
+    const [socket, setSocket] = useState<Socket | null>(null);
     const [readyState, setReadyState] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [lastMessage, setLastMessage] = useState<string>();
-
     const [games, setGames] = useState<GameMap>({});
-
     const [tournament, setTournament] = useState<Tournament>();
 
-    const sendMessage = (type: string, data: any) => {
-        setLoading(true)
-        socket?.emit(type, data)
-    }
+    const socketInstance = useMemo(() => io(url, {
+        path: path + "/socket.io",
+        transports: ["websocket", "polling"],
+    }), [url, path]);
+
     useEffect(() => {
+        setSocket(socketInstance);
+        return () => {
+            if (socketInstance) {
+                socketInstance.disconnect();
+            }
+        };
+    }, [socketInstance]);
 
-        if (!socket) {
-            const client = io(url, {
-                path: path + "/socket.io",
-
-                transports: ["websocket", "polling"],
+    useEffect(() => {
+        if (socket) {
+            socket.connect();
+            socket.on("hello", (data: any) => {
+                setLoading(false);
+                setTournament(data);
             });
 
-            setSocket(client)
-            console.log("connecting....")
-            client.connect();
-
-            client.on("hello", (data: any) => {
-                //setLastMessage(data) 
-                setLoading(false);
-                setTournament(data)
-            })
-
-            client.on("message", ({ event, data }: { event: string, data: any }) => {
+            socket.on("message", ({ event, data }: { event: string, data: any }) => {
                 if (event === "game") {
-                    const key = `${data.round}_${data.game}`
-
+                    const key = `${data.round}_${data.game}`;
                     setGames((prevGame) => {
                         if (prevGame[key]?.moves.length < data.moves.length) {
-                            return { ...prevGame, [key]: data } as any
+                            return { ...prevGame, [key]: data };
+                        } else {
+                            return prevGame;
                         }
-                        else {
-                            return prevGame
-                        }
-                    })
+                    });
                 }
 
                 if (event === "tournament") {
-                    setTournament(data)
+
+                    setTournament(data);
                 }
+            });
 
-            })
-
-            client.on("game", (data: GameEventResponse) => {
+            socket.on("game", (data: GameEventResponse) => {
                 setLoading(false);
-                //setLastMessage(data) 
-                const key = `${data.round}_${data.game}`
-                setGames({ ...games, [key]: data } as any)
-            })
+                const key = `${data.round}_${data.game}`;
+                setGames((prevGames) => ({ ...prevGames, [key]: data }));
+            });
 
-            client.on('connect', () => {
-                setReadyState(true)
-            })
-
+            socket.on('connect', () => {
+                setReadyState(true);
+            });
         }
+
         return () => {
+            console.log("someone disconnect me");
             if (socket) {
-                socket.disconnect()
+                socket.disconnect();
             }
-        }
+        };
+    }, [socket]);
 
-    }, [url, socket, games, path])
     return {
         loading,
-        sendMessage,
+        sendMessage: (type: string, data: any) => {
+            setLoading(true);
+            socket?.emit(type, data);
+        },
         tournament,
         lastMessage,
         readyState,
-        games
-    }
+        games,
+    };
 }

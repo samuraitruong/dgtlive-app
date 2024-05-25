@@ -8,6 +8,7 @@ export interface Round {
     date: string;
     live?: boolean;
     pairs: Pair[];
+
 }
 
 export interface Pair {
