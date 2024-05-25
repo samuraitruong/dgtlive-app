@@ -63,7 +63,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair }: GameViewerProps) =>
     return height - 50
   }, [height, fullscreen])
   return (
-    <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen p-2 bg-slate-200 z-100 text-black' : ''}>
+    <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen bg-slate-200 z-100 text-black' : ''}>
       <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'}>
         {fullscreen && <div className='flex p-5 items-center justify-center align-middle h-100 flex-col mr-10'>
           <div className="flex items-center justify-center text-4xl">

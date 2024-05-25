@@ -26,7 +26,11 @@ export class EventsService {
   }
 
   async loadGame(game: LoadGameDto): Promise<GameEventResponse> {
-    // const tour = await this.cacheManager.get(this.tournamentId);
+    const cacheKey = `${this.tournamentId}-${game.round}-${game.game}`;
+    const tour = await this.cacheManager.get<GameEventResponse>(cacheKey);
+    if (tour) {
+      return tour;
+    }
     const { moves, live } = await this.game.fetchGame(game.round, game.game);
     const t: GameEventResponse = {
       isLive: live,
@@ -42,6 +46,10 @@ export class EventsService {
     if (live && t.moves.length > delayMoves) {
       t.moves = t.moves.slice(0, t.moves.length - delayMoves);
       t.delayedMoves = delayMoves;
+    }
+
+    if (!live) {
+      this.cacheManager.set(cacheKey, t, configuration().cache.tournamentTTL * 1000) // Never need to expired it.
     }
     return t;
   }
