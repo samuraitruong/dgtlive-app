@@ -11,7 +11,7 @@ interface ScheduleProps {
   onSelect: (round: number, gameId: number) => void
 }
 
-const Schedule = React.memo(({ data, onSelect, selectedRound }: ScheduleProps) => {
+export default function Schedule({ data, onSelect, selectedRound }: ScheduleProps) {
   const [openRoundIndex, setOpenRoundIndex] = useState<number>(selectedRound);
 
   const sortedData = useMemo<Round[]>(() => {
@@ -66,6 +66,4 @@ const Schedule = React.memo(({ data, onSelect, selectedRound }: ScheduleProps) =
       </div>
     </div>
   );
-});
-
-export default Schedule;
+}
