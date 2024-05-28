@@ -35,5 +35,7 @@ export interface GameEventResponse {
     delayedMoves?: number;
     round: number,
     game: number;
-    moves: Move[]
+    moves: Move[];
+    white: string;
+    black: string;
 }

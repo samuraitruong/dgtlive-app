@@ -7,6 +7,7 @@ import Schedule from './Schedule';
 import GameViewer from './GameViewer';
 import { Pair } from 'library';
 import Loading from './Loading';
+import { MultipleGameViewer } from './MultipleGameViewer';
 
 interface TournamentProps {
     category: string
@@ -18,12 +19,25 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
 
     const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
-
+    const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string>();
     const [selectedRound, setSelectedRound] = useState<number>(0);
     const [selectedPair, setSelectedPair] = useState<Pair>();
 
     const onSelectGame = (round: number, game: number) => {
+        if (game === -1) {
+            setSelectedGame(undefined)
+            const roundPairs = tournament?.rounds[round - 1];
+            var gamesPairs = roundPairs?.pairs.map((x, i) => {
+
+
+                sendMessage('game', { round, game: i + 1 })
+                return `${round}_${i + 1}`
+            })
+            setMultipleGameIds(gamesPairs as any);
+            return;
+        }
+        setMultipleGameIds([])
         sendMessage('game', { round, game })
         setSelectedGame(`${round}_${game}`)
         const pair = tournament?.rounds[round - 1].pairs[game - 1]
@@ -37,6 +51,19 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
             sendMessage(consrtants.EventNames.Hello, {})
         }
     }, [readyState]);
+
+
+    useEffect(() => {
+
+        if (!selectedGame && multipleGameId.length == 0) {
+            const p = tournament?.rounds.filter(x => x.pairs.length > 0).pop();
+            if (p) {
+                onSelectGame((p?.index || 0) + 1, -1)
+                setSelectedRound((p.index || 0) + 1)
+                console.log(p)
+            }
+        }
+    }, [tournament]);
 
 
     if (!readyState || !tournament || loading) {
@@ -53,6 +80,7 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                     {tournament && <Schedule data={tournament.rounds} onSelect={onSelectGame} selectedRound={selectedRound} />}
                 </div>
                 <div className="md:col-span-9">
+                    {games && multipleGameId && <MultipleGameViewer games={games} gameIds={multipleGameId} />}
                     {games && selectedGame && games[selectedGame] && <GameViewer tournamentName={tournament.name} data={games[selectedGame]} pair={selectedPair as Pair} />}
                 </div>
             </div>

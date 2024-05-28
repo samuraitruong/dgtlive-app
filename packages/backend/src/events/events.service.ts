@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import configuration from 'src/config/configuration';
 
-import { LiveChessTournament, GameEventResponse } from 'library';
+import { LiveChessTournament, GameEventResponse, Tournament } from 'library';
 import { LoadGameDto } from './dto/game-event.dto';
 import { Cache } from '@nestjs/cache-manager';
 
@@ -33,6 +33,9 @@ export class EventsService {
     }
     const { moves, live } = await this.game.fetchGame(game.round, game.game);
     const extractTime = (t: string) => {
+      if (!t) {
+        return { time: 0, moveTime: 0 }
+      }
       const [time, spent] = t.split('+');
       return {
         time: +time,
@@ -40,7 +43,11 @@ export class EventsService {
 
       }
     }
+    const cacheData = await this.cacheManager.get(this.tournamentId) as Tournament;
+    var pairs = cacheData.rounds[game.round - 1].pairs[game.game - 1]
+
     const t: GameEventResponse = {
+      ...pairs,
       isLive: live,
       ...game,
       moves: moves.map((x) => ({

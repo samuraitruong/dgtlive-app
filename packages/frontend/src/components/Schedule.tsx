@@ -4,6 +4,7 @@ import { CiStreamOn } from "react-icons/ci";
 import React, { useMemo, useState } from 'react';
 import { IoChevronUpCircleOutline } from "react-icons/io5";
 import { MdOutlineExpandCircleDown } from "react-icons/md";
+import { PiSelectionAllBold } from "react-icons/pi";
 
 interface ScheduleProps {
   data: Round[]
@@ -30,7 +31,10 @@ export default function Schedule({ data, onSelect, selectedRound }: ScheduleProp
       <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
         {sortedData.map((item, index) => (
           <div key={index} className={"bg-gray-100 p-2 relative" + (item.live ? ' border border-green-500 bg-green-200' : '') + ' ' + (item.pairs.length === 0 ? 'opacity-35' : '')}>
-            <h2 className="text-xl font-bold mb-2 cursor-pointer">R{item.index || 0 + 1} - {item.date}</h2>
+            <div className='flex justify-between'>
+              <h2 className="text-xl font-bold mb-2 cursor-pointer">R{item.index || 0 + 1} - {item.date}</h2>
+              <PiSelectionAllBold className='mr-5 hover:bg-blue-700 hover:text-white cursor-pointer' onClick={() => onSelect(item.index || 1, -1)} />
+            </div>
             {!item.live && openRoundIndex !== item.index &&
               <MdOutlineExpandCircleDown className='absolute top-2 right-2 cursor-pointer text-xl text-green-700' onClick={() => toggleRound(item.index || 0)} />
             }
