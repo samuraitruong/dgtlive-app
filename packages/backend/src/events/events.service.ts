@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import configuration from 'src/config/configuration';
 
-import { LiveChessTournament, GameEventResponse, Tournament } from 'library';
+import { LiveChessTournament, GameEventResponse, Tournament, Pair } from 'library';
 import { LoadGameDto } from './dto/game-event.dto';
 import { Cache } from '@nestjs/cache-manager';
 
@@ -44,10 +44,10 @@ export class EventsService {
       }
     }
     const cacheData = await this.cacheManager.get(this.tournamentId) as Tournament;
-    var pairs = cacheData.rounds[game.round - 1].pairs[game.game - 1]
+    var pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
 
     const t: GameEventResponse = {
-      ...pairs,
+      pair,
       isLive: live,
       ...game,
       moves: moves.map((x) => ({

@@ -31,11 +31,10 @@ export type GameMap = {
 
 
 export interface GameEventResponse {
+    pair: Pair,
     isLive: boolean;
     delayedMoves?: number;
     round: number,
     game: number;
     moves: Move[];
-    white: string;
-    black: string;
 }

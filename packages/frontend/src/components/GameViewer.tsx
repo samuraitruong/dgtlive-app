@@ -19,7 +19,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const { height } = useWindowSize()
-  const [time, setTime] = useState({ black: 0, white: 0 });
+  const [time, setTime] = useState({ black: -1, white: -1 });
   const [orientation, setOrientation] = useState<BoardOrientation>('white')
 
   const onBoardOrientationChanged = (d: BoardOrientation) => {
@@ -44,7 +44,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
     if (currentIndex % 2 === 0) {
       setTime({
         white: moves[currentIndex].time,
-        black: moves[Math.max(1, currentIndex - 1)].time
+        black: moves[currentIndex - 1]?.time || -1
       })
     }
     else {
