@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import configuration from 'src/config/configuration';
 
-import { LiveChessTournament, GameEventResponse, Tournament, Pair } from 'library';
+import {
+  LiveChessTournament,
+  GameEventResponse,
+  Tournament,
+  Pair,
+} from 'library';
 import { LoadGameDto } from './dto/game-event.dto';
 import { Cache } from '@nestjs/cache-manager';
 
@@ -22,7 +27,7 @@ export class EventsService {
     const dgtLiveChess = new LiveChessTournament(tournamentId);
     const verify = dgtLiveChess.fetchTournament();
     if (verify) {
-      console.log("Overwritting game id to ", tournamentId);
+      console.log('Overwritting game id to ', tournamentId);
       this.tournamentId = tournamentId;
       this.game.setGame(tournamentId);
       await this.hello(true);
@@ -39,17 +44,18 @@ export class EventsService {
     const { moves, live } = await this.game.fetchGame(game.round, game.game);
     const extractTime = (t: string) => {
       if (!t) {
-        return { time: 0, moveTime: 0 }
+        return { time: 0, moveTime: 0 };
       }
       const [time, spent] = t.split('+');
       return {
         time: +time,
-        moveTime: +spent
-
-      }
-    }
-    const cacheData = await this.cacheManager.get(this.tournamentId) as Tournament;
-    var pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
+        moveTime: +spent,
+      };
+    };
+    const cacheData = (await this.cacheManager.get(
+      this.tournamentId,
+    )) as Tournament;
+    const pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
 
     const t: GameEventResponse = {
       pair,
@@ -69,7 +75,11 @@ export class EventsService {
     }
 
     if (!live) {
-      this.cacheManager.set(cacheKey, t, configuration().cache.tournamentTTL * 1000) // Never need to expired it.
+      this.cacheManager.set(
+        cacheKey,
+        t,
+        configuration().cache.tournamentTTL * 1000,
+      ); // Never need to expired it.
     }
     return t;
   }

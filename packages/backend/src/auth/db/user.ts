@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 
 @Schema({ timestamps: true })
 export class User {
-    @Prop()
-    username: string;
-    @Prop()
-    password: string;
+  @Prop()
+  username: string;
+  @Prop()
+  password: string;
 }
 
 export type UserDocument = User & Document;

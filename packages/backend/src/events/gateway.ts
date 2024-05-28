@@ -14,7 +14,8 @@ import { UseFilters } from '@nestjs/common';
 import { SocketExceptionFilter } from './socket.exception.filter';
 
 export class BaseGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   @WebSocketServer() private server: any;
   private liveGames: GameEventResponse[] = [];
 

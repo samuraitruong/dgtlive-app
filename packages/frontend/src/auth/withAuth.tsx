@@ -1,13 +1,10 @@
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { useAuth } from './authContext';
 import Login from '@/components/Login';
 
-const withAuth = (WrappedComponent: any) => {
-    return (props: any) => {
+function withAuth(WrappedComponent: any) {
+    const AuthWrapper = (props: any) => {
         const { user, loading } = useAuth();
 
-        console.log("user", user)
         if (loading) {
             return <></>
         }
@@ -17,6 +14,7 @@ const withAuth = (WrappedComponent: any) => {
 
         return <WrappedComponent {...props} user={user} />;
     };
+    return AuthWrapper;
 };
 
 export default withAuth;
