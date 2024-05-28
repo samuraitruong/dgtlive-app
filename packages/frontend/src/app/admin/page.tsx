@@ -4,6 +4,8 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { useRouter } from 'next/navigation'
 import Loading from "@/components/Loading";
 import Link from 'next/link'
+import withAuth from "@/auth/withAuth";
+import { useAuth } from "@/auth/authContext";
 
 function GameIdChanner({ type, title }: { type: string, title: string }) {
   const router = useRouter()
@@ -45,10 +47,11 @@ function GameIdChanner({ type, title }: { type: string, title: string }) {
   );
 }
 
-export default function Admin() {
-
+function Admin() {
+  const { user } = useAuth();
   return (
     <main className="flex min-h-screen flex-col items-center justify-between bg-gray-100 text-black">
+      <h2 className="p-10 text-6xl">Welcome {user.username}</h2>
       <div className="flex items-center  flex-col justify-center h-screen">
         <GameIdChanner type="junior" title="Set Junior Tournament ID"></GameIdChanner>
 
@@ -58,3 +61,5 @@ export default function Admin() {
     </main>
   );
 }
+
+export default withAuth(Admin)

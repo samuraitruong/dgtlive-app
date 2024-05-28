@@ -7,16 +7,20 @@ import configuration from './config/configuration';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { CacheModule } from '@nestjs/cache-manager';
+import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ load: [configuration] }),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     CacheModule.register(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '../..', 'frontend/out'),
       serveRoot: '/',
     }),
     EventsModule,
-    ConfigModule.forRoot({ load: [configuration] }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [
@@ -31,4 +35,4 @@ import { CacheModule } from '@nestjs/cache-manager';
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

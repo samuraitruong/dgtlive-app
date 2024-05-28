@@ -8,13 +8,14 @@ import GameViewer from './GameViewer';
 import { Pair } from 'library';
 import Loading from './Loading';
 import { MultipleGameViewer } from './MultipleGameViewer';
+import { BACKEND_URL } from '@/config';
 
 interface TournamentProps {
     category: string
 }
 export default function Tournament({ category = 'junior' }: TournamentProps) {
 
-    const [socketUrl, setSocketUrl] = useState(process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001');
+    const [socketUrl, setSocketUrl] = useState(BACKEND_URL);
     const socketPath = useMemo(() => category, [category]);
 
     const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)

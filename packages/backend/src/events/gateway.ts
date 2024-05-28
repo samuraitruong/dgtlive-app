@@ -10,6 +10,8 @@ import { EventsService } from './events.service';
 import { LoadGameDto } from './dto/game-event.dto';
 import { AdminDto } from './dto/admin.dto';
 import { GameEventResponse } from 'library';
+import { UseFilters } from '@nestjs/common';
+import { SocketExceptionFilter } from './socket.exception.filter';
 
 export class BaseGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -86,15 +88,19 @@ export class BaseGateway
 
   @SubscribeMessage('admin')
   async admin(@MessageBody() game: AdminDto) {
-    console.log(game)
-    await this.eventsService.setGameId(game.gameId);
+    const result = await this.eventsService.setGameId(game.gameId);
 
     await this.refreshTournament();
     return {
       event: 'admin',
       data: {
-        status: true,
+        status: result != null,
       },
     };
+  }
+  @UseFilters(SocketExceptionFilter)
+  public handleException(error: Error, client: any): void {
+    console.error(`Error from client: ${error.message}`);
+    client.error(error.message);
   }
 }

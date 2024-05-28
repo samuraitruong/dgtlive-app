@@ -19,10 +19,15 @@ export class EventsService {
   }
 
   async setGameId(tournamentId: string) {
-    console.log("Overwritting game id to ", tournamentId);
-    this.tournamentId = tournamentId;
-    this.game.setGame(tournamentId);
-    await this.hello(true);
+    const dgtLiveChess = new LiveChessTournament(tournamentId);
+    const verify = dgtLiveChess.fetchTournament();
+    if (verify) {
+      console.log("Overwritting game id to ", tournamentId);
+      this.tournamentId = tournamentId;
+      this.game.setGame(tournamentId);
+      await this.hello(true);
+    }
+    return verify;
   }
 
   async loadGame(game: LoadGameDto): Promise<GameEventResponse> {
