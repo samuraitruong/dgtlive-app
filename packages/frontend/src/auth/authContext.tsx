@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { BACKEND_URL } from '@/config';
+import { API_URL } from '@/config';
 
 interface AuthContextType {
     loading?: boolean
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
     const verifyToken = (token: string) => {
-        fetch(`${BACKEND_URL}/api/auth/me`, {
+        fetch(`${API_URL}/api/auth/me`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const token = localStorage.getItem('token');
         if (token) {
             // Fetch user data with the token
-            fetch(`${BACKEND_URL}/api/auth/me`, {
+            fetch(`${API_URL}/api/auth/me`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

@@ -1,5 +1,5 @@
 import { useAuth } from '@/auth/authContext';
-import { BACKEND_URL } from '@/config';
+import { API_URL } from '@/config';
 import React, { useState } from 'react';
 
 const Login: React.FC<{ history?: any }> = ({ history }) => {
@@ -18,7 +18,7 @@ const Login: React.FC<{ history?: any }> = ({ history }) => {
     e.preventDefault();
     setErrorMessage('')
     try {
-      const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
