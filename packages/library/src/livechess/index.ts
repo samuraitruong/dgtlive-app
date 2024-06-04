@@ -65,6 +65,6 @@ export class LiveChessTournament {
                 m, chess.fen(), time, m1.from, m1.to
             ])
         }
-        return { moves, live: data.live };
+        return { moves, live: data.live, startedAt: data.firstMove };
     }
 }

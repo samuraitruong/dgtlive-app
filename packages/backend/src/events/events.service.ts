@@ -41,15 +41,19 @@ export class EventsService {
     if (tour) {
       return tour;
     }
-    const { moves, live } = await this.game.fetchGame(game.round, game.game);
+    const { moves, live, startedAt } = await this.game.fetchGame(game.round, game.game);
+    let previousMovedAt = startedAt;
     const extractTime = (t: string) => {
       if (!t) {
         return { time: 0, moveTime: 0 };
       }
       const [time, spent] = t.split('+');
+
+      previousMovedAt = previousMovedAt + (+spent || 0) * 1000;
       return {
         time: +time,
         moveTime: +spent,
+        movedAt: previousMovedAt,
       };
     };
     const cacheData = (await this.cacheManager.get(

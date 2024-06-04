@@ -1,6 +1,8 @@
 
 import { Move } from 'library';
 import React from 'react';
+import moment from 'moment'
+
 interface MoveListProps {
     moves: Move[],
     delayedMoves?: number;
@@ -19,6 +21,12 @@ const chunkArray = (arr: any[], size: number) => {
 
 function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: MoveListProps) {
     const pairs = chunkArray(moves, 2)
+    const formatTime = (m: Move) => {
+        if (m?.movedAt) {
+            return moment(m.movedAt).format()
+        }
+        return ""
+    }
     return (
         <div className="flex flex-col w-[300px] ml-5 pt-3 pl-5  overflow-y-auto relative border border-solid border-red" style={{ height: maxHeight + 20 }}>
             <div className="flex w-full justify bg-blue-500 p-1 text-white">
@@ -30,8 +38,8 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
             {pairs.map((t: Move[], index: number) => (
                 <div key={index} className="flex w-full justify border-b-indigo-400 p-1">
                     <div className='w-2/12'>{index + 1}.</div>
-                    <div className={"mr-4 w-5/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 ? 'font-bold' : '')} onClick={() => onSelect(index * 2)}> {t[0].san}</div>
-                    <div className={"mr-4 w-5/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 + 1 ? 'font-bold' : '')} onClick={() => onSelect(index * 2 + 1)}>{t[1]?.san}</div>
+                    <div title={formatTime(t[0])} className={"mr-4 w-5/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 ? 'font-bold' : '')} onClick={() => onSelect(index * 2)}> {t[0].san}</div>
+                    <div title={formatTime(t[1])} className={"mr-4 w-5/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 + 1 ? 'font-bold' : '')} onClick={() => onSelect(index * 2 + 1)}>{t[1]?.san}</div>
                 </div>
             ))
             }

@@ -22,7 +22,8 @@ export interface Move {
     fen: string;
     time: number;
     moveTime: number;
-    arrow: string[]
+    arrow: string[];
+    movedAt?: number; // Epoch of move
 }
 
 export type GameMap = {

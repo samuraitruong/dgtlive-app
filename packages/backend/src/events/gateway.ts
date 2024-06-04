@@ -12,12 +12,19 @@ import { AdminDto } from './dto/admin.dto';
 import { GameEventResponse } from 'library';
 import { UseFilters } from '@nestjs/common';
 import { SocketExceptionFilter } from './socket.exception.filter';
+import { hashObject } from 'src/util';
+
+interface LiveGame {
+  lastFetch?: number;
+  nextFetch?: number;
+  hash?: string;
+  data: GameEventResponse
+}
 
 export class BaseGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
-{
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer() private server: any;
-  private liveGames: GameEventResponse[] = [];
+  private liveGames: LiveGame[] = [];
 
   wsClients = [];
 
@@ -31,12 +38,18 @@ export class BaseGateway
     this.broadcast('tournament', t);
   }
   private async intervalCheck() {
-    for await (const game of this.liveGames) {
+    for await (const liveGame of this.liveGames) {
+      const game = liveGame.data;
       const data = await this.eventsService.loadGame(game);
       game.isLive = data.isLive;
-      this.broadcast('game', data);
+      const newHash = hashObject(game);
+      liveGame.lastFetch = new Date().getTime();
+      if (liveGame.hash != newHash) {
+        this.broadcast('game', data);
+        liveGame.hash = newHash;
+      }
     }
-    this.liveGames = this.liveGames.filter((x) => x.isLive);
+    this.liveGames = this.liveGames.filter((x) => x.data.isLive);
   }
 
   afterInit() {
@@ -75,10 +88,10 @@ export class BaseGateway
     const data = await this.eventsService.loadGame(game);
     if (data.isLive) {
       const findGame = this.liveGames.find(
-        (x) => x.game == data.game && x.round == data.round,
+        (x) => x.data.game == data.game && x.data.round == data.round,
       );
       if (!findGame) {
-        this.liveGames.push(data);
+        this.liveGames.push({ data });
       }
     }
     return {
