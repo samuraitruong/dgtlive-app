@@ -6,7 +6,7 @@ export default function Board({ move, boardWidth, direction = 'white' }: { move:
         <Chessboard
             boardOrientation={direction}
             boardWidth={boardWidth}
-            position={move.fen}
+            position={move?.fen}
             showBoardNotation={true}
             areArrowsAllowed={true}
             arePiecesDraggable={false}

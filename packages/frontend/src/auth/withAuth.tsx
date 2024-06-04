@@ -1,3 +1,4 @@
+import Loading from '@/components/Loading';
 import { useAuth } from './authContext';
 import Login from '@/components/Login';
 
@@ -6,7 +7,7 @@ function withAuth(WrappedComponent: any) {
         const { user, loading } = useAuth();
 
         if (loading) {
-            return <></>
+            return <Loading />
         }
         if (!user) {
             return <Login />
