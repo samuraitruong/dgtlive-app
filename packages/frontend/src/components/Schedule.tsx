@@ -20,7 +20,6 @@ export default function Schedule({ data, onSelect, selectedRound }: ScheduleProp
       ...x, index: data.length - index
     }));
   }, [data]);
-
   const toggleRound = (index: number) => {
     setOpenRoundIndex(prevIndex => (prevIndex === index ? -1 : index));
   };
@@ -43,7 +42,7 @@ export default function Schedule({ data, onSelect, selectedRound }: ScheduleProp
             }
 
             {item.live && <CiStreamOn className='absolute top-0 right-0 text-green-600' />}
-            {openRoundIndex === item.index && item.pairs.length > 0 && !item.live && (
+            {((openRoundIndex === item.index && item.pairs.length > 0) || item.live) && (
               <ul>
                 {item.pairs.map((pair, pairIndex) => (
                   <li key={pairIndex} className="mb-2 cursor-pointer hover:bg-slate-400">
