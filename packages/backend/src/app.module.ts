@@ -11,6 +11,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { FallbackMiddleware } from './middleware/fallback.middleware';
 import { DataModule } from './data/data.module';
+import { APP_FILTER } from '@nestjs/core';
+import { CustomExceptionFilter } from './middleware/app.filter';
 
 @Module({
   imports: [
@@ -28,6 +30,10 @@ import { DataModule } from './data/data.module';
   ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_FILTER,
+      useClass: CustomExceptionFilter,
+    },
     AppService,
     {
       provide: 'JUNIOR_TOURNAMENT_ID',

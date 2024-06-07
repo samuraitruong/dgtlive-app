@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { ValidationPipe } from '@nestjs/common';
+import { CustomExceptionFilter } from './middleware/app.filter';
 
 async function bootstrap() {
   const corsOptions: CorsOptions = {
@@ -16,6 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(corsOptions);
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new CustomExceptionFilter())
 
   // const gatewayManager = app.get<GatewayManagerService>(GatewayManagerService);
   // gatewayManager.bootstrap();
