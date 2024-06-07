@@ -14,7 +14,7 @@ import { UseFilters } from '@nestjs/common';
 import { SocketExceptionFilter } from './socket.exception.filter';
 import { hashObject } from 'src/util';
 
-interface LiveGame {
+export interface LiveGame {
   lastFetch?: number;
   nextFetch?: number;
   hash?: string;
@@ -23,21 +23,21 @@ interface LiveGame {
 
 export class BaseGateway
   implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
-  @WebSocketServer() private server: any;
-  private liveGames: LiveGame[] = [];
+  @WebSocketServer() public server: any;
+  public liveGames: LiveGame[] = [];
 
   wsClients = [];
 
-  constructor(private readonly eventsService: EventsService) {
+  constructor(public readonly eventsService: EventsService) {
     setInterval(() => this.intervalCheck(), 5000);
     setInterval(() => this.refreshTournament(), 60000);
   }
 
-  private async refreshTournament() {
+  public async refreshTournament() {
     const t = await this.eventsService.hello(true);
     this.broadcast('tournament', t);
   }
-  private async intervalCheck() {
+  public async intervalCheck() {
     for await (const liveGame of this.liveGames) {
       const game = liveGame.data;
       const data = await this.eventsService.loadGame(game);
@@ -69,7 +69,7 @@ export class BaseGateway
     }
     this.broadcast('disconnect', {});
   }
-  private broadcast(event, data: any) {
+  public broadcast(event, data: any) {
     for (const c of this.wsClients) {
       c.send({ event, data });
     }

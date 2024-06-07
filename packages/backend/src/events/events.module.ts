@@ -1,11 +1,24 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { JuniorEventsGateway } from './events.gateway';
 import { SeniorEventsGateway } from './senior.gateway';
 import { CacheModule } from '@nestjs/cache-manager';
+import { GatewayManagerService } from './gateway.manager';
+import { createDynamicGatewayClass, registerDynamicSocket } from './dynamic.gateway';
+import { ModuleRef } from '@nestjs/core';
 
 @Module({
-  imports: [CacheModule.register()],
-  providers: [JuniorEventsGateway, SeniorEventsGateway, EventsService],
+  imports: [CacheModule.register(), registerDynamicSocket()],
+  providers: [JuniorEventsGateway, SeniorEventsGateway, EventsService, GatewayManagerService],
+  exports: [GatewayManagerService]
 })
-export class EventsModule {}
+export class EventsModule
+
+  implements OnModuleInit {
+  constructor(private readonly gatewayManager: GatewayManagerService,
+    private readonly moduleRef: ModuleRef) {
+  }
+
+  async onModuleInit() {
+  }
+}

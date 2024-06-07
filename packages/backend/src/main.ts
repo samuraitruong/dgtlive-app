@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
@@ -15,6 +16,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(corsOptions);
   app.setGlobalPrefix('api');
+
+  // const gatewayManager = app.get<GatewayManagerService>(GatewayManagerService);
+  // gatewayManager.bootstrap();
+
   await app.listen(process.env.PORT || 3001);
 }
 bootstrap();
