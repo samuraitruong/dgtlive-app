@@ -18,11 +18,12 @@ export interface LiveGame {
   lastFetch?: number;
   nextFetch?: number;
   hash?: string;
-  data: GameEventResponse
+  data: GameEventResponse;
 }
 
 export class BaseGateway
-  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   @WebSocketServer() public server: any;
   public liveGames: LiveGame[] = [];
 

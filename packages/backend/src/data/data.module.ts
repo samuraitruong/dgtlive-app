@@ -7,9 +7,12 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: 'TournamentRegister', schema: TournamentRegisterSchema }]),
-    AuthModule],
+    MongooseModule.forFeature([
+      { name: 'TournamentRegister', schema: TournamentRegisterSchema },
+    ]),
+    AuthModule,
+  ],
   controllers: [DataController],
   providers: [DataService],
 })
-export class DataModule { }
+export class DataModule {}

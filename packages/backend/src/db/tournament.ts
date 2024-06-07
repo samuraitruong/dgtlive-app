@@ -19,8 +19,8 @@ export class TournamentRegister {
 
   @Prop()
   delayTimes?: number;
-
 }
 
 export type TournamentRegisterrDocument = TournamentRegister & Document;
-export const TournamentRegisterSchema = SchemaFactory.createForClass(TournamentRegister);
+export const TournamentRegisterSchema =
+  SchemaFactory.createForClass(TournamentRegister);

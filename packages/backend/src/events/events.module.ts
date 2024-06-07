@@ -9,18 +9,16 @@ import { registerDynamicSocket } from './dynamic.gateway';
 
 @Module({
   imports: [CacheModule.register(), registerDynamicSocket()],
-  providers: [JuniorEventsGateway, SeniorEventsGateway, EventsService, GatewayManagerService],
-  exports: [GatewayManagerService]
+  providers: [
+    JuniorEventsGateway,
+    SeniorEventsGateway,
+    EventsService,
+    GatewayManagerService,
+  ],
+  exports: [GatewayManagerService],
 })
-export class EventsModule
+export class EventsModule implements OnModuleInit {
+  constructor() {} // private readonly moduleRef: ModuleRef // private readonly gatewayManager: GatewayManagerService,
 
-  implements OnModuleInit {
-  constructor(
-    // private readonly gatewayManager: GatewayManagerService,
-    // private readonly moduleRef: ModuleRef
-  ) {
-  }
-
-  async onModuleInit() {
-  }
+  async onModuleInit() {}
 }

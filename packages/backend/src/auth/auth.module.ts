@@ -17,6 +17,6 @@ import { UserSchema } from '../db/user';
   ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [JwtModule]
+  exports: [JwtModule],
 })
-export class AuthModule { }
+export class AuthModule {}

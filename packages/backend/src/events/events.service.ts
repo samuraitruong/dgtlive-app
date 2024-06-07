@@ -1,5 +1,5 @@
 import configuration from 'src/config/configuration';
-import * as moment from 'moment'
+import * as moment from 'moment';
 import {
   LiveChessTournament,
   GameEventResponse,
@@ -15,7 +15,10 @@ export class EventsService {
 
   readonly game: LiveChessTournament;
 
-  constructor(private cacheManager: Cache, private options: EventServiceOptions) {
+  constructor(
+    private cacheManager: Cache,
+    private options: EventServiceOptions,
+  ) {
     this.tournamentId = configuration().game.juniorTournamentId;
     this.game = new LiveChessTournament(
       configuration().game.juniorTournamentId,
@@ -40,7 +43,10 @@ export class EventsService {
     if (tour) {
       return tour;
     }
-    const { moves, live, startedAt } = await this.game.fetchGame(game.round, game.game);
+    const { moves, live, startedAt } = await this.game.fetchGame(
+      game.round,
+      game.game,
+    );
     let previousMovedAt = startedAt;
     const extractTime = (t: string) => {
       if (!t) {
@@ -77,11 +83,11 @@ export class EventsService {
       t.delayedMoves = delayMoves;
     }
     // delay by time
-    const epochNowInMs = moment().unix().valueOf() * 1000
+    const epochNowInMs = moment().unix().valueOf() * 1000;
     const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
 
     if (live && cutoffTime < epochNowInMs) {
-      t.moves = t.moves.filter(x => x.movedAt <= cutoffTime);
+      t.moves = t.moves.filter((x) => x.movedAt <= cutoffTime);
       t.delayedMoves = delayMoves;
       t.pointInTime = cutoffTime;
     }

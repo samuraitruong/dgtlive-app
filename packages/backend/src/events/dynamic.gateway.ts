@@ -8,60 +8,66 @@ import { TournamentRegisterSchema } from 'src/db/tournament';
 import mongoose from 'mongoose';
 import { EventServiceOptions } from './dto/event-option';
 
-export function createDynamicGatewayClass(path: string, options: EventServiceOptions): DynamicModule {
-
-    @WebSocketGateway({ path: '/' + path })
-    class DynamicGateway extends BaseGateway {
-        constructor(@Inject(CACHE_MANAGER) cacheManager: Cache) {
-            const service = new EventsService(cacheManager, options);
-            service.setGameId(options.tournamentId);
-            service.hello();
-            super(service);
-        }
-        startUp() {
-
-        }
+export function createDynamicGatewayClass(
+  path: string,
+  options: EventServiceOptions,
+): DynamicModule {
+  @WebSocketGateway({ path: '/' + path })
+  class DynamicGateway extends BaseGateway {
+    constructor(@Inject(CACHE_MANAGER) cacheManager: Cache) {
+      const service = new EventsService(cacheManager, options);
+      service.setGameId(options.tournamentId);
+      service.hello();
+      super(service);
     }
+    startUp() {}
+  }
 
-    @Module({
-        imports: [CacheModule.register(), MongooseModule.forFeature([{ name: 'TournamentRegister', schema: TournamentRegisterSchema }])],
-        providers: [DynamicGateway, EventsService],
-        exports: [DynamicGateway],
-    })
-    class DynamicGatewayModule { }
+  @Module({
+    imports: [
+      CacheModule.register(),
+      MongooseModule.forFeature([
+        { name: 'TournamentRegister', schema: TournamentRegisterSchema },
+      ]),
+    ],
+    providers: [DynamicGateway, EventsService],
+    exports: [DynamicGateway],
+  })
+  class DynamicGatewayModule {}
 
-    return {
-        module: DynamicGatewayModule,
-        providers: [DynamicGateway],
-    };
-
+  return {
+    module: DynamicGatewayModule,
+    providers: [DynamicGateway],
+  };
 }
-
 
 export async function registerDynamicSocket(): Promise<DynamicModule> {
-    // connect to mongo db
+  // connect to mongo db
 
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+  const conn = await mongoose.connect(process.env.MONGO_URI);
 
-    const TournamentRegisterModel = mongoose.model('tournamentregisters', TournamentRegisterSchema);
+  const TournamentRegisterModel = mongoose.model(
+    'tournamentregisters',
+    TournamentRegisterSchema,
+  );
 
-    const tournaments = (await TournamentRegisterModel.find());
+  const tournaments = await TournamentRegisterModel.find();
 
-    const loadedPlugins: Array<DynamicModule> = tournaments.map((x) => createDynamicGatewayClass(x.slug, {
-        tournamentId: x.liveChessId,
-        delayedMoves: x.delayMoves,
-        delayedTimeInSec: x.delayTimes
-    }));
+  const loadedPlugins: Array<DynamicModule> = tournaments.map((x) =>
+    createDynamicGatewayClass(x.slug, {
+      tournamentId: x.liveChessId,
+      delayedMoves: x.delayMoves,
+      delayedTimeInSec: x.delayTimes,
+    }),
+  );
 
-    conn.disconnect();
+  conn.disconnect();
 
-    @Module({
-        imports: [...loadedPlugins.map(plugin => plugin.module)],
-    })
-    class DynamicGatewayModule { }
-    return {
-        module: DynamicGatewayModule
-    }
-
+  @Module({
+    imports: [...loadedPlugins.map((plugin) => plugin.module)],
+  })
+  class DynamicGatewayModule {}
+  return {
+    module: DynamicGatewayModule,
+  };
 }
-

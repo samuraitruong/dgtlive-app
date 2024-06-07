@@ -9,20 +9,22 @@ import { LiveChessTournament } from 'library';
 @Injectable()
 export class DataService {
   constructor(
-    @InjectModel(TournamentRegister.name) private tournamentRegisterModel: Model<TournamentRegister>) { }
+    @InjectModel(TournamentRegister.name)
+    private tournamentRegisterModel: Model<TournamentRegister>,
+  ) {}
   async create(createDatumDto: CreateDatumDto) {
     const livechess = new LiveChessTournament(createDatumDto.liveChessId);
-    var tournament = await livechess.fetchTournament();
+    const tournament = await livechess.fetchTournament();
     createDatumDto.name = tournament.name;
 
-    this.tournamentRegisterModel.create({ ...createDatumDto })
+    this.tournamentRegisterModel.create({ ...createDatumDto });
     return {
-      ...createDatumDto
-    }
+      ...createDatumDto,
+    };
   }
 
   async findAll() {
-    return (await this.tournamentRegisterModel.find()).map(x => x.toObject())
+    return (await this.tournamentRegisterModel.find()).map((x) => x.toObject());
   }
 
   findOne(id: string) {
@@ -30,11 +32,10 @@ export class DataService {
   }
 
   async update(id: string, updateDatumDto: UpdateDatumDto) {
-
     const livechess = new LiveChessTournament(updateDatumDto.liveChessId);
-    var tournament = await livechess.fetchTournament();
+    const tournament = await livechess.fetchTournament();
     updateDatumDto.name = tournament.name;
-    await this.tournamentRegisterModel.updateOne({ _id: id }, updateDatumDto)
+    await this.tournamentRegisterModel.updateOne({ _id: id }, updateDatumDto);
     const exist = (await this.tournamentRegisterModel.findById(id)).toObject();
     return exist;
   }

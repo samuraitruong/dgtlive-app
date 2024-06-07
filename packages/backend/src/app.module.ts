@@ -14,7 +14,6 @@ import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
-
     CacheModule.register(),
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(process.env.MONGO_URI),

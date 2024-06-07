@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { DataService } from './data.service';
 import { CreateDatumDto } from './dto/create-datum.dto';
 import { UpdateDatumDto } from './dto/update-datum.dto';
@@ -7,7 +16,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 @Controller('data')
 @UseGuards(AuthGuard)
 export class DataController {
-  constructor(private readonly dataService: DataService) { }
+  constructor(private readonly dataService: DataService) {}
 
   @Post()
   create(@Body() createDatumDto: CreateDatumDto) {
@@ -17,8 +26,7 @@ export class DataController {
   @Get()
   async findAll() {
     const allData = await this.dataService.findAll();
-    return allData.map(x => ({ ...x, id: x._id, _id: undefined }))
-
+    return allData.map((x) => ({ ...x, id: x._id, _id: undefined }));
   }
 
   @Get(':id')

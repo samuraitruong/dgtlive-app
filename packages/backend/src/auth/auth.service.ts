@@ -16,7 +16,7 @@ export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async registerUser(
     username: string,

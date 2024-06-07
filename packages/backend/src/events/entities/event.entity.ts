@@ -1,2 +1,1 @@
-export class Event { }
-
+export class Event {}
