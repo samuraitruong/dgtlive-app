@@ -33,7 +33,7 @@ export function useWebSocket(url: string, path = '/') {
                 setTournament(data);
             });
 
-            socketInstance.io.on("error", (error) => {
+            socketInstance.on("error", (error) => {
                 // ...
                 console.error(error)
             });
