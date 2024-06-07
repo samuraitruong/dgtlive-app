@@ -24,8 +24,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 'Authorization': `Bearer ${token}`
             }
         })
-            .then(res => res.json())
-            .then(data => setUser(data))
+            .then(res => {
+                console.log("res", res)
+                if (res.status !== 200) {
+                    throw new Error('Unauthorized')
+                }
+                return res.json()
+            })
+            .then(data => {
+                setLoading(false)
+                setUser({ ...data, token })
+            })
+            .catch(e => {
+                setLoading(false)
+                setUser(null);
+            })
     }
 
     useEffect(() => {
@@ -34,24 +47,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const token = localStorage.getItem('token');
         if (token) {
             // Fetch user data with the token
-            fetch(`${API_URL}/api/auth/me`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-                .then(res => res.json())
-                .then(data => {
-                    setUser(data);
-                    setLoading(false)
-                })
-                .catch(() => {
-                    setLoading(false)
-                    // Handle errors, for example, remove invalid token
-                    localStorage.removeItem('token');
-                    // router.push('/login');
-                });
+            verifyToken(token)
         } else {
             // router.push('/login');
+            setUser(null)
             setLoading(false);
         }
     }, [router]);

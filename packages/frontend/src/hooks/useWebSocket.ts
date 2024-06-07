@@ -26,14 +26,19 @@ export function useWebSocket(url: string, path = '/') {
     }, [socketInstance]);
 
     useEffect(() => {
-        if (socket) {
-            socket.connect();
-            socket.on("hello", (data: any) => {
+        if (socketInstance) {
+            socketInstance.connect();
+            socketInstance.on("hello", (data: any) => {
                 setLoading(false);
                 setTournament(data);
             });
 
-            socket.on("message", ({ event, data }: { event: string, data: any }) => {
+            socketInstance.io.on("error", (error) => {
+                // ...
+                console.error(error)
+            });
+
+            socketInstance.on("message", ({ event, data }: { event: string, data: any }) => {
                 if (event === "game") {
                     const key = `${data.round}_${data.game}`;
                     setGames((prevGame) => {
@@ -51,14 +56,18 @@ export function useWebSocket(url: string, path = '/') {
                 }
             });
 
-            socket.on("game", (data: GameEventResponse) => {
+            socketInstance.on("game", (data: GameEventResponse) => {
                 setLoading(false);
                 const key = `${data.round}_${data.game}`;
                 setGames((prevGames) => ({ ...prevGames, [key]: data }));
             });
 
-            socket.on('connect', () => {
+            socketInstance.on('connect', () => {
                 setReadyState(true);
+            });
+            socketInstance.on('disconect', () => {
+                setReadyState(false);
+                setLoading(false)
             });
         }
 

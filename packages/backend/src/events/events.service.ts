@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import configuration from 'src/config/configuration';
-
+import * as moment from 'moment'
 import {
   LiveChessTournament,
   GameEventResponse,
@@ -9,14 +9,14 @@ import {
 } from 'library';
 import { LoadGameDto } from './dto/game-event.dto';
 import { Cache } from '@nestjs/cache-manager';
+import { EventServiceOptions } from './dto/event-option';
 
-@Injectable()
 export class EventsService {
   private tournamentId: string;
 
   readonly game: LiveChessTournament;
 
-  constructor(private cacheManager: Cache) {
+  constructor(private cacheManager: Cache, private options: EventServiceOptions) {
     this.tournamentId = configuration().game.juniorTournamentId;
     this.game = new LiveChessTournament(
       configuration().game.juniorTournamentId,
@@ -72,10 +72,19 @@ export class EventsService {
         arrow: [x[3], x[4]],
       })),
     };
-    const delayMoves = configuration().game.delayMoves;
-    if (live && t.moves.length > delayMoves) {
+    const delayMoves = this.options.delayedMoves;
+    if (live && t.moves.length > delayMoves && delayMoves > 0) {
       t.moves = t.moves.slice(0, t.moves.length - delayMoves);
       t.delayedMoves = delayMoves;
+    }
+    // delay by time
+    const epochNowInMs = moment().unix().valueOf() * 1000
+    const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
+
+    if (live && cutoffTime < epochNowInMs) {
+      t.moves = t.moves.filter(x => x.movedAt <= cutoffTime);
+      t.delayedMoves = delayMoves;
+      t.pointInTime = cutoffTime;
     }
 
     if (!live) {

@@ -35,6 +35,7 @@ export interface GameEventResponse {
     pair: Pair,
     isLive: boolean;
     delayedMoves?: number;
+    pointInTime?: number;
     round: number,
     game: number;
     moves: Move[];

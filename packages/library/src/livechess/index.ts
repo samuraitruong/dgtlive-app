@@ -30,10 +30,8 @@ export class LiveChessTournament {
     public async fetchTournament() {
         const lookupUrl = "https://lookup.livechesscloud.com/meta/" + this.tournamentId
         const { data: lookupData } = await axiosInstance.get<LookupResultData>(lookupUrl);
-        console.log("lookupUrl", lookupUrl)
         this.lookupResult = lookupData;
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/tournament.json`
-        console.log("url", url)
         const { data: tournamentData } = await axiosInstance.get<TournamentData>(url);
         this.tournament = tournamentData;
         return tournamentData;
@@ -41,7 +39,6 @@ export class LiveChessTournament {
 
     public async fetchRound(round: number) {
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/index.json`
-        console.log("round", url)
         const { data } = await axiosInstance.get<RoundPairingData>(url);
         return data;
     }
@@ -59,11 +56,17 @@ export class LiveChessTournament {
         const chess = new Chess()
         const moves = [];
         for (const move of data.moves) {
-            const [m, time] = move.split(' ')
-            const m1 = chess.move(m);
-            moves.push([
-                m, chess.fen(), time, m1.from, m1.to
-            ])
+            try {
+                const [m, time] = move.split(' ')
+                const m1 = chess.move(m);
+                moves.push([
+                    m, chess.fen(), time, m1.from, m1.to
+                ])
+            }
+            catch (err) {
+                console.log(err)
+                break;
+            }
         }
         return { moves, live: data.live, startedAt: data.firstMove };
     }

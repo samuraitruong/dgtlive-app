@@ -56,7 +56,10 @@ function Admin() {
         <GameIdChanner type="junior" title="Set Junior Tournament ID"></GameIdChanner>
 
         <GameIdChanner type="senior" title="Set Senior Tournament ID"></GameIdChanner>
-        <Link href='/' className="bg-blue-500 hover:bg-blue-700 mt-5 text-white font-bold py-2 px-4 rounded flex items-center">Cancel</Link>
+        <div className="flex justify-between mt-5">
+          <Link href='/admin/manage' className="bg-blue-500 hover:bg-blue-700  mr-5 text-white font-bold py-2 px-4 rounded flex items-center">Manage</Link>
+          <Link href='/' className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded flex items-center">Cancel</Link>
+        </div>
       </div>
     </main>
   );

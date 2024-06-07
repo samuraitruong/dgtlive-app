@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
@@ -9,6 +9,8 @@ import { join } from 'path';
 import { CacheModule } from '@nestjs/cache-manager';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
+import { FallbackMiddleware } from './middleware/fallback.middleware';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     EventsModule,
     AuthModule,
+    DataModule,
   ],
   controllers: [AppController],
   providers: [
@@ -35,4 +38,10 @@ import { AuthModule } from './auth/auth.module';
     },
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(FallbackMiddleware)
+      .forRoutes({ path: 'tournament/*', method: RequestMethod.ALL });
+  }
+}

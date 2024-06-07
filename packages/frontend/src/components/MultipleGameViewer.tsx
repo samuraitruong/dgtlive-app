@@ -15,7 +15,7 @@ function MiniBoard({ game }: { game: GameEventResponse }) {
     const time = useMemo(() => {
         const currentMove = game.moves[game.moves.length - 1];
         const previousMove = game.moves[game.moves.length - 2];
-        if (game.moves.length % 2 === 0) {
+        if (game.moves.length % 2 === 1) {
             return { black: previousMove?.time || -1, white: currentMove?.time || 0 }
         }
         return { white: previousMove?.time || -1, black: currentMove?.time || 0 }

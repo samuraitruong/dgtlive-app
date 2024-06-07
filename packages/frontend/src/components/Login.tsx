@@ -31,8 +31,6 @@ const Login: React.FC<{ history?: any }> = ({ history }) => {
       // Store token in local storage
       localStorage.setItem('token', token);
       verifyToken(token);
-      // Redirect to some other page upon successful login
-      //history.push('/');
     } catch (error) {
       console.error('Login failed:', error);
       setErrorMessage('Unable to login, Please check uername & password and try again.')

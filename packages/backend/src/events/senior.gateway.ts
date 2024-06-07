@@ -8,7 +8,11 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 @WebSocketGateway({ path: '/senior' })
 export class SeniorEventsGateway extends BaseGateway {
   constructor(@Inject(CACHE_MANAGER) cacheManager: Cache) {
-    const service = new EventsService(cacheManager);
+    var config = configuration();
+    const service = new EventsService(cacheManager, {
+      delayedMoves: config.game.delayMoves,
+      delayedTimeInSec: config.game.delayTimeInSeconds
+    });
     service.setGameId(configuration().game.seniorTournamentId);
     service.hello();
     super(service);
