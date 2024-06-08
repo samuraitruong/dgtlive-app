@@ -10,15 +10,20 @@ export class CustomExceptionFilter implements ExceptionFilter {
         const response = ctx.getResponse<Response>();
         const { url } = ctx.getRequest();
         // Serve your static file here
-        const staticFilePath = path.join(__dirname, '../../..', 'frontend/out/tournament/default.html');
-        // Check if the file exists
-        if (url.includes('/tournament') && fs.existsSync(staticFilePath)) {
-            response.sendFile(staticFilePath);
-        } else {
-            // If file doesn't exist, send a simple message
-            response.status(404).json({
-                message: 'Page Not Found',
-            });
-        }
+        const tournamentFallbackFile = path.join(__dirname, '../../..', 'frontend/out/tournament/default.html');
+        const rootFrontEnd = path.join(__dirname, '../../..', 'frontend/out');
+        const htmlPage = rootFrontEnd + url + ".html"
+        if (fs.existsSync(htmlPage)) {
+            response.sendFile(tournamentFallbackFile);
+        } else
+            // Check if the file exists
+            if (url.includes('/tournament') && fs.existsSync(tournamentFallbackFile)) {
+                response.sendFile(tournamentFallbackFile);
+            } else {
+                // If file doesn't exist, send a simple message
+                response.status(404).json({
+                    message: 'Page Not Found',
+                });
+            }
     }
 }
