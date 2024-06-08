@@ -21,7 +21,6 @@ const chunkArray = (arr: any[], size: number) => {
 
 function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: MoveListProps) {
     const pairs = chunkArray(moves, 2)
-    console.log("delayedMoves", delayedMoves)
     const formatTime = (m: Move) => {
         if (m?.movedAt) {
             return moment(m.movedAt).format()
