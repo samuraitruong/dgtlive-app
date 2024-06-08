@@ -21,7 +21,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       'frontend/out/tournament/default.html',
     );
     const rootFrontEnd = path.join(__dirname, '../../..', 'frontend/out');
-    const htmlPage = rootFrontEnd + url + '.html';
+    const htmlPage = rootFrontEnd + url.trimEnd('/') + '.html';
     if (fs.existsSync(htmlPage)) {
       response.sendFile(tournamentFallbackFile);
     }

@@ -77,21 +77,22 @@ export class EventsService {
         arrow: [x[3], x[4]],
       })),
     };
-    const delayMoves = this.options.delayedMoves;
-    if (live && t.moves.length > delayMoves && delayMoves > 0) {
-      t.moves = t.moves.slice(0, t.moves.length - delayMoves);
-      t.delayedMoves = delayMoves;
-    }
-    // delay by time
-    const epochNowInMs = moment().unix().valueOf() * 1000;
-    const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
+    if (t.moves.length > 2) {
+      const delayMoves = this.options.delayedMoves;
+      if (live && t.moves.length > delayMoves && delayMoves > 0) {
+        t.moves = t.moves.slice(0, t.moves.length - delayMoves);
+        t.delayedMoves = delayMoves;
+      }
+      // delay by time
+      const epochNowInMs = moment().unix().valueOf() * 1000;
+      const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
 
-    if (live && cutoffTime < epochNowInMs) {
-      t.moves = t.moves.filter((x) => x.movedAt <= cutoffTime);
-      t.delayedMoves = delayMoves;
-      t.pointInTime = cutoffTime;
+      if (live && cutoffTime < epochNowInMs) {
+        t.moves = t.moves.filter((x) => x.movedAt <= cutoffTime);
+        t.delayedMoves = delayMoves;
+        t.pointInTime = cutoffTime;
+      }
     }
-
     if (!live) {
       this.cacheManager.set(
         cacheKey,
