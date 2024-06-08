@@ -43,9 +43,10 @@ export class BaseGateway
       const game = liveGame.data;
       const data = await this.eventsService.loadGame(game);
       game.isLive = data.isLive;
-      const newHash = hashObject(game);
+      const newHash = hashObject(data);
       liveGame.lastFetch = new Date().getTime();
       if (liveGame.hash != newHash) {
+        console.log('broadcasing game to client');
         this.broadcast('game', data);
         liveGame.hash = newHash;
       }

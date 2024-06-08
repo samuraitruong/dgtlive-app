@@ -22,6 +22,9 @@ function MiniBoard({ game }: { game: GameEventResponse }) {
     }, [game])
 
     useEffect(() => {
+        setCurrentIndex(game.moves.length - 1)
+    }, [game])
+    useEffect(() => {
         if (parentRef.current) {
             setParentWidth(parentRef.current.offsetWidth);
         }
@@ -40,7 +43,6 @@ function MiniBoard({ game }: { game: GameEventResponse }) {
     )
 }
 export function MultipleGameViewer({ gameIds, games }: MultipleGameViewerProps) {
-
     const displayGames = useMemo(() => {
         return gameIds.map(x => games[x]).filter(Boolean)
     }, [games, gameIds])

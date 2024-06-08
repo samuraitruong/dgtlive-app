@@ -48,18 +48,21 @@ export class EventsService {
       game.game,
     );
     let previousMovedAt = startedAt;
+    let totalTIme = 0;
     const extractTime = (t: string) => {
       if (!t) {
         return { time: 0, moveTime: 0 };
       }
       const [time, spent] = t.split('+');
 
-      previousMovedAt = previousMovedAt + (+spent || 0) * 1000;
-      return {
+      const item = {
         time: +time,
         moveTime: +spent,
         movedAt: previousMovedAt,
       };
+      previousMovedAt = previousMovedAt + (+spent || 0) * 1000;
+      totalTIme += +spent || 0;
+      return item;
     };
     const cacheData = (await this.cacheManager.get(
       this.tournamentId,
@@ -77,7 +80,12 @@ export class EventsService {
         arrow: [x[3], x[4]],
       })),
     };
-    if (t.moves.length > 2) {
+    console.log(
+      'Total time spend until now',
+      totalTIme,
+      previousMovedAt - startedAt,
+    );
+    if (t.moves.length > 4) {
       const delayMoves = this.options.delayedMoves;
       if (live && t.moves.length > delayMoves && delayMoves > 0) {
         t.moves = t.moves.slice(0, t.moves.length - delayMoves);
@@ -86,12 +94,26 @@ export class EventsService {
       // delay by time
       const epochNowInMs = moment().unix().valueOf() * 1000;
       const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
-
+      console.log(
+        'before cut off',
+        t.moves.length,
+        epochNowInMs,
+        this.options.delayedTimeInSec,
+      );
       if (live && cutoffTime < epochNowInMs) {
+        const debug = t.moves.filter((x) => x.movedAt > cutoffTime);
+        console.log(
+          'filtered',
+          debug.map((x) => ({
+            at: moment(x.movedAt).format(),
+            diff: epochNowInMs - x.movedAt,
+          })),
+        );
         t.moves = t.moves.filter((x) => x.movedAt <= cutoffTime);
-        t.delayedMoves = delayMoves;
+        t.delayedMoves = debug.length;
         t.pointInTime = cutoffTime;
       }
+      console.log('actual move display', t.moves.length);
     }
     if (!live) {
       this.cacheManager.set(

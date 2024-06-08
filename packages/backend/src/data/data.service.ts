@@ -13,7 +13,7 @@ export class DataService {
     private tournamentRegisterModel: Model<TournamentRegister>,
   ) {}
   async create(createDatumDto: CreateDatumDto) {
-    const findExist = this.tournamentRegisterModel.findOne({
+    const findExist = await this.tournamentRegisterModel.findOne({
       slug: createDatumDto.slug,
     });
     if (findExist != null) {

@@ -10,6 +10,6 @@ export default function Board({ move, boardWidth, direction = 'white' }: { move:
             showBoardNotation={true}
             areArrowsAllowed={true}
             arePiecesDraggable={false}
-            customArrows={[move.arrow] as any} />
+            customArrows={[move?.arrow] as any} />
     )
 }

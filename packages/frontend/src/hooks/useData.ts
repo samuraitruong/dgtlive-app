@@ -40,7 +40,6 @@ const useData = (url: string): UseDataHook => {
     const addItem = useCallback(async (item: RowData) => {
         setIsLoading(true)
         setError(undefined);
-        console.log("item to update", item)
         const updateUrl = `${url}/api/data`
         const res = await fetch(updateUrl, { method: 'POST', headers: { authorization: `Bearer ${user.token}`, "Content-Type": "application/json", }, body: JSON.stringify(item) });
         setIsLoading(false)

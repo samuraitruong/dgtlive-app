@@ -5,7 +5,6 @@ import Login from '@/components/Login';
 function withAuth(WrappedComponent: any) {
     const AuthWrapper = (props: any) => {
         const { user, loading } = useAuth();
-        console.log(user, loading)
         if (loading) {
             return <Loading />
         }
