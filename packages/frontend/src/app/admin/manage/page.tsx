@@ -7,14 +7,14 @@ import Link from 'next/link'
 import withAuth from "@/auth/withAuth";
 import { useAuth } from "@/auth/authContext";
 import useData, { RowData } from "@/hooks/useData";
-import { BACKEND_URL } from "@/config";
+import { API_URL } from "@/config";
 import Form from "./form";
 
 
 
 function ManageAdmin() {
   const { user } = useAuth();
-  const { data, updateItem, addItem } = useData(BACKEND_URL);
+  const { data, updateItem, addItem } = useData(API_URL);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState<RowData | undefined>();
 

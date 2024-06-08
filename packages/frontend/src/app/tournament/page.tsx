@@ -1,11 +1,11 @@
 "use client";
 import Loading from "@/components/Loading";
-import { BACKEND_URL } from "@/config";
+import { API_URL } from "@/config";
 import usePublicData from "@/hooks/usePublicData";
 import Link from "next/link";
 
 export default function TournamentList() {
-    const { data, loading, error, refetch } = usePublicData(BACKEND_URL);
+    const { data, loading, error, refetch } = usePublicData(API_URL);
 
 
     if (loading) return <Loading />
