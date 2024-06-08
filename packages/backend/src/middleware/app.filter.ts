@@ -22,9 +22,10 @@ export class CustomExceptionFilter implements ExceptionFilter {
     );
     const rootFrontEnd = path.join(__dirname, '../../..', 'frontend/out');
     const htmlPage = rootFrontEnd + url.trimEnd('/') + '.html';
+
+    console.log('htmlPage', htmlPage);
     if (fs.existsSync(htmlPage)) {
       response.sendFile(tournamentFallbackFile);
-      return;
     }
     // Check if the file exists
     else if (
