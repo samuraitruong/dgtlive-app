@@ -1,7 +1,5 @@
 'use client';
-import { ChangeEvent, useEffect, useState } from "react";
-import { useWebSocket } from "@/hooks/useWebSocket";
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
 import Loading from "@/components/Loading";
 import Link from 'next/link'
 import withAuth from "@/auth/withAuth";
@@ -14,7 +12,7 @@ import Form from "./form";
 
 function ManageAdmin() {
   const { user } = useAuth();
-  const { data, updateItem, addItem, error } = useData(API_URL);
+  const { data, updateItem, addItem, error, deleteItem, isLoading } = useData(API_URL);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState<RowData | undefined>();
 
@@ -42,17 +40,24 @@ function ManageAdmin() {
         addItem({ ...data } as any);
     }
   }
-
-
+  const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
+    deleteItem(id);
+    e.stopPropagation();
+  }
+  if (isLoading) {
+    return <Loading />
+  }
   return (
     <main className="flex min-h-screen flex-col items-center  bg-gray-100 text-black p-3">
       <h2 className="p-10 text-6xl">Welcome {user.username}</h2>
-      <button
-        className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-        onClick={() => handleOpenModal()}
-      >
-        Add New
-      </button>
+      <div className="w-full text-right">
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded mb-4 float-right"
+          onClick={() => handleOpenModal()}
+        >
+          Add New
+        </button>
+      </div>
       <table className="min-w-full bg-white border">
         <thead>
           <tr>
@@ -61,12 +66,12 @@ function ManageAdmin() {
             <th className="py-2 px-4 border-b">Live Chess ID</th>
             <th className="py-2 px-4 border-b">Delay Moves</th>
             <th className="py-2 px-4 border-b">Delay Times</th>
-            <td></td>
+            <th className="py-2 px-4 border-b">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {data.map(row => (
-            <tr key={row.id} className="cursor-pointer" onClick={() => handleOpenModal(row)}>
+            <tr key={row.id} className="cursor-pointer">
               <td className="py-2 px-4 border-b">{row.name}</td>
               <td className="py-2 px-4 border-b">{row.slug}</td>
               <td className="py-2 px-4 border-b">{row.liveChessId}</td>
@@ -77,6 +82,14 @@ function ManageAdmin() {
                 {row.delayTimes}
               </td>
               <td className="py-2 px-4 border-b">
+              </td>
+              <td className="py-2 px-4 border-b">
+                <button className="ml-5 round-sm bg-green-400 p-1 z-50 text-white rounded-sm hover:text-green-700" onClick={() => handleOpenModal(row)}>Edit</button>
+
+
+                <button className="ml-5 round-sm bg-red-400 p-1 z-50 text-white rounded-sm hover:text-red-700" onClick={(e) => handleDeleteClick(e, row.id)}>Delete</button>
+
+                <Link className="ml-5 round-sm bg-blue-400 p-1 z-50 text-white rounded-sm hover:text-red-700" href={'/tournament/' + row.slug}>Open</Link>
               </td>
             </tr>
           ))}

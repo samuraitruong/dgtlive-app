@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateDatumDto } from './dto/create-datum.dto';
 import { UpdateDatumDto } from './dto/update-datum.dto';
 import { TournamentRegister } from '../db/tournament';
@@ -13,6 +13,12 @@ export class DataService {
     private tournamentRegisterModel: Model<TournamentRegister>,
   ) {}
   async create(createDatumDto: CreateDatumDto) {
+    const findExist = this.tournamentRegisterModel.findOne({
+      slug: createDatumDto.slug,
+    });
+    if (findExist != null) {
+      throw new BadRequestException('An item with same slug already existing');
+    }
     const livechess = new LiveChessTournament(createDatumDto.liveChessId);
     const tournament = await livechess.fetchTournament();
     createDatumDto.name = tournament.name;
@@ -27,8 +33,8 @@ export class DataService {
     return (await this.tournamentRegisterModel.find()).map((x) => x.toObject());
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} datum`;
+  async findOne(id: string) {
+    return (await this.tournamentRegisterModel.findById(id)).toObject();
   }
 
   async update(id: string, updateDatumDto: UpdateDatumDto) {
@@ -40,7 +46,10 @@ export class DataService {
     return exist;
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} datum`;
+  async remove(id: string) {
+    await this.tournamentRegisterModel.deleteOne({ _id: id });
+    return {
+      succes: true,
+    };
   }
 }

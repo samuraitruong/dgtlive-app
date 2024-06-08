@@ -94,8 +94,25 @@ const useData = (url: string): UseDataHook => {
     }, []);
 
     // Delete item
-    const deleteItem = useCallback((id: string) => {
-        setData((prevData) => prevData.filter((item) => item.id && item.id !== id));
+    const deleteItem = useCallback(async (id: string) => {
+
+        setIsLoading(true)
+        setError(undefined);
+        const updateUrl = `${url}/api/data/${id}`
+        const res = await fetch(updateUrl, {
+            method: 'DELETE', headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${user.token}`
+            }
+        });
+        setIsLoading(false)
+        if (res.ok) {
+            loadData();
+        }
+        else {
+            setError('Unable to update data')
+        }
+
     }, []);
 
     return {
