@@ -73,7 +73,6 @@ const useData = (url: string): UseDataHook => {
         }
     }, []);
 
-
     // Update item
     const updateItem = useCallback(async (item: RowData) => {
         setIsLoading(true)
