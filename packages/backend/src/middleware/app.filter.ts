@@ -24,6 +24,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const htmlPage = rootFrontEnd + url.trimEnd('/') + '.html';
     if (fs.existsSync(htmlPage)) {
       response.sendFile(tournamentFallbackFile);
+      return;
     }
     // Check if the file exists
     else if (
