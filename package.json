@@ -8,8 +8,7 @@
     "start:dev": "pnpm --parallel --stream -r run start:dev",
     "build": "pnpm --parallel --stream -r run build",
     "build-publish": "pnpm --parallel --stream -r run build-publish",
-    "lint": "pnpm --parallel --stream -r run lint",
-    "prepare": "husky install"
+    "lint": "pnpm --parallel --stream -r run lint"
   },
   "keywords": [],
   "author": "",
