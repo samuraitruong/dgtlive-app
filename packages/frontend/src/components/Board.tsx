@@ -2,6 +2,7 @@ import { Chessboard } from "react-chessboard";
 import { Move } from "library";
 
 export default function Board({ move, boardWidth, direction = 'white' }: { move: Move, boardWidth: number, direction?: 'black' | 'white' }) {
+
     return (
         <Chessboard
             boardOrientation={direction}
@@ -10,6 +11,6 @@ export default function Board({ move, boardWidth, direction = 'white' }: { move:
             showBoardNotation={true}
             areArrowsAllowed={true}
             arePiecesDraggable={false}
-            customArrows={[move?.arrow] as any} />
+            customArrows={move ? [move.arrow] as any : undefined} />
     )
 }

@@ -55,13 +55,14 @@ export class EventsService {
       }
       const [time, spent] = t.split('+');
 
+      previousMovedAt = previousMovedAt + (+spent || 0) * 1000;
+      totalTIme += +spent || 0;
+
       const item = {
         time: +time,
         moveTime: +spent,
         movedAt: previousMovedAt,
       };
-      previousMovedAt = previousMovedAt + (+spent || 0) * 1000;
-      totalTIme += +spent || 0;
       return item;
     };
     const cacheData = (await this.cacheManager.get(
