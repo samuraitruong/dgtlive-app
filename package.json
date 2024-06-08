@@ -8,7 +8,8 @@
     "start:dev": "pnpm --parallel --stream -r run start:dev",
     "build": "pnpm --parallel --stream -r run build",
     "build-publish": "pnpm --parallel --stream -r run build-publish",
-    "lint": "pnpm --parallel --stream -r run lint"
+    "lint": "pnpm --parallel --stream -r run lint",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
@@ -17,8 +18,5 @@
     "husky": "^9.0.11",
     "nodemon": "^3.1.0",
     "lint-staged": "^15.2.4"
-  },
-  "lint-staged": {
-    "*": "npm run lint"
   }
 }
