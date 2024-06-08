@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 
 interface FormProps {
     data?: RowData
+    errorMessage?: string;
     onEvent: (ev: 'close' | 'save', data?: RowData) => void;
 }
-function Form({ data, onEvent }: FormProps) {
+function Form({ data, onEvent, errorMessage }: FormProps) {
     const [currentRow, setCurrentRow] = useState<RowData | undefined>(data);
     useEffect(() => {
         if (data != currentRow) {
@@ -77,6 +78,9 @@ function Form({ data, onEvent }: FormProps) {
                         className="w-full border px-2 py-1"
                     />
                 </div>
+                {errorMessage && <div className="p-3 bg-red-400 text-white"> {errorMessage}
+                </div>
+                }
                 <div className="flex justify-end">
                     <button
                         className="bg-gray-500 text-white px-4 py-2 rounded mr-2"

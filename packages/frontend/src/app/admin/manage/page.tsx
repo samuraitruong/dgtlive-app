@@ -14,7 +14,7 @@ import Form from "./form";
 
 function ManageAdmin() {
   const { user } = useAuth();
-  const { data, updateItem, addItem } = useData(API_URL);
+  const { data, updateItem, addItem, error } = useData(API_URL);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState<RowData | undefined>();
 
@@ -83,7 +83,7 @@ function ManageAdmin() {
         </tbody>
       </table>
 
-      {isModalOpen && <Form data={currentRow} onEvent={handleFormEvent} />}
+      {isModalOpen && <Form data={currentRow} onEvent={handleFormEvent} errorMessage={error} />}
     </main>
   );
 };

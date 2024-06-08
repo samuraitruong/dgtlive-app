@@ -36,7 +36,6 @@ export default function TournamentList() {
                     </li>
                 ))}
             </ul>
-
         </div>
     );
 }

@@ -13,7 +13,7 @@ export interface RowData {
 interface UseDataHook {
     data: RowData[];
     isLoading: boolean;
-    error: string | null;
+    error: string | undefined;
     addItem: (item: RowData) => void;
     updateItem: (item: RowData) => void;
     deleteItem: (id: string) => void;
@@ -23,7 +23,7 @@ interface UseDataHook {
 const useData = (url: string): UseDataHook => {
     const [data, setData] = useState<RowData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | undefined>();
 
     const { user } = useAuth();
     // Fetch data from API
@@ -39,6 +39,7 @@ const useData = (url: string): UseDataHook => {
     // Add item
     const addItem = useCallback(async (item: RowData) => {
         setIsLoading(true)
+        setError(undefined);
         console.log("item to update", item)
         const updateUrl = `${url}/api/data`
         const res = await fetch(updateUrl, { method: 'POST', headers: { authorization: `Bearer ${user.token}`, "Content-Type": "application/json", }, body: JSON.stringify(item) });
@@ -76,8 +77,14 @@ const useData = (url: string): UseDataHook => {
     // Update item
     const updateItem = useCallback(async (item: RowData) => {
         setIsLoading(true)
+        setError(undefined);
         const updateUrl = `${url}/api/data/${item.id}`
-        const res = await fetch(updateUrl, { method: 'PATCH', headers: { authorization: `Bearer ${user.token}` }, body: JSON.stringify(item) });
+        const res = await fetch(updateUrl, {
+            method: 'PATCH', headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${user.token}`
+            }, body: JSON.stringify(item)
+        });
         setIsLoading(false)
         if (res.ok) {
             loadData();
