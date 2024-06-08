@@ -37,8 +37,19 @@ const useData = (url: string): UseDataHook => {
     }, [url, user]);
 
     // Add item
-    const addItem = useCallback((item: RowData) => {
-        setData((prevData) => [...prevData, item]);
+    const addItem = useCallback(async (item: RowData) => {
+        setIsLoading(true)
+        console.log("item to update", item)
+        const updateUrl = `${url}/api/data`
+        const res = await fetch(updateUrl, { method: 'POST', headers: { authorization: `Bearer ${user.token}`, "Content-Type": "application/json", }, body: JSON.stringify(item) });
+        setIsLoading(false)
+        if (res.ok) {
+            loadData();
+        }
+        else {
+            console.log(await res.json())
+            setError('Unable to create data')
+        }
     }, []);
 
     const loadData = useCallback(async () => {
@@ -65,9 +76,8 @@ const useData = (url: string): UseDataHook => {
     // Update item
     const updateItem = useCallback(async (item: RowData) => {
         setIsLoading(true)
-        console.log('update', item)
         const updateUrl = `${url}/api/data/${item.id}`
-        const res = await fetch(updateUrl, { method: 'PUT', headers: { authorization: `Bearer ${user.token}` }, body: JSON.stringify(item) });
+        const res = await fetch(updateUrl, { method: 'PATCH', headers: { authorization: `Bearer ${user.token}` }, body: JSON.stringify(item) });
         setIsLoading(false)
         if (res.ok) {
             loadData();

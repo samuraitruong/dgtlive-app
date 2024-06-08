@@ -4,6 +4,7 @@ import { DataController } from './data.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { TournamentRegisterSchema } from 'src/db/tournament';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PublicDataController } from './public.controller';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     ]),
     AuthModule,
   ],
-  controllers: [DataController],
+  controllers: [DataController, PublicDataController],
   providers: [DataService],
 })
 export class DataModule {}

@@ -14,7 +14,7 @@ import Form from "./form";
 
 function ManageAdmin() {
   const { user } = useAuth();
-  const { data, updateItem } = useData(BACKEND_URL);
+  const { data, updateItem, addItem } = useData(BACKEND_URL);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState<RowData | undefined>();
 
@@ -29,28 +29,20 @@ function ManageAdmin() {
   };
 
 
-
   const handleFormEvent = (ev: 'close' | 'save', data?: RowData) => {
     if (ev === 'close') {
       handleCloseModal();
     }
     if (ev === "save") {
-      updateItem({ ...data } as any);
+      if (data?.id) {
+        // update
+        updateItem({ ...data } as any);
+      }
+      else
+        addItem({ ...data } as any);
     }
   }
 
-  const handleSave = () => {
-    if (currentRow) {
-      if (currentRow.id) {
-        // Update existing row
-        //  setRows(rows.map(row => (row.id === currentRow.id ? currentRow : row)));
-      } else {
-        // Add new row
-        // setRows([...rows, { ...currentRow, id: Math.random().toString(36).substring(7) }]);
-      }
-    }
-    handleCloseModal();
-  };
 
   return (
     <main className="flex min-h-screen flex-col items-center  bg-gray-100 text-black p-3">

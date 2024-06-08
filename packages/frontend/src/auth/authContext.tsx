@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         })
             .then(res => {
-                console.log("res", res)
                 if (res.status !== 200) {
                     throw new Error('Unauthorized')
                 }

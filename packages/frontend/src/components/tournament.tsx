@@ -9,15 +9,21 @@ import { Pair } from 'library';
 import Loading from './Loading';
 import { MultipleGameViewer } from './MultipleGameViewer';
 import { BACKEND_URL } from '@/config';
+import { useRouter, useParams } from 'next/navigation';
 
 interface TournamentProps {
     category: string
 }
 export default function Tournament({ category = 'junior' }: TournamentProps) {
-
+    const pathParmas = useParams<{ slug: string }>();
     const [socketUrl, setSocketUrl] = useState(BACKEND_URL);
-    const socketPath = useMemo(() => category, [category]);
-
+    const socketPath = useMemo(() => {
+        if (pathParmas.slug && pathParmas.slug !== category) {
+            return "/" + pathParmas.slug
+        }
+        return category
+    }, [category, pathParmas]);
+    console.log("socketPath", socketPath)
     const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)
     const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
     const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
@@ -61,7 +67,6 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
             if (p) {
                 onSelectGame((p?.index || 0) + 1, -1)
                 setSelectedRound((p.index || 0) + 1)
-                console.log(p)
             }
         }
     }, [tournament]);

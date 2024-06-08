@@ -15,8 +15,11 @@ function Form({ data, onEvent }: FormProps) {
     }, [data])
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (currentRow) {
-            const { name, value } = e.target;
-            setCurrentRow({ ...currentRow, [name]: value });
+            const { name, value, type } = e.target;
+            if (type === 'number') {
+                setCurrentRow({ ...currentRow, [name]: +value });
+            } else
+                setCurrentRow({ ...currentRow, [name]: value });
         }
     };
 

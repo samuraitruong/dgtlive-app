@@ -17,7 +17,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors(corsOptions);
   app.setGlobalPrefix('api');
-  app.useGlobalFilters(new CustomExceptionFilter())
+  app.useGlobalFilters(new CustomExceptionFilter());
 
   // const gatewayManager = app.get<GatewayManagerService>(GatewayManagerService);
   // gatewayManager.bootstrap();
