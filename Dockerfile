@@ -10,6 +10,7 @@ RUN npm run lint
 
 ENV NEXT_PUBLIC_WS_URL=/
 ENV NEXTJS_BUILD_MODE=1
+ENV NEXTJS_BUILD_API_URL=https://hbcclive.fly.dev/api/public
 RUN npm run build-publish
 
 # Stage 2: Production Stage

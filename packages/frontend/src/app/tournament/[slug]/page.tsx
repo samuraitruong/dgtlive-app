@@ -8,12 +8,12 @@ export default function Home({ params }: { params: { slug: string } }) {
   );
 }
 export async function generateStaticParams() {
-  // const posts = await fetch('https://.../posts').then((res) => res.json())
-  const tournaments = [{
-    slug: 'bitw'
-  }, {
-    slug: 'default'
-  }]
+  const apiUrl = process.env.NEXTJS_BUILD_API_URL || 'http://localhost:3001/api/public'
+  const posts = await fetch(apiUrl).then((res) => res.json())
+  const tournaments = [
+    ...posts, {
+      slug: 'default'
+    }]
   return tournaments.map((t) => ({
     slug: t.slug,
   }))
