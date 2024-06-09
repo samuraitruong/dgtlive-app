@@ -1,8 +1,9 @@
 import type { GameEventResponse, GameMap } from "library"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import Board from "./Board"
 import SmallPlayerDisplay from './SmallPlayerDisplay'
-
+import { BsFullscreen } from "react-icons/bs";
+import { AiOutlineFullscreenExit } from "react-icons/ai";
 interface MultipleGameViewerProps {
     games: GameMap,
     gameIds: string[]
@@ -28,10 +29,10 @@ function MiniBoard({ game }: { game: GameEventResponse }) {
         if (parentRef.current) {
             setParentWidth(parentRef.current.offsetWidth);
         }
-    }, []);
+    }, [parentRef.current?.offsetWidth]);
 
     return (
-        <div className="flex flex-col w-1/3 p-1" ref={parentRef}>
+        <div className="flex flex-col w-1/3 p-1 mt-5" ref={parentRef}>
             <div className="pr-3">
                 <SmallPlayerDisplay time={time} pair={game.pair} color="black" icon={false} /></div>
             <Board move={game.moves[currentIndex]} boardWidth={parentWidth - 20} ></Board>
@@ -42,19 +43,68 @@ function MiniBoard({ game }: { game: GameEventResponse }) {
 
     )
 }
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.error(`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`);
+        });
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
+
 export function MultipleGameViewer({ gameIds, games }: MultipleGameViewerProps) {
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    const handleFullscreenToggle = useCallback(() => {
+        toggleFullscreen();
+        setIsFullscreen(!isFullscreen);
+    }, [isFullscreen]);
+
     const displayGames = useMemo(() => {
         return gameIds.map(x => games[x]).filter(Boolean)
     }, [games, gameIds])
+
+    useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        return () => {
+            document.removeEventListener("fullscreenchange", handleFullscreenChange);
+        };
+    }, []);
+
+
 
     if (!games || gameIds.length == 0) {
         return <></>
     }
 
     return (
+        <div className={isFullscreen ? "fixed top-0 left-0 h-screen w-screen z-50 bg-white p-5" : ""}>
+            {isFullscreen && <>}</>}
+            <div className={"flex flex-row w-full flex-wrap pt-10"}>
+                {displayGames.map((game) => <MiniBoard game={game} key={game.game + game.round} />)}
 
-        <div className="flex flex-row w-full flex-wrap pt-10">
-            {displayGames.map((game) => <MiniBoard game={game} key={game.game + game.round} />)}
+                <div className="fixed bottom-5 right-5">
+                    {isFullscreen ?
+                        <AiOutlineFullscreenExit
+                            onClick={handleFullscreenToggle}
+                            className="text-red-500 cursor-pointer font-bold"
+                        >
+                        </AiOutlineFullscreenExit> :
+
+                        <BsFullscreen
+                            onClick={handleFullscreenToggle}
+                            className="text-green-500 cursor-pointer font-bold"
+                        >
+                        </BsFullscreen>}
+                </div>
+            </div>
         </div>
     )
 }

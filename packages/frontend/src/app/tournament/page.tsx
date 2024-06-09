@@ -12,7 +12,7 @@ export default function TournamentList() {
     if (error) return <p className="text-center text-red-500">Error: {error}</p>;
 
     return (
-        <div className="mx-auto p-10 bg-gray-400 shadow-lg min-h-screen">
+        <div className="mx-auto p-10 bg-slate-500 shadow-lg min-h-screen">
             <div className="flex justify-between">
 
                 <h1 className="text-2xl font-bold mb-4 text-center">Tournament list</h1>
