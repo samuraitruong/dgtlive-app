@@ -5,7 +5,7 @@ import consrtants from '@/model/consrtants';
 import { useEffect, useMemo, useState } from 'react';
 import Schedule from './Schedule';
 import GameViewer from './GameViewer';
-import { Pair } from 'library';
+import { GameEventResponse, Pair } from 'library';
 import Loading from './Loading';
 import { MultipleGameViewer } from './MultipleGameViewer';
 import { BACKEND_URL } from '@/config';
@@ -69,6 +69,10 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         }
     }, [tournament]);
 
+    const handleMiniGameClick = (g: GameEventResponse) => {
+        const { round, game } = g;
+        onSelectGame(round, game)
+    }
 
     if (!readyState || !tournament || loading) {
         return <Loading />
@@ -84,7 +88,7 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                     {tournament && <Schedule data={tournament.rounds} onSelect={onSelectGame} selectedRound={selectedRound} />}
                 </div>
                 <div className="md:col-span-9">
-                    {games && multipleGameId && <MultipleGameViewer games={games} gameIds={multipleGameId} title={tournament.name} />}
+                    {games && multipleGameId && <MultipleGameViewer games={games} gameIds={multipleGameId} title={tournament.name} onClick={handleMiniGameClick} />}
                     {games && selectedGame && games[selectedGame] && <GameViewer tournamentName={tournament.name} data={games[selectedGame]} pair={selectedPair as Pair} />}
                 </div>
             </div>

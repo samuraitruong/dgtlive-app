@@ -72,7 +72,7 @@ export function useWebSocket(url: string, path = '/') {
         }
 
         return () => {
-            console.log("someone disconnect me");
+            console.log("use socket hook unmounting");
             if (socket) {
                 socket.disconnect();
             }
