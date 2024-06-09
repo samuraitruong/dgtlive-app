@@ -37,7 +37,7 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
 
             {pairs.map((t: Move[], index: number) => (
                 <div key={index} className="flex w-full justify border-b-indigo-400 p-1">
-                    <div className='w-2/12'>{index + 1}.</div>
+                    <div className={`w-2/12   ${(selectedIndex == (index * 2)) || (selectedIndex == (index * 2) + 1) ? ' font-bold' : ''}`}>{index + 1}.</div>
                     <div title={formatTime(t[0])} className={"mr-4 w-5/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 ? 'font-bold' : '')} onClick={() => onSelect(index * 2)}> {t[0].san}</div>
                     <div title={formatTime(t[1])} className={"mr-4 w-5/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 + 1 ? 'font-bold' : '')} onClick={() => onSelect(index * 2 + 1)}>{t[1]?.san}</div>
                 </div>

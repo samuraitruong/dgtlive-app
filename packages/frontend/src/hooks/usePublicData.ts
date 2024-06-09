@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // Define the structure of the data you're fetching
 interface PublicData {
@@ -12,7 +12,7 @@ const usePublicData = (apiUrl: string) => {
     const [error, setError] = useState<string | null>(null);
 
     // Fetch data from the public API
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             setLoading(true);
             const response = await fetch(apiUrl + "/api/public");
@@ -26,12 +26,12 @@ const usePublicData = (apiUrl: string) => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [apiUrl, setLoading, setData, setError]);
 
     // Prefetch data on load
     useEffect(() => {
         fetchData();
-    }, [apiUrl]);
+    }, [apiUrl, fetchData]);
 
     return { data, loading, error, refetch: fetchData };
 };

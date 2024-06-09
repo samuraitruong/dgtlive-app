@@ -1,5 +1,6 @@
-export default {
-    EventNames : {
+const constants = {
+    EventNames: {
         Hello: 'hello'
     }
 }
+export default constants

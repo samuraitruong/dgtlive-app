@@ -27,30 +27,6 @@ const useData = (url: string): UseDataHook => {
 
     const { user } = useAuth();
     // Fetch data from API
-    useEffect(() => {
-        if (!user) return;
-        const fetchData = async () => {
-            await loadData();
-        };
-
-        fetchData();
-    }, [url, user]);
-
-    // Add item
-    const addItem = useCallback(async (item: RowData) => {
-        setIsLoading(true)
-        setError(undefined);
-        const updateUrl = `${url}/api/data`
-        const res = await fetch(updateUrl, { method: 'POST', headers: { authorization: `Bearer ${user.token}`, "Content-Type": "application/json", }, body: JSON.stringify(item) });
-        setIsLoading(false)
-        if (res.ok) {
-            loadData();
-        }
-        else {
-            console.log(await res.json())
-            setError('Unable to create data')
-        }
-    }, []);
 
     const loadData = useCallback(async () => {
         setIsLoading(true);
@@ -70,7 +46,25 @@ const useData = (url: string): UseDataHook => {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [url, user.token]);
+
+    // Add item
+    const addItem = useCallback(async (item: RowData) => {
+        setIsLoading(true)
+        setError(undefined);
+        const updateUrl = `${url}/api/data`
+        const res = await fetch(updateUrl, { method: 'POST', headers: { authorization: `Bearer ${user.token}`, "Content-Type": "application/json", }, body: JSON.stringify(item) });
+        setIsLoading(false)
+        if (res.ok) {
+            loadData();
+        }
+        else {
+            console.log(await res.json())
+            setError('Unable to create data')
+        }
+    }, [loadData, url, user.token]);
+
+
 
     // Update item
     const updateItem = useCallback(async (item: RowData) => {
@@ -90,7 +84,7 @@ const useData = (url: string): UseDataHook => {
         else {
             setError('Unable to update data')
         }
-    }, []);
+    }, [loadData, url, user.token]);
 
     // Delete item
     const deleteItem = useCallback(async (id: string) => {
@@ -112,7 +106,18 @@ const useData = (url: string): UseDataHook => {
             setError('Unable to update data')
         }
 
-    }, []);
+    }, [loadData, url, user.token]);
+
+
+    useEffect(() => {
+        if (!user) return;
+        const fetchData = async () => {
+            await loadData();
+        };
+
+        fetchData();
+    }, [url, user, loadData]);
+
 
     return {
         data,

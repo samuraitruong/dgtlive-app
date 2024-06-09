@@ -10,9 +10,10 @@ interface MultipleGameViewerProps {
     games: GameMap,
     gameIds: string[],
     title: string;
+
     onClick: (t: GameEventResponse) => void
 }
-function MiniBoard({ game, onClick }: { game: GameEventResponse, onClick: () => void }) {
+function MiniBoard({ game, onClick, gameCount }: { game: GameEventResponse, gameCount: number, onClick: () => void }) {
     const [currentIndex, setCurrentIndex] = useState(game.moves.length - 1)
     const parentRef = useRef<HTMLDivElement>(null);
     const [parentWidth, setParentWidth] = useState(200);
@@ -45,8 +46,9 @@ function MiniBoard({ game, onClick }: { game: GameEventResponse, onClick: () => 
         setIsHovered(false);
     };
 
+
     return (
-        <div className="flex flex-col w-1/3 p-1 mt-5 relative" ref={parentRef}
+        <div className={`flex flex-col w-1/3 p-1 mt-5 relative`} ref={parentRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -115,14 +117,14 @@ export function MultipleGameViewer({ gameIds, games, title, onClick }: MultipleG
     }
 
     return (
-        <div className={isFullscreen ? "fixed top-0 left-0 h-screen w-screen z-50 bg-white p-5" : ""}>
+        <div className={isFullscreen ? "fixed top-0 left-0 h-screen w-screen z-50 bg-white p-5 overflow-y-auto" : ""}>
             {isFullscreen &&
                 <div className='fixed top-0 left-0  w-full pt-2 pb-2 bg-slate-800 text-white'>
                     <h1 className="text-3xl font-bold text-center">{title}</h1>
                 </div>
             }
             <div className={"flex flex-row w-full flex-wrap pt-10"}>
-                {displayGames.map((game) => <MiniBoard game={game} key={game.game + game.round} onClick={() => handleMiniGameClick(game)} />)}
+                {displayGames.map((game) => <MiniBoard gameCount={gameIds.length} game={game} key={game.game + game.round} onClick={() => handleMiniGameClick(game)} />)}
 
                 <div className="fixed bottom-5 right-5">
                     {isFullscreen ?

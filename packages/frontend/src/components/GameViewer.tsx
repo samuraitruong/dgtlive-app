@@ -43,14 +43,14 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   useEffect(() => {
     if (currentIndex % 2 === 0) {
       setTime({
-        white: moves[currentIndex].time,
+        white: moves[currentIndex]?.time || -1,
         black: moves[currentIndex - 1]?.time || -1
       })
     }
     else {
       setTime({
-        white: moves[currentIndex - 1].time,
-        black: moves[currentIndex].time
+        white: moves[currentIndex - 1]?.time || -1,
+        black: moves[currentIndex]?.time || -1
       })
     }
   }, [currentIndex, moves])

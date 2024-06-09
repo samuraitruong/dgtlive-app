@@ -73,11 +73,11 @@ export function useWebSocket(url: string, path = '/') {
 
         return () => {
             console.log("use socket hook unmounting");
-            if (socket) {
-                socket.disconnect();
+            if (socketInstance) {
+                socketInstance.disconnect();
             }
         };
-    }, [socket]);
+    }, [socketInstance]);
 
     return {
         loading,

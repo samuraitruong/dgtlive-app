@@ -2,7 +2,7 @@
 
 import { useWebSocket } from '@/hooks/useWebSocket';
 import consrtants from '@/model/consrtants';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Schedule from './Schedule';
 import GameViewer from './GameViewer';
 import { GameEventResponse, Pair } from 'library';
@@ -29,7 +29,8 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
     const [selectedGame, setSelectedGame] = useState<string>();
     const [selectedRound, setSelectedRound] = useState<number>(0);
     const [selectedPair, setSelectedPair] = useState<Pair>();
-    const onSelectGame = (round: number, game: number) => {
+    const onSelectGame = useCallback((round: number, game: number) => {
+
         if (game === -1) {
             setSelectedGame(undefined)
             const roundPairs = tournament?.rounds[round - 1];
@@ -48,14 +49,14 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         const pair = tournament?.rounds[round - 1].pairs[game - 1]
         setSelectedPair(pair)
         setSelectedRound(round)
-    }
+    }, [sendMessage, tournament?.rounds]);
 
     useEffect(() => {
 
         if (readyState && !tournament) {
             sendMessage(consrtants.EventNames.Hello, {})
         }
-    }, [readyState]);
+    }, [readyState, sendMessage, tournament]);
 
 
     useEffect(() => {
@@ -67,7 +68,7 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                 setSelectedRound((p.index || 0) + 1)
             }
         }
-    }, [tournament]);
+    }, [tournament, multipleGameId?.length, onSelectGame, selectedGame]);
 
     const handleMiniGameClick = (g: GameEventResponse) => {
         const { round, game } = g;

@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const useKeyPress = (targetKey: string, callback: () => void) => {
     const [keyPressed, setKeyPressed] = useState(false);
 
-    const downHandler = ({ key }: any) => {
+    const downHandler = useCallback(({ key }: any) => {
         if (key === targetKey) {
             setKeyPressed(true);
             callback()
         }
-    };
+    }, [setKeyPressed, callback, targetKey]);
 
     // const upHandler = ({ key }: any) => {
     //     if (key === targetKey) {
