@@ -6,7 +6,8 @@ import { BsFullscreen } from "react-icons/bs";
 import { AiOutlineFullscreenExit } from "react-icons/ai";
 interface MultipleGameViewerProps {
     games: GameMap,
-    gameIds: string[]
+    gameIds: string[],
+    title: string;
 }
 function MiniBoard({ game }: { game: GameEventResponse }) {
     const [currentIndex, setCurrentIndex] = useState(game.moves.length - 1)
@@ -56,7 +57,7 @@ function toggleFullscreen() {
     }
 }
 
-export function MultipleGameViewer({ gameIds, games }: MultipleGameViewerProps) {
+export function MultipleGameViewer({ gameIds, games, title }: MultipleGameViewerProps) {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const handleFullscreenToggle = useCallback(() => {
@@ -86,7 +87,7 @@ export function MultipleGameViewer({ gameIds, games }: MultipleGameViewerProps) 
 
     return (
         <div className={isFullscreen ? "fixed top-0 left-0 h-screen w-screen z-50 bg-white p-5" : ""}>
-            {isFullscreen && <>}</>}
+            {isFullscreen && <div className="text-3xl font-bold">{title}</div>}
             <div className={"flex flex-row w-full flex-wrap pt-10"}>
                 {displayGames.map((game) => <MiniBoard game={game} key={game.game + game.round} />)}
 
