@@ -74,7 +74,7 @@ export class EventsService {
       this.tournamentId,
     )) as Tournament;
     // if cache not found, then need to get data again
-    if (cacheData == null) {
+    if (cacheData === null || cacheData === undefined) {
       cacheData = await this.hello();
     }
     const pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
