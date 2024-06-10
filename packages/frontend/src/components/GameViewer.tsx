@@ -25,23 +25,26 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   const [orientation, setOrientation] = useState<BoardOrientation>('white')
 
   const onBoardOrientationChanged = (d: BoardOrientation) => {
-    setOrientation(d)
+    console.log(d, orientation)
+    setOrientation((prev) => prev === 'white' ? 'black' : 'white')
   }
 
-  const handlePrevMove = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+  const handleNavigateStep = (step: number) => {
+    console.log(step)
+    let nextStep = currentIndex + step;
+    if (step == Number.MIN_VALUE) {
+      nextStep = 0;
     }
+
+    if (step == Number.MAX_VALUE) {
+      nextStep = moves.length - 1;
+    }
+    if (nextStep >= 0 && nextStep < moves.length)
+      setCurrentIndex(nextStep);
   };
 
-  const handleNextMove = () => {
-    if (currentIndex < moves.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  useKeyPress('ArrowLeft', handlePrevMove)
-  useKeyPress('ArrowRight', handleNextMove)
+  useKeyPress('ArrowLeft', () => handleNavigateStep(-1))
+  useKeyPress('ArrowRight', () => handleNavigateStep(1))
   useEffect(() => {
     if (currentIndex % 2 === 0) {
       setTime({
@@ -74,11 +77,13 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
     <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen bg-slate-200 z-100 text-black' : ''}>
       <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'}>
         {fullscreen && <div className='flex p-10 items-center justify-center align-middle h-100 flex-col relative'>
-          <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}1</h2>
+          <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}</h2>
 
           <BigPlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
           <div className="flex items-center justify-center mt-20 mb-20 size-10 text-6xl font-semibold">vs</div>
           <BigPlayerDisplay pair={pair} time={time} color={orientation} reverse={true} />
+
+          <div className='p-5 text-6xl mt-5 absolute bottom-0 font-bold'>{pair.result}</div>
         </div>
         }
         <div>
@@ -92,9 +97,8 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
             <PlayerDisplay pair={pair} time={time} color={orientation} />
           }
 
-          <GameController handleNextMove={handleNextMove}
+          <GameController navigateByStep={handleNavigateStep}
             onBoardOrientationChanged={onBoardOrientationChanged}
-            handlePrevMove={handlePrevMove}
             currentIndex={currentIndex}
             total={moves.length}
             handleMaxSize={toggleFullscreen} />
@@ -102,6 +106,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
         <div>
 
           <MoveList maxHeight={boardWidth} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
+          {!fullscreen && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair.result}</div>}
         </div>
       </div>
     </div>

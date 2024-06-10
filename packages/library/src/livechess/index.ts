@@ -68,6 +68,6 @@ export class LiveChessTournament {
                 break;
             }
         }
-        return { moves, live: data.live, startedAt: data.firstMove };
+        return { moves, live: data.live, startedAt: data.firstMove, result: data.result };
     }
 }

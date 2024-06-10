@@ -48,6 +48,9 @@ export class GameData {
   @Prop({ type: PairSchema, required: true })
   pair: Pair;
 
+  @Prop({ required: false })
+  result: string;
+
   @Prop({ required: true })
   liveChessId: string;
 

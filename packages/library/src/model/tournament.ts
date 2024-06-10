@@ -39,4 +39,5 @@ export interface GameEventResponse {
     round: number,
     game: number;
     moves: Move[];
+    result?: string;
 }

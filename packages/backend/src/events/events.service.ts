@@ -5,6 +5,7 @@ import {
   GameEventResponse,
   Tournament,
   Pair,
+  mapGameResult,
 } from 'library';
 import { LoadGameDto } from './dto/game-event.dto';
 import { Cache } from '@nestjs/cache-manager';
@@ -47,7 +48,7 @@ export class EventsService {
     if (tour) {
       return tour;
     }
-    const { moves, live, startedAt } = await this.game.fetchGame(
+    const { moves, live, startedAt, result } = await this.game.fetchGame(
       game.round,
       game.game,
     );
@@ -69,12 +70,17 @@ export class EventsService {
       };
       return item;
     };
-    const cacheData = (await this.cacheManager.get(
+    let cacheData: any = (await this.cacheManager.get(
       this.tournamentId,
     )) as Tournament;
+    // if cache not found, then need to get data again
+    if (cacheData == null) {
+      cacheData = await this.hello();
+    }
     const pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
 
     const t: GameEventResponse = {
+      result: mapGameResult(result),
       pair,
       isLive: live,
       ...game,
@@ -158,7 +164,7 @@ export class EventsService {
         pairs: p.pairings.map((p) => ({
           black: p.black.fname + ', ' + p.black.lname,
           white: p.white.fname + ', ' + p.white.lname,
-          result: p.result,
+          result: mapGameResult(p.result),
           live: p.live,
         })),
       })),
