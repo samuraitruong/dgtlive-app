@@ -3,10 +3,12 @@ import { EventsService } from './events.service';
 import { BaseGateway } from './gateway';
 import { DynamicModule, Inject, Module } from '@nestjs/common';
 import { CACHE_MANAGER, Cache, CacheModule } from '@nestjs/cache-manager';
-import { MongooseModule } from '@nestjs/mongoose';
 import { TournamentRegisterSchema } from 'src/db/tournament';
 import mongoose from 'mongoose';
 import { EventServiceOptions } from './dto/event-option';
+import { TournamentDataService } from '../db/tournament-data.service';
+import { DatabaseModule } from 'src/db/db.module';
+import { GameDataService } from 'src/db/game-data.service';
 
 export function createDynamicGatewayClass(
   path: string,
@@ -14,8 +16,17 @@ export function createDynamicGatewayClass(
 ): DynamicModule {
   @WebSocketGateway({ path: '/' + path })
   class DynamicGateway extends BaseGateway {
-    constructor(@Inject(CACHE_MANAGER) cacheManager: Cache) {
-      const service = new EventsService(cacheManager, options);
+    constructor(
+      @Inject(CACHE_MANAGER) cacheManager: Cache,
+      dataService: TournamentDataService,
+      gameDataService: GameDataService,
+    ) {
+      const service = new EventsService(
+        cacheManager,
+        dataService,
+        gameDataService,
+        options,
+      );
       service.setGameId(options.tournamentId);
       service.hello();
       super(service);
@@ -24,12 +35,7 @@ export function createDynamicGatewayClass(
   }
 
   @Module({
-    imports: [
-      CacheModule.register(),
-      MongooseModule.forFeature([
-        { name: 'TournamentRegister', schema: TournamentRegisterSchema },
-      ]),
-    ],
+    imports: [CacheModule.register(), DatabaseModule],
     providers: [DynamicGateway, EventsService],
     exports: [DynamicGateway],
   })

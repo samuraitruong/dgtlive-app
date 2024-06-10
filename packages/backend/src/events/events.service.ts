@@ -9,6 +9,8 @@ import {
 import { LoadGameDto } from './dto/game-event.dto';
 import { Cache } from '@nestjs/cache-manager';
 import { EventServiceOptions } from './dto/event-option';
+import { TournamentDataService } from '../db/tournament-data.service';
+import { GameDataService } from 'src/db/game-data.service';
 
 export class EventsService {
   private tournamentId: string;
@@ -17,6 +19,8 @@ export class EventsService {
 
   constructor(
     private cacheManager: Cache,
+    private dataService: TournamentDataService,
+    private gameDataService: GameDataService,
     private options: EventServiceOptions,
   ) {
     this.tournamentId = configuration().game.juniorTournamentId;
@@ -60,7 +64,7 @@ export class EventsService {
 
       const item = {
         time: +time,
-        moveTime: +spent,
+        moveTime: +spent || 0,
         movedAt: previousMovedAt,
       };
       return item;
@@ -86,12 +90,15 @@ export class EventsService {
       totalTIme,
       previousMovedAt - startedAt,
     );
+    //save the game to database
+    this.gameDataService.upsert({ ...t, liveChessId: this.tournamentId });
     if (t.moves.length > 4) {
       const delayMoves = this.options.delayedMoves;
       if (live && t.moves.length > delayMoves && delayMoves > 0) {
         t.moves = t.moves.slice(0, t.moves.length - delayMoves);
         t.delayedMoves = delayMoves;
       }
+
       // delay by time
       const epochNowInMs = moment().unix().valueOf() * 1000;
       const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
@@ -156,6 +163,10 @@ export class EventsService {
         })),
       })),
     };
+    this.dataService.upsert({
+      liveChessId: this.tournamentId,
+      ...data,
+    });
     this.cacheManager.set(
       this.tournamentId,
       data,

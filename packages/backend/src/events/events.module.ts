@@ -5,10 +5,11 @@ import { SeniorEventsGateway } from './senior.gateway';
 import { CacheModule } from '@nestjs/cache-manager';
 import { GatewayManagerService } from './gateway.manager';
 import { registerDynamicSocket } from './dynamic.gateway';
+import { DatabaseModule } from 'src/db/db.module';
 // import { ModuleRef } from '@nestjs/core';
 
 @Module({
-  imports: [CacheModule.register(), registerDynamicSocket()],
+  imports: [CacheModule.register(), registerDynamicSocket(), DatabaseModule],
   providers: [
     JuniorEventsGateway,
     SeniorEventsGateway,
