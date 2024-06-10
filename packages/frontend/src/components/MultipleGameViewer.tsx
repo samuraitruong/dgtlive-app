@@ -5,6 +5,9 @@ import SmallPlayerDisplay from './SmallPlayerDisplay'
 import { BsFullscreen } from "react-icons/bs";
 import { AiOutlineFullscreenExit } from "react-icons/ai";
 import { FaRegPlayCircle } from "react-icons/fa";
+import { } from '@uidotdev/usehooks'
+import { useFullscreen } from "@/hooks/useFullscreen";
+import { FullscreenButton } from "./FullscreenButton";
 
 interface MultipleGameViewerProps {
     games: GameMap,
@@ -13,6 +16,7 @@ interface MultipleGameViewerProps {
 
     onClick: (t: GameEventResponse) => void
 }
+
 function MiniBoard({ game, onClick, gameCount }: { game: GameEventResponse, gameCount: number, onClick: () => void }) {
     const [currentIndex, setCurrentIndex] = useState(game.moves.length - 1)
     const parentRef = useRef<HTMLDivElement>(null);
@@ -87,26 +91,10 @@ function toggleFullscreen() {
 }
 
 export function MultipleGameViewer({ gameIds, games, title, onClick }: MultipleGameViewerProps) {
-    const [isFullscreen, setIsFullscreen] = useState(false);
-
-    const handleFullscreenToggle = useCallback(() => {
-        toggleFullscreen();
-        setIsFullscreen(!isFullscreen);
-    }, [isFullscreen]);
-
+    const [isFullscreen, toggleFullscreen] = useFullscreen();
     const displayGames = useMemo(() => {
         return gameIds.map(x => games[x]).filter(Boolean)
     }, [games, gameIds])
-
-    useEffect(() => {
-        const handleFullscreenChange = () => {
-            setIsFullscreen(!!document.fullscreenElement);
-        };
-        document.addEventListener("fullscreenchange", handleFullscreenChange);
-        return () => {
-            document.removeEventListener("fullscreenchange", handleFullscreenChange);
-        };
-    }, []);
 
     const handleMiniGameClick = (g: GameEventResponse) => {
         onClick(g)
@@ -127,18 +115,7 @@ export function MultipleGameViewer({ gameIds, games, title, onClick }: MultipleG
                 {displayGames.map((game) => <MiniBoard gameCount={gameIds.length} game={game} key={game.game + game.round} onClick={() => handleMiniGameClick(game)} />)}
 
                 <div className="fixed bottom-5 right-5">
-                    {isFullscreen ?
-                        <AiOutlineFullscreenExit
-                            onClick={handleFullscreenToggle}
-                            className="text-red-400 cursor-pointer font-bold"
-                        >
-                        </AiOutlineFullscreenExit> :
-
-                        <BsFullscreen
-                            onClick={handleFullscreenToggle}
-                            className="text-slate-800 cursor-pointer font-bold hover:font-bold"
-                        >
-                        </BsFullscreen>}
+                    <FullscreenButton isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} />
                 </div>
             </div>
         </div>

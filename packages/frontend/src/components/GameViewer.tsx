@@ -8,6 +8,7 @@ import Board from './Board';
 import { BoardOrientation } from 'react-chessboard/dist/chessboard/types';
 import PlayerDisplay from './SmallPlayerDisplay';
 import BigPlayerDisplay from './BigPlayerDisplay';
+import { useFullscreen } from '@/hooks/useFullscreen';
 
 interface GameViewerProps {
   data: GameEventResponse
@@ -17,7 +18,8 @@ interface GameViewerProps {
 
 const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: GameViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [fullscreen, setFullscreen] = useState(false);
+
+  const [fullscreen, toggleFullscreen] = useFullscreen();
   const { height } = useWindowSize()
   const [time, setTime] = useState({ black: -1, white: -1 });
   const [orientation, setOrientation] = useState<BoardOrientation>('white')
@@ -65,14 +67,14 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
     if (!fullscreen) {
       return height - 160
     }
-    return height - 50
+    return height - 70
   }, [height, fullscreen])
 
   return (
     <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen bg-slate-200 z-100 text-black' : ''}>
       <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'}>
-        {fullscreen && <div className='flex p-5 items-center justify-center align-middle h-100 flex-col mr-10 relative'>
-          <h2 className='mb-10 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold '>{tournamentName}</h2>
+        {fullscreen && <div className='flex p-10 items-center justify-center align-middle h-100 flex-col relative'>
+          <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}1</h2>
 
           <BigPlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
           <div className="flex items-center justify-center mt-20 mb-20 size-10 text-6xl font-semibold">vs</div>
@@ -95,7 +97,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
             handlePrevMove={handlePrevMove}
             currentIndex={currentIndex}
             total={moves.length}
-            handleMaxSize={() => setFullscreen(!fullscreen)} />
+            handleMaxSize={toggleFullscreen} />
         </div>
         <div>
 
