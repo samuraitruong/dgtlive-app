@@ -1,9 +1,7 @@
 import type { GameEventResponse, GameMap } from "library"
-import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Board from "./Board"
 import SmallPlayerDisplay from './SmallPlayerDisplay'
-import { BsFullscreen } from "react-icons/bs";
-import { AiOutlineFullscreenExit } from "react-icons/ai";
 import { FaRegPlayCircle } from "react-icons/fa";
 import { } from '@uidotdev/usehooks'
 import { useFullscreen } from "@/hooks/useFullscreen";

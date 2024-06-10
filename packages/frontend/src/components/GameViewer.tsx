@@ -1,5 +1,5 @@
 import { GameEventResponse, Pair } from 'library';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MoveList from './MoveList';
 import GameController from './Controller'
 import { useWindowSize } from '@uidotdev/usehooks';
@@ -23,14 +23,14 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   const { height } = useWindowSize()
   const [time, setTime] = useState({ black: -1, white: -1 });
   const [orientation, setOrientation] = useState<BoardOrientation>('white')
-
+  const parentRef = useRef<HTMLDivElement>(null);
+  const moveListRef = useRef<HTMLDivElement>(null);
   const onBoardOrientationChanged = (d: BoardOrientation) => {
     console.log(d, orientation)
     setOrientation((prev) => prev === 'white' ? 'black' : 'white')
   }
 
   const handleNavigateStep = (step: number) => {
-    console.log(step)
     let nextStep = currentIndex + step;
     if (step == Number.MIN_VALUE) {
       nextStep = 0;
@@ -64,18 +64,30 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
     setCurrentIndex(moves.length - 1)
   }, [moves])
   const boardWidth = useMemo(() => {
+
+    const box1 = parentRef.current?.getClientRects()[0];
+    const box2 = moveListRef.current?.getClientRects()[0];
+
+    console.log("debug", box1, box2);
+
+    const availableWidth = box1?.width || 0 - (box2?.width || 0) - 250; //margin
+    let desiredHeight = 500;
     if (!height) {
-      return 500
+      desiredHeight = 500
     }
     if (!fullscreen) {
-      return height - 160
+      desiredHeight = (height || 500) - 160
+    } else {
+      desiredHeight = (height || 500) - 70
     }
-    return height - 70
+
+    console.log("debug w, h", availableWidth, desiredHeight)
+    return Math.min(desiredHeight, availableWidth);
   }, [height, fullscreen])
 
   return (
     <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen bg-slate-200 z-100 text-black' : ''}>
-      <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'}>
+      <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'} ref={parentRef}>
         {fullscreen && <div className='flex p-10 items-center justify-center align-middle h-100 flex-col relative'>
           <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}</h2>
 
@@ -103,7 +115,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
             total={moves.length}
             handleMaxSize={toggleFullscreen} />
         </div>
-        <div>
+        <div ref={moveListRef}>
 
           <MoveList maxHeight={boardWidth} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
           {!fullscreen && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair.result}</div>}

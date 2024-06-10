@@ -12,3 +12,9 @@ export function mapGameResult(result: string) {
 
     return resultmap[result.toUpperCase()] || result
 }
+
+export function secondsToMMSS(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    seconds %= 60;
+    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}

@@ -26,7 +26,7 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
     const maxTime = useMemo(() => {
         let max = 0;
         for (const x of moves) {
-            max = Math.max(x.moveTime, max)
+            max = Math.max(x?.moveTime || 0, max)
         }
         return max;
     }, [moves])
@@ -36,6 +36,7 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
         }
         return ""
     }
+    console.log(maxTime)
     return (
         <div className="flex flex-col w-[300px] ml-5  overflow-y-auto relative border border-solid border-red" style={{ height: maxHeight + 20 }}>
             <div className="flex w-full justify bg-slate-800 p-1 text-white">
@@ -51,7 +52,7 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
                     <div title={formatTime(t[0])} className={"mr-4 w-3/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 ? 'font-bold' : '')} onClick={() => onSelect(index * 2)}> {t[0].san}</div>
                     <div title={formatTime(t[1])} className={"mr-4 w-3/12 cursor-pointer hover:font-bold " + (selectedIndex == index * 2 + 1 ? 'font-bold' : '')} onClick={() => onSelect(index * 2 + 1)}>{t[1]?.san}</div>
                     <div className='w-4/12'>
-                        <TimeBarChart whiteTime={t[0].moveTime} blackTime={t[1].moveTime} maxTime={maxTime} />
+                        <TimeBarChart whiteTime={t[0].moveTime} blackTime={t[1]?.moveTime} maxTime={maxTime} />
                     </div>
                 </div>
             ))

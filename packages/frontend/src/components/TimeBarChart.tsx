@@ -1,15 +1,16 @@
+import { secondsToMMSS } from 'library';
 import React from 'react';
 
 interface TimeBarChartProps {
     whiteTime: number;
-    blackTime: number;
+    blackTime?: number;
     maxTime: number;
 }
 
 const TimeBarChart = ({ whiteTime, blackTime, maxTime }: TimeBarChartProps) => {
     // Calculate width percentages
     const whiteWidthPercent = (whiteTime / maxTime) * 100;
-    const blackWidthPercent = (blackTime / maxTime) * 100;
+    const blackWidthPercent = ((blackTime || 0) / maxTime) * 100;
 
     return (
         <div className="w-full max-w-lg">
@@ -22,9 +23,8 @@ const TimeBarChart = ({ whiteTime, blackTime, maxTime }: TimeBarChartProps) => {
                             style={{ width: `${whiteWidthPercent}%` }}
                         ></div>
                     </div>
-                    <span className="text-3xs pr-2 w-[30px] inline-block text-right">{whiteTime}s</span>
+                    <span className="text-3xs pr-2 w-[60px] inline-block text-right">{secondsToMMSS(whiteTime)}</span>
                 </div>
-                {/* Black Time Bar */}
                 <div className="flex items-center justify-end h-2">
                     <div className="relative h-full w-full bg-gray-100 border border-gray-200 flex items-center">
                         <div
@@ -32,7 +32,7 @@ const TimeBarChart = ({ whiteTime, blackTime, maxTime }: TimeBarChartProps) => {
                             style={{ width: `${blackWidthPercent}%` }}
                         ></div>
                     </div>
-                    <span className="text-3xs pr-2 text-black w-[30px] inline-block text-right">{blackTime}s</span>
+                    <span className="text-3xs pr-2 text-black w-[60px] inline-block text-right">{secondsToMMSS(blackTime || 0)}</span>
                 </div>
             </div>
         </div>
