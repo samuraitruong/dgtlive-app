@@ -36,16 +36,16 @@ export interface Pairing {
 
 export interface Player {
     fname: string;
-    mname: null;
+    mname: string;
     lname: string;
-    title: null;
-    federation: null;
-    gender: null | string;
-    fideid: null;
+    title: string;
+    federation: string;
+    gender: string;
+    fideid: string;
 }
 
 
-export interface GameData{
+export interface GameData {
     live: boolean;
     serialNr: string;
     firstMove: number;

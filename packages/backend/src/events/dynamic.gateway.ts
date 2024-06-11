@@ -9,6 +9,8 @@ import { EventServiceOptions } from './dto/event-option';
 import { TournamentDataService } from '../db/tournament-data.service';
 import { DatabaseModule } from 'src/db/db.module';
 import { GameDataService } from 'src/db/game-data.service';
+import { FideModule } from 'src/fide/fide.module';
+import { FideService } from 'src/fide/fide.service';
 
 export function createDynamicGatewayClass(
   path: string,
@@ -20,11 +22,13 @@ export function createDynamicGatewayClass(
       @Inject(CACHE_MANAGER) cacheManager: Cache,
       dataService: TournamentDataService,
       gameDataService: GameDataService,
+      fideService: FideService,
     ) {
       const service = new EventsService(
         cacheManager,
         dataService,
         gameDataService,
+        fideService,
         options,
       );
       service.setGameId(options.tournamentId);
@@ -35,7 +39,7 @@ export function createDynamicGatewayClass(
   }
 
   @Module({
-    imports: [CacheModule.register(), DatabaseModule],
+    imports: [CacheModule.register(), DatabaseModule, FideModule],
     providers: [DynamicGateway, EventsService],
     exports: [DynamicGateway],
   })

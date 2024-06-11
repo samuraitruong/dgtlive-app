@@ -12,6 +12,7 @@ import { Cache } from '@nestjs/cache-manager';
 import { EventServiceOptions } from './dto/event-option';
 import { TournamentDataService } from '../db/tournament-data.service';
 import { GameDataService } from 'src/db/game-data.service';
+import { FideService } from 'src/fide/fide.service';
 
 export class EventsService {
   private tournamentId: string;
@@ -22,6 +23,7 @@ export class EventsService {
     private cacheManager: Cache,
     private dataService: TournamentDataService,
     private gameDataService: GameDataService,
+    private fideService: FideService,
     private options: EventServiceOptions,
   ) {
     this.tournamentId = configuration().game.juniorTournamentId;
@@ -148,9 +150,29 @@ export class EventsService {
 
     const t = await this.game.fetchTournament();
 
-    const fetchTask = t.rounds.map((r, index) =>
-      this.game.fetchRound(index + 1),
-    );
+    const fetchTask = t.rounds.map(async (r, index) => {
+      const rPairs = await this.game.fetchRound(index + 1);
+      for await (const pair of rPairs.pairings) {
+        const [white, black] = await Promise.all([
+          this.fideService.searchUser(
+            `${pair.white.lname}, ${pair.white.fname}`,
+          ),
+          this.fideService.searchUser(
+            `${pair.black.lname}, ${pair.black.fname}`,
+          ),
+        ]);
+        if (black && black.id) {
+          pair.black.fideid = black.id;
+          pair.black.title = black.title;
+        }
+
+        if (white && white.id) {
+          pair.white.fideid = white.id;
+          pair.white.title = white.title;
+        }
+      }
+      return rPairs;
+    });
     const rounds = await Promise.all(fetchTask);
 
     const data = {

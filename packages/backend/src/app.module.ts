@@ -13,9 +13,11 @@ import { FallbackMiddleware } from './middleware/fallback.middleware';
 import { DataModule } from './data/data.module';
 import { APP_FILTER } from '@nestjs/core';
 import { CustomExceptionFilter } from './middleware/app.filter';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     CacheModule.register(),
     ConfigModule.forRoot({ load: [configuration] }),
     MongooseModule.forRoot(process.env.MONGO_URI),

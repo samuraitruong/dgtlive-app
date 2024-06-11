@@ -6,6 +6,7 @@ import { Inject } from '@nestjs/common';
 import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { TournamentDataService } from '../db/tournament-data.service';
 import { GameDataService } from 'src/db/game-data.service';
+import { FideService } from 'src/fide/fide.service';
 
 @WebSocketGateway({ path: '/senior' })
 export class SeniorEventsGateway extends BaseGateway {
@@ -13,12 +14,14 @@ export class SeniorEventsGateway extends BaseGateway {
     @Inject(CACHE_MANAGER) cacheManager: Cache,
     dataService: TournamentDataService,
     gameDataService: GameDataService,
+    fideService: FideService,
   ) {
     const config = configuration();
     const service = new EventsService(
       cacheManager,
       dataService,
       gameDataService,
+      fideService,
       {
         delayedMoves: config.game.delayMoves,
         delayedTimeInSec: config.game.delayTimeInSeconds,
