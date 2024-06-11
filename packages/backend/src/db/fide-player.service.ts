@@ -80,6 +80,13 @@ export class FidePlayerService {
     }
   }
 
+  public async deleteSameName(name: string) {
+    await this.fidePlayerModel.deleteMany({
+      name,
+      id: { $exists: false },
+    });
+  }
+
   async upsertFidePlayer(
     playerData: Partial<FidePlayer>,
     currentName?: string,
@@ -88,10 +95,8 @@ export class FidePlayerService {
     const existingPlayer = await this.fidePlayerModel.findOne({ name }).exec();
 
     if (existingPlayer) {
-      // Update existing player
-      return this.fidePlayerModel
-        .findOneAndUpdate({ name }, playerData, { new: true, upsert: true })
-        .exec();
+      Object.assign(existingPlayer, playerData);
+      return await existingPlayer.save();
     } else {
       // Create new player
       const createdPlayer = new this.fidePlayerModel(playerData);

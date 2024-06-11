@@ -195,6 +195,7 @@ export class EventsService {
       liveChessId: this.tournamentId,
       ...data,
     });
+    // check if the round already finished. make cache to infinity
     this.cacheManager.set(
       this.tournamentId,
       data,

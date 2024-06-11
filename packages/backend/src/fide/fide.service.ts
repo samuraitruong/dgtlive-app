@@ -121,7 +121,7 @@ export class FideService {
     existingPlayer?: FidePlayerDocument,
   ): Promise<FidePlayer> {
     const url = `https://app.fide.com/api/v1/client/search?query=${name}`;
-    this.logger.log(`Fetching FIDE player data from URL: ${url}`);
+    this.logger.log(`Fetching FIDE player ${name} data from URL: ${url}`);
 
     try {
       const { data } = await firstValueFrom(
@@ -134,6 +134,9 @@ export class FideService {
           existingPlayer?.name,
         );
         this.logger.log(`Fetched and updated player ${user.id} from FIDE`);
+        //  find the user with same name and remove
+        await this.fidePlayerService.deleteSameName(name);
+
         return user;
       }
     } catch (error) {
