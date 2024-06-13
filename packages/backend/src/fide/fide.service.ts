@@ -19,7 +19,7 @@ export class FideService {
     private fidePlayerService: FidePlayerService,
   ) {}
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async cronFetch() {
     if (this.cronLock.cronFetch) {
       this.logger.warn(
@@ -54,7 +54,7 @@ export class FideService {
     }
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async cronPopulateRating() {
     if (this.cronLock.cronPopulateRating) {
       this.logger.warn(
