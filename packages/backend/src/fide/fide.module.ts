@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { FideService } from './fide.service';
 import { HttpModule } from '@nestjs/axios';
 import { DatabaseModule } from 'src/db/db.module';
+import { FidePlayerController } from './fide.controller';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [HttpModule, DatabaseModule],
+  imports: [HttpModule, DatabaseModule, AuthModule],
   exports: [FideService],
-  providers: [FideService],
+  providers: [FideService, FidePlayerController],
 })
 export class FideModule {}
 

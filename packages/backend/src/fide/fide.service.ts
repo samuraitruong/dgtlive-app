@@ -4,7 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { FidePlayerService } from '../db/fide-player.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { FidePlayerDocument } from '../db/fide-player.schema';
+import configuration from '../config/configuration';
 
 @Injectable()
 export class FideService {
@@ -21,6 +21,9 @@ export class FideService {
 
   @Cron(CronExpression.EVERY_10_MINUTES)
   async cronFetch() {
+    if (!configuration().system.enabledSync) {
+      return;
+    }
     if (this.cronLock.cronFetch) {
       this.logger.warn(
         'cronFetch is already running. Skipping this execution.',
@@ -39,6 +42,9 @@ export class FideService {
 
       for await (const player of unfetchedPlayers) {
         try {
+          if (player.errorCount && player.errorCount > 10) {
+            continue;
+          }
           await this.searchUserFromFide(player.name, player);
         } catch (error) {
           this.logger.error(
@@ -56,6 +62,9 @@ export class FideService {
 
   @Cron(CronExpression.EVERY_10_MINUTES)
   async cronPopulateRating() {
+    if (!configuration().system.enabledSync) {
+      return;
+    }
     if (this.cronLock.cronPopulateRating) {
       this.logger.warn(
         'cronPopulateRating is already running. Skipping this execution.',
@@ -116,26 +125,20 @@ export class FideService {
     }
   }
 
-  async searchUserFromFide(
-    name: string,
-    existingPlayer?: FidePlayerDocument,
-  ): Promise<FidePlayer> {
+  async searchUserFromFide(name: string): Promise<FidePlayer> {
     const url = `https://app.fide.com/api/v1/client/search?query=${name}`;
     this.logger.log(`Fetching FIDE player ${name} data from URL: ${url}`);
-
+    const existingPlayer = await this.fidePlayerService.searchByName(name);
     try {
       const { data } = await firstValueFrom(
         this.httpService.get<FideSearchPlayerResponse>(url),
       );
       const user = data.players[0];
       if (user) {
-        await this.fidePlayerService.upsertFidePlayer(
-          { ...user },
-          existingPlayer?.name,
-        );
+        await this.fidePlayerService.upsertFidePlayer({ ...user });
         this.logger.log(`Fetched and updated player ${user.id} from FIDE`);
         //  find the user with same name and remove
-        await this.fidePlayerService.deleteSameName(name);
+        // await this.fidePlayerService.deleteSameName(name);
 
         return user;
       }
@@ -157,15 +160,19 @@ export class FideService {
   }
 
   async searchUser(name: string): Promise<FidePlayer> {
-    this.logger.log(`Searching user ${name}`);
+    this.logger.log(`Query user information ${name}`);
     try {
-      const userFromDb = await this.fidePlayerService.upsertFidePlayer({
-        name,
-      });
-      if (userFromDb && userFromDb.id) {
-        this.logger.log(`Found fetched user ${name} in database`);
+      const userFromDb = await this.fidePlayerService.searchByName(name);
+
+      if (userFromDb) {
+        // this.logger.log(`Found fetched user ${name} in database`);
         return userFromDb;
       }
+
+      await this.fidePlayerService.upsertFidePlayer({
+        name,
+      });
+
       this.logger.log(`User ${name} not found in database, fetching from FIDE`);
       return await this.searchUserFromFide(name);
     } catch (error) {

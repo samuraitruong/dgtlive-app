@@ -12,4 +12,7 @@ export default () => ({
     delayMoves: parseInt(process.env.DELAY_MOVES, 10) || 0,
     delayTimeInSeconds: parseInt(process.env.DELAY_BY_SECONDS, 10) || 0,
   },
+  system: {
+    enabledSync: process.env.ENABLE_DATA_SYNC !== 'false',
+  },
 });

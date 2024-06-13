@@ -14,6 +14,7 @@ import { DataModule } from './data/data.module';
 import { APP_FILTER } from '@nestjs/core';
 import { CustomExceptionFilter } from './middleware/app.filter';
 import { ScheduleModule } from '@nestjs/schedule';
+import { FideModule } from './fide/fide.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     EventsModule,
     AuthModule,
     DataModule,
+    FideModule,
   ],
   controllers: [AppController],
   providers: [

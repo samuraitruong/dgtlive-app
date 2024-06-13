@@ -57,7 +57,28 @@ export class FidePlayer {
 
   @Prop({ required: false })
   lastRatingUpdate: Date;
+
+  @Prop()
+  firstname: string;
+
+  @Prop()
+  lastname: string;
 }
 
+const FidePlayerSchema = SchemaFactory.createForClass(FidePlayer);
+
+// Pre-save hook to split 'name' into 'firstname' and 'lastname'
+FidePlayerSchema.pre<FidePlayerDocument>('save', function (next) {
+  if (this.isModified('name')) {
+    const [last, first] = this.name.split(',').map((part) => part.trim());
+    this.firstname = first;
+    this.lastname = last;
+  }
+  next();
+});
+
+// Indexing
+FidePlayerSchema.index({ firstname: 'text', lastname: 'text' });
+
 // Create the SchemaFactory for the FIDE player schema
-export const FidePlayerSchema = SchemaFactory.createForClass(FidePlayer);
+export { FidePlayerSchema };

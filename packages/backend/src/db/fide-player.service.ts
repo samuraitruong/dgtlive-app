@@ -20,10 +20,6 @@ export class FidePlayerService {
     return this.fidePlayerModel.find(filters).exec();
   }
 
-  async findAll(): Promise<FidePlayer[]> {
-    return this.fidePlayerModel.find().exec();
-  }
-
   async findOne(id: string): Promise<FidePlayer> {
     return this.fidePlayerModel.findOne({ id }).exec();
   }
@@ -87,12 +83,68 @@ export class FidePlayerService {
     });
   }
 
-  async upsertFidePlayer(
-    playerData: Partial<FidePlayer>,
-    currentName?: string,
-  ): Promise<FidePlayer> {
-    const name = currentName || playerData.name;
-    const existingPlayer = await this.fidePlayerModel.findOne({ name }).exec();
+  async searchByName(searchName: string): Promise<FidePlayerDocument> {
+    const filter: any = {};
+
+    // Split searchName to try different formats
+    const nameParts = searchName.split(',').map((part) => part.trim());
+
+    if (nameParts.length === 2) {
+      const [lastname, firstname] = nameParts;
+
+      // Search for 'lastname, firstname' or 'firstname lastname'
+      filter.$or = [
+        {
+          firstname: new RegExp(`^${firstname}$`, 'i'),
+          lastname: new RegExp(`^${lastname}$`, 'i'),
+        },
+        {
+          firstname: new RegExp(`^${lastname}$`, 'i'),
+          lastname: new RegExp(`^${firstname}$`, 'i'),
+        },
+        { name: new RegExp(`^${firstname} ${lastname}$`, 'i') },
+        { name: new RegExp(`^${lastname}, ${firstname}$`, 'i') },
+        { name: searchName },
+      ];
+    } else {
+      // Single part (either full name or part of it)
+      const searchPattern = new RegExp(searchName, 'i');
+
+      filter.$or = [
+        { firstname: searchPattern },
+        { lastname: searchPattern },
+        { name: searchPattern },
+      ];
+    }
+
+    // Execute the query
+    return this.fidePlayerModel.findOne(filter).exec();
+  }
+
+  async findAll(
+    page: number,
+    limit: number,
+    sortField: string,
+    sortOrder: 'asc' | 'desc',
+    filter: Partial<FidePlayer>,
+  ): Promise<{ data: FidePlayerDocument[]; total: number }> {
+    const skip = (page - 1) * limit;
+    const sort = { [sortField]: sortOrder === 'asc' ? 1 : -1 };
+
+    const total = await this.fidePlayerModel.countDocuments(filter).exec();
+    const data = await this.fidePlayerModel
+      .find(filter)
+      .sort(sort as any)
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    return { data, total };
+  }
+
+  async upsertFidePlayer(playerData: Partial<FidePlayer>): Promise<FidePlayer> {
+    const name = playerData.name;
+    const existingPlayer = await this.searchByName(name);
 
     if (existingPlayer) {
       Object.assign(existingPlayer, playerData);
