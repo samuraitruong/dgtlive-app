@@ -45,7 +45,7 @@ export class FideService {
           if (player.errorCount && player.errorCount > 10) {
             continue;
           }
-          await this.searchUserFromFide(player.name, player);
+          await this.searchUserFromFide(player.name);
         } catch (error) {
           this.logger.error(
             `Error fetching data for player ${player.name}`,

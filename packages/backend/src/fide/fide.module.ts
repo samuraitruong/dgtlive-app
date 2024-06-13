@@ -7,8 +7,9 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [HttpModule, DatabaseModule, AuthModule],
+  controllers: [FidePlayerController],
   exports: [FideService],
-  providers: [FideService, FidePlayerController],
+  providers: [FideService],
 })
 export class FideModule {}
 

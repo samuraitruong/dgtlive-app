@@ -27,7 +27,13 @@ export class FidePlayerController {
     );
 
     return {
-      data,
+      data: data.map(({ name, id, ratings, title, fideTitle }) => ({
+        name,
+        id,
+        ratings,
+        title,
+        fideTitle,
+      })),
       total,
       page: pageNumber,
       limit: limitNumber,
