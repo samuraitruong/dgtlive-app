@@ -33,8 +33,8 @@ function FidePlayersPage() {
 
     const totalPages = Math.ceil(total / limit);
 
-    (
-        <div className="container mx-auto px-4">
+    return (
+        <div className="w-full px-4 bg-slate-600 h-screen">
             <h1 className="text-2xl font-bold mb-4">FIDE Players</h1>
 
             <div className="mb-4 flex">
@@ -43,7 +43,7 @@ function FidePlayersPage() {
                     value={searchName}
                     onChange={(e) => setSearchName(e.target.value)}
                     placeholder="Search by name"
-                    className="border p-2 rounded-l w-64"
+                    className="border p-2 rounded-l w-64 text-slate-800"
                 />
                 <button
                     onClick={handleSearch}
@@ -63,6 +63,13 @@ function FidePlayersPage() {
                         <thead>
                             <tr>
                                 <th
+                                    onClick={() => handleSort('id')}
+                                    className="cursor-pointer px-4 py-2 border"
+                                >
+                                    Id
+                                </th>
+
+                                <th
                                     onClick={() => handleSort('name')}
                                     className="cursor-pointer px-4 py-2 border"
                                 >
@@ -74,12 +81,7 @@ function FidePlayersPage() {
                                 >
                                     FIDE Title
                                 </th>
-                                <th
-                                    onClick={() => handleSort('country')}
-                                    className="cursor-pointer px-4 py-2 border"
-                                >
-                                    Country
-                                </th>
+
                                 <th
                                     onClick={() => handleSort('birthYear')}
                                     className="cursor-pointer px-4 py-2 border"
@@ -90,18 +92,18 @@ function FidePlayersPage() {
                                     onClick={() => handleSort('lastRatingUpdate')}
                                     className="cursor-pointer px-4 py-2 border"
                                 >
-                                    Last Rating Update
+                                    Ratings
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((player) => (
                                 <tr key={player.id}>
+                                    <td className="border px-4 py-2">{player.id}</td>
                                     <td className="border px-4 py-2">{player.name}</td>
-                                    <td className="border px-4 py-2">{player.fideTitle}</td>
-                                    <td className="border px-4 py-2">{player.country}</td>
+                                    <td className="border px-4 py-2">{player.title}</td>
                                     <td className="border px-4 py-2">{player.birthYear}</td>
-                                    <td className="border px-4 py-2">{player.lastRatingUpdate ? new Date(player.lastRatingUpdate).toLocaleDateString() : 'N/A'}</td>
+                                    <td className="border px-4 py-2">{player.ratings?.rapid}</td>
                                 </tr>
                             ))}
                         </tbody>

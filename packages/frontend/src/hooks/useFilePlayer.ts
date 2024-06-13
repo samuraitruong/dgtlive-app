@@ -60,7 +60,7 @@ export const useFidePlayers = ({
             setError(null);
             try {
                 const response = await fetch(
-                    `${API_URL}/api/players?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}&filter=${encodeURIComponent(JSON.stringify({ name: searchName }))}`,
+                    `${API_URL}/api/player?page=${page}&limit=${limit}&sortField=${sortField}&sortOrder=${sortOrder}&searchName=${searchName}`,
                     {
                         headers: {
                             "Content-Type": "application/json",

@@ -60,7 +60,7 @@ export class FideService {
     }
   }
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  @Cron(CronExpression.EVERY_MINUTE)
   async cronPopulateRating() {
     if (!configuration().system.enabledSync) {
       return;
@@ -136,9 +136,11 @@ export class FideService {
       const user = data.players[0];
       if (user) {
         await this.fidePlayerService.upsertFidePlayer({ ...user });
-        this.logger.log(`Fetched and updated player ${user.id} from FIDE`);
+        this.logger.log(
+          `Fetched and updated player ${user.id} from FIDE. search name =${name}`,
+        );
         //  find the user with same name and remove
-        // await this.fidePlayerService.deleteSameName(name);
+        //  await this.fidePlayerService.deleteSameName(name);
 
         return user;
       }
@@ -160,7 +162,7 @@ export class FideService {
   }
 
   async searchUser(name: string): Promise<FidePlayer> {
-    this.logger.log(`Query user information ${name}`);
+    // this.logger.log(`Query user information ${name}`);
     try {
       const userFromDb = await this.fidePlayerService.searchByName(name);
 
@@ -170,6 +172,7 @@ export class FideService {
       }
 
       await this.fidePlayerService.upsertFidePlayer({
+        inputName: name,
         name,
       });
 

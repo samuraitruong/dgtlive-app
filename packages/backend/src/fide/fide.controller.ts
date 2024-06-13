@@ -1,6 +1,15 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { FidePlayerService } from '../db/fide-player.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { SearchFidePlayerDto } from './dto/player-search.dto';
+import { ParseFilterPipe } from 'src/pipes/parse-filter.pipe';
 
 @Controller('player')
 @UseGuards(AuthGuard)
@@ -8,22 +17,22 @@ export class FidePlayerController {
   constructor(private readonly fidePlayerService: FidePlayerService) {}
 
   @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
   async getPlayers(
-    @Query('page') page: string = '1',
-    @Query('limit') limit: string = '10',
-    @Query('sortField') sortField: string = 'name',
-    @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'asc',
-    @Query('filter') filter: Partial<FidePlayer> = {},
+    @Query() query: SearchFidePlayerDto,
+    @Query('filter', ParseFilterPipe) filter: any,
   ) {
+    const { searchName, sortField, sortOrder, page, limit } = query;
+
     const pageNumber = parseInt(page, 10);
     const limitNumber = parseInt(limit, 10);
-
+    const nameSearch = this.fidePlayerService.getSearchNameFilter(searchName);
     const { data, total } = await this.fidePlayerService.findAll(
       pageNumber,
       limitNumber,
       sortField,
       sortOrder,
-      filter,
+      nameSearch || filter,
     );
 
     return {

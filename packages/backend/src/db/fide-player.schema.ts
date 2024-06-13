@@ -18,10 +18,13 @@ export class PlayerRating {
 
 const PlayerRatingSchema = SchemaFactory.createForClass(PlayerRating);
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, collection: 'players' })
 export class FidePlayer {
   @Prop({ required: true })
   name: string;
+
+  @Prop({ required: true })
+  inputName: string;
 
   @Prop({ required: false })
   fideTitle: string | null;
@@ -73,6 +76,9 @@ FidePlayerSchema.pre<FidePlayerDocument>('save', function (next) {
     const [last, first] = this.name.split(',').map((part) => part.trim());
     this.firstname = first;
     this.lastname = last;
+    // if (!this.inputName) {
+    //   this.inputName = this.name;
+    // }
   }
   next();
 });

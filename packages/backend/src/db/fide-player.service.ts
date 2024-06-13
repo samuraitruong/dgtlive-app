@@ -82,11 +82,9 @@ export class FidePlayerService {
       id: { $exists: false },
     });
   }
-
-  async searchByName(searchName: string): Promise<FidePlayerDocument> {
+  public getSearchNameFilter(searchName: string): any {
+    if (!searchName) return {};
     const filter: any = {};
-
-    // Split searchName to try different formats
     const nameParts = searchName.split(',').map((part) => part.trim());
 
     if (nameParts.length === 2) {
@@ -105,6 +103,7 @@ export class FidePlayerService {
         { name: new RegExp(`^${firstname} ${lastname}$`, 'i') },
         { name: new RegExp(`^${lastname}, ${firstname}$`, 'i') },
         { name: searchName },
+        { inputName: searchName },
       ];
     } else {
       // Single part (either full name or part of it)
@@ -116,9 +115,13 @@ export class FidePlayerService {
         { name: searchPattern },
       ];
     }
-
+    return filter;
+  }
+  async searchByName(searchName: string): Promise<FidePlayerDocument> {
     // Execute the query
-    return this.fidePlayerModel.findOne(filter).exec();
+    return this.fidePlayerModel
+      .findOne(this.getSearchNameFilter(searchName))
+      .exec();
   }
 
   async findAll(
@@ -152,7 +155,7 @@ export class FidePlayerService {
     } else {
       // Create new player
       const createdPlayer = new this.fidePlayerModel(playerData);
-      return createdPlayer.save();
+      return await createdPlayer.save();
     }
   }
 }
