@@ -1,6 +1,9 @@
 import {
+  Body,
   Controller,
   Get,
+  Param,
+  Patch,
   Query,
   UseGuards,
   UsePipes,
@@ -10,11 +13,20 @@ import { FidePlayerService } from '../db/fide-player.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { SearchFidePlayerDto } from './dto/player-search.dto';
 import { ParseFilterPipe } from 'src/pipes/parse-filter.pipe';
+import { FidePlayer } from '../db/fide-player.schema';
 
 @Controller('player')
 @UseGuards(AuthGuard)
 export class FidePlayerController {
   constructor(private readonly fidePlayerService: FidePlayerService) {}
+
+  @Patch('/:id')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async updatePlayer(@Param() id: string, @Body() data: Partial<FidePlayer>) {
+    const raw = await this.fidePlayerService.patchPlayerData(id, data);
+
+    return this.cleanPlayer(raw);
+  }
 
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -36,7 +48,8 @@ export class FidePlayerController {
     );
 
     return {
-      data: data.map(({ name, id, ratings, title, fideTitle }) => ({
+      data: data.map(({ _id, name, id, ratings, title, fideTitle }) => ({
+        _id: _id,
         name,
         id,
         ratings,
@@ -48,5 +61,17 @@ export class FidePlayerController {
       limit: limitNumber,
       totalPages: Math.ceil(total / limitNumber),
     };
+  }
+  private cleanPlayer(p: FidePlayer): Partial<FidePlayer> {
+    const { _id, name, id, ratings, title, fideTitle } = p as any;
+
+    return {
+      _id: _id.toString(),
+      name,
+      id,
+      ratings,
+      title,
+      fideTitle,
+    } as any;
   }
 }

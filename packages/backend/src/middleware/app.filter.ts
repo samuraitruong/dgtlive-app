@@ -25,7 +25,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     console.log('fallback html page', htmlPage);
     if (fs.existsSync(htmlPage)) {
-      console.log('file existing', htmlPage);
+      //  console.log('file existing', htmlPage);
       response.sendFile(htmlPage);
     }
     // Check if the file exists

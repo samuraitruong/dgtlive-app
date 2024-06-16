@@ -26,7 +26,6 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   const parentRef = useRef<HTMLDivElement>(null);
   const moveListRef = useRef<HTMLDivElement>(null);
   const onBoardOrientationChanged = (d: BoardOrientation) => {
-    console.log(d, orientation)
     setOrientation((prev) => prev === 'white' ? 'black' : 'white')
   }
 
@@ -67,8 +66,6 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
 
     const box1 = parentRef.current?.getClientRects()[0];
     const box2 = moveListRef.current?.getClientRects()[0];
-
-    console.log("debug", box1, box2);
 
     const availableWidth = box1?.width || 0 - (box2?.width || 0) - 250; //margin
     let desiredHeight = 500;

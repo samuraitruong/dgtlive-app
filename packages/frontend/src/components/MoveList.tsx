@@ -36,7 +36,6 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
         }
         return ""
     }
-    console.log(maxTime)
     return (
         <div className="flex flex-col w-[300px] ml-5  overflow-y-auto relative border border-solid border-red" style={{ height: maxHeight + 20 }}>
             <div className="flex w-full justify bg-slate-800 p-1 text-white">

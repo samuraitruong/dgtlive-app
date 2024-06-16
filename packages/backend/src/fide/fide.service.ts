@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { FidePlayerService } from '../db/fide-player.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import configuration from '../config/configuration';
+import { FidePlayer } from '../db/fide-player.schema';
+import { FideSearchPlayerResponse } from 'library';
 
 @Injectable()
 export class FideService {
@@ -142,7 +144,7 @@ export class FideService {
         //  find the user with same name and remove
         //  await this.fidePlayerService.deleteSameName(name);
 
-        return user;
+        return user as FidePlayer;
       }
     } catch (error) {
       this.logger.error(

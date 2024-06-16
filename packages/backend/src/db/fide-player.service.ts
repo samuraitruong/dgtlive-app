@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FidePlayer, FidePlayerDocument } from './fide-player.schema';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class FidePlayerService {
@@ -22,6 +23,15 @@ export class FidePlayerService {
 
   async findOne(id: string): Promise<FidePlayer> {
     return this.fidePlayerModel.findOne({ id }).exec();
+  }
+
+  async patchPlayerData(
+    _id: string,
+    playerData: Partial<FidePlayer>,
+  ): Promise<FidePlayer> {
+    return this.fidePlayerModel
+      .findByIdAndUpdate(new ObjectId(_id), { $set: playerData }, { new: true })
+      .exec();
   }
 
   async updateFidePlayer(

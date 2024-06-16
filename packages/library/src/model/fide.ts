@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-interface FideSearchPlayerResponse {
+export interface FideSearchPlayerResponse {
   data: any[];
   links: {
     first: string;
@@ -19,7 +19,7 @@ interface FideSearchPlayerResponse {
   players: FidePlayer[];
 }
 
-interface FidePlayer {
+export interface FidePlayer {
   lastRatingUpdate?: Date;
   name: string;
   title: string | null;
