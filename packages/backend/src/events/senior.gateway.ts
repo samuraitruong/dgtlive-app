@@ -7,6 +7,7 @@ import { CACHE_MANAGER, Cache } from '@nestjs/cache-manager';
 import { TournamentDataService } from '../db/tournament-data.service';
 import { GameDataService } from 'src/db/game-data.service';
 import { FideService } from 'src/fide/fide.service';
+import { DataService } from 'src/data/data.service';
 
 @WebSocketGateway({ path: '/senior' })
 export class SeniorEventsGateway extends BaseGateway {
@@ -15,6 +16,7 @@ export class SeniorEventsGateway extends BaseGateway {
     dataService: TournamentDataService,
     gameDataService: GameDataService,
     fideService: FideService,
+    private tournamentRegister: DataService,
   ) {
     const config = configuration();
     const service = new EventsService(
@@ -30,5 +32,13 @@ export class SeniorEventsGateway extends BaseGateway {
     service.setGameId(configuration().game.seniorTournamentId);
     service.hello();
     super(service);
+    this.bootstrap();
+  }
+
+  async bootstrap() {
+    const data = await this.tournamentRegister.findOneBy({ slug: 'junior' });
+    if (data) {
+      await this.replaceTournamenIdOnFly(data.liveChessId);
+    }
   }
 }

@@ -32,8 +32,8 @@ export class TournamentDataService {
       .exec();
   }
 
-  async findOneBy(filtesr: any): Promise<TournamentData> {
-    return this.tournamentModel.findOne(filtesr).exec();
+  async findOneBy(filters: any): Promise<TournamentData> {
+    return this.tournamentModel.findOne(filters).exec();
   }
 
   async findAll(): Promise<TournamentData[]> {

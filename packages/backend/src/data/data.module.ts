@@ -15,5 +15,6 @@ import { PublicDataController } from './public.controller';
   ],
   controllers: [DataController, PublicDataController],
   providers: [DataService],
+  exports: [DataService],
 })
 export class DataModule {}

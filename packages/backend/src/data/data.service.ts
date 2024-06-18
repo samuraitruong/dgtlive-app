@@ -37,6 +37,10 @@ export class DataService {
     return (await this.tournamentRegisterModel.findById(id)).toObject();
   }
 
+  async findOneBy(filters: any) {
+    return (await this.tournamentRegisterModel.findOne(filters)).toObject();
+  }
+
   async update(id: string, updateDatumDto: UpdateDatumDto) {
     const livechess = new LiveChessTournament(updateDatumDto.liveChessId);
     const tournament = await livechess.fetchTournament();

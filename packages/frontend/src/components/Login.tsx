@@ -25,12 +25,15 @@ const Login: React.FC<{ history?: any }> = ({ history }) => {
         },
         body: JSON.stringify(formData)
       });
+      if (response.ok) {
+        const { token } = await response.json();
 
-      const { token } = await response.json();
-
-      // Store token in local storage
-      localStorage.setItem('token', token);
-      verifyToken(token);
+        // Store token in local storage
+        localStorage.setItem('token', token);
+        verifyToken(token);
+      } else {
+        setErrorMessage('Unable to login, please try again')
+      }
     } catch (error) {
       console.error('Login failed:', error);
       setErrorMessage('Unable to login, Please check uername & password and try again.')

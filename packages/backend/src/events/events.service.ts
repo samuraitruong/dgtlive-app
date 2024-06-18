@@ -15,7 +15,7 @@ import { GameDataService } from 'src/db/game-data.service';
 import { FideService } from 'src/fide/fide.service';
 
 export class EventsService {
-  private tournamentId: string;
+  public tournamentId: string;
 
   readonly game: LiveChessTournament;
 

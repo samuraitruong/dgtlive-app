@@ -61,7 +61,7 @@ export async function registerDynamicSocket(): Promise<DynamicModule> {
     TournamentRegisterSchema,
   );
 
-  const tournaments = await TournamentRegisterModel.find();
+  const tournaments = await TournamentRegisterModel.find({ isActive: true });
 
   const loadedPlugins: Array<DynamicModule> = tournaments.map((x) =>
     createDynamicGatewayClass(x.slug, {

@@ -5,8 +5,9 @@ import { SeniorEventsGateway } from './senior.gateway';
 import { CacheModule } from '@nestjs/cache-manager';
 import { GatewayManagerService } from './gateway.manager';
 import { registerDynamicSocket } from './dynamic.gateway';
-import { DatabaseModule } from 'src/db/db.module';
-import { FideModule } from 'src/fide/fide.module';
+import { DatabaseModule } from '../db/db.module';
+import { FideModule } from '../fide/fide.module';
+import { DataModule } from '../data/data.module';
 // import { ModuleRef } from '@nestjs/core';
 
 @Module({
@@ -15,6 +16,7 @@ import { FideModule } from 'src/fide/fide.module';
     registerDynamicSocket(),
     DatabaseModule,
     FideModule,
+    DataModule,
   ],
   providers: [
     JuniorEventsGateway,

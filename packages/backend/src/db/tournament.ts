@@ -19,6 +19,9 @@ export class TournamentRegister {
 
   @Prop()
   delayTimes?: number;
+
+  @Prop()
+  isActive?: boolean;
 }
 
 export type TournamentRegisterrDocument = TournamentRegister & Document;

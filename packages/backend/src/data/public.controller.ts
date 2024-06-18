@@ -8,6 +8,8 @@ export class PublicDataController {
   @Get()
   async findAll() {
     const allData = await this.dataService.findAll();
-    return allData.map((x) => ({ name: x.name, slug: x.slug }));
+    return allData
+      .filter((x) => x.isActive)
+      .map((x) => ({ name: x.name, slug: x.slug }));
   }
 }

@@ -104,9 +104,7 @@ export class BaseGateway
 
   @SubscribeMessage('admin')
   async admin(@MessageBody() game: AdminDto) {
-    const result = await this.eventsService.setGameId(game.gameId);
-
-    await this.refreshTournament();
+    const result = await this.replaceTournamenIdOnFly(game.gameId);
     return {
       event: 'admin',
       data: {
@@ -118,5 +116,19 @@ export class BaseGateway
   public handleException(error: Error, client: any): void {
     console.error(`Error from client: ${error.message}`);
     client.error(error.message);
+  }
+
+  public async replaceTournamenIdOnFly(tournamentId: string) {
+    if (tournamentId != this.eventsService.tournamentId) {
+      const result = await this.eventsService.setGameId(tournamentId);
+      await this.refreshTournament();
+      // TODO: remove live games
+      return result;
+    } else {
+      console.log(
+        'Ignore the replace tournament id as data is the same with current tournament',
+      );
+    }
+    return undefined;
   }
 }

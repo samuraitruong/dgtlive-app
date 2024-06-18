@@ -17,7 +17,7 @@ function ManageAdmin() {
   const [currentRow, setCurrentRow] = useState<RowData | undefined>();
 
   const handleOpenModal = (row?: RowData) => {
-    setCurrentRow(row || { id: '', name: '', slug: '', liveChessId: '', delayMoves: 0, delayTimes: 0 });
+    setCurrentRow(row || { id: '', name: '', slug: '', liveChessId: '', delayMoves: 0, delayTimes: 0, isActive: true });
     setIsModalOpen(true);
   };
 
@@ -27,17 +27,17 @@ function ManageAdmin() {
   };
 
 
-  const handleFormEvent = (ev: 'close' | 'save', data?: RowData) => {
+  const handleFormEvent = async (ev: 'close' | 'save', data?: RowData) => {
     if (ev === 'close') {
       handleCloseModal();
     }
     if (ev === "save") {
       if (data?.id) {
         // update
-        updateItem({ ...data } as any);
+        updateItem({ ...data } as any).then(() => setIsModalOpen(false))
       }
       else
-        addItem({ ...data } as any);
+        addItem({ ...data } as any).then(() => setIsModalOpen(false));
     }
   }
   const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>, id: string) => {
@@ -71,7 +71,7 @@ function ManageAdmin() {
         </thead>
         <tbody>
           {data.map(row => (
-            <tr key={row.id} className="cursor-pointer">
+            <tr key={row.id} className={"cursor-pointer" + (!row.isActive ? "bg-slate-500 opacity-50" : "")}>
               <td className="py-2 px-4 border-b">{row.name}</td>
               <td className="py-2 px-4 border-b">{row.slug}</td>
               <td className="py-2 px-4 border-b">{row.liveChessId}</td>
@@ -88,8 +88,9 @@ function ManageAdmin() {
 
 
                 <button className="ml-5 round-sm bg-red-400 p-1 z-50 text-white rounded-sm hover:text-red-700" onClick={(e) => handleDeleteClick(e, row.id)}>Delete</button>
-
-                <Link className="ml-5 round-sm bg-blue-400 p-1 z-50 text-white rounded-sm hover:text-red-700" href={'/tournament/' + row.slug}>Open</Link>
+                {row.isActive &&
+                  <Link className="ml-5 round-sm bg-blue-400 p-1 z-50 text-white rounded-sm hover:text-red-700" href={'/tournament/' + row.slug}>Open</Link>
+                }
               </td>
             </tr>
           ))}

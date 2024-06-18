@@ -8,15 +8,16 @@ export interface RowData {
     liveChessId: string;
     delayMoves: number;
     delayTimes: number;
+    isActive: boolean;
 }
 
 interface UseDataHook {
     data: RowData[];
     isLoading: boolean;
     error: string | undefined;
-    addItem: (item: RowData) => void;
-    updateItem: (item: RowData) => void;
-    deleteItem: (id: string) => void;
+    addItem: (item: RowData) => Promise<void>;
+    updateItem: (item: RowData) => Promise<void>;
+    deleteItem: (id: string) => Promise<void>;
     loadData: () => void;
 }
 
