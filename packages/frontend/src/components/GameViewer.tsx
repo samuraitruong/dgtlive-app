@@ -62,12 +62,12 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   useEffect(() => {
     setCurrentIndex(moves.length - 1)
   }, [moves])
-  const boardWidth = useMemo(() => {
+  const { boardWidth, availableHeight } = useMemo(() => {
 
     const box1 = parentRef.current?.getClientRects()[0];
     const box2 = moveListRef.current?.getClientRects()[0];
 
-    const availableWidth = box1?.width || 0 - (box2?.width || 0) - 250; //margin
+    const availableWidth = box1?.width || 0 - (box2?.width || 0) - 400; //margin
     let desiredHeight = 500;
     if (!height) {
       desiredHeight = 500
@@ -75,18 +75,21 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
     if (!fullscreen) {
       desiredHeight = (height || 500) - 160
     } else {
-      desiredHeight = (height || 500) - 70
+      desiredHeight = (height || 500) - 170
     }
 
-    console.log("debug w, h", availableWidth, desiredHeight)
-    return Math.min(desiredHeight, availableWidth);
+    const boardWidth = Math.min(desiredHeight, availableWidth)
+    let availableHeight = boardWidth;
+    if (fullscreen) {
+      availableHeight = (box1?.height || 0);
+    }
+    return { boardWidth, availableHeight }
   }, [height, fullscreen])
 
   return (
-    <div className={fullscreen ? 'fixed top-0 left-0 h-screen w-screen bg-slate-200 z-100 text-black' : ''}>
-      <div className={fullscreen ? 'flex justify-center' : 'flex justify-center'} ref={parentRef}>
+    <div className={fullscreen ? 'fixed top-[50px] left-0 h-screen w-screen bg-slate-200 z-100 text-black pt-1' : ''}>
+      <div className={fullscreen ? 'flex justify-center border-red-400 border-solid border-1' : 'flex justify-center'} ref={parentRef}>
         {fullscreen && <div className='flex p-10 items-center justify-center align-middle h-100 flex-col relative'>
-          <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}</h2>
 
           <BigPlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
           <div className="flex items-center justify-center mt-20 mb-20 size-10 text-6xl font-semibold">vs</div>
@@ -100,24 +103,35 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
             <PlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
 
           }
+          {/* {fullscreen && <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}</h2>} */}
+
           <Board move={moves[currentIndex]} boardWidth={boardWidth} direction={orientation} />
 
           {!fullscreen &&
             <PlayerDisplay pair={pair} time={time} color={orientation} />
           }
-
-          <GameController navigateByStep={handleNavigateStep}
-            onBoardOrientationChanged={onBoardOrientationChanged}
-            currentIndex={currentIndex}
-            total={moves.length}
-            handleMaxSize={toggleFullscreen} />
+          <div className={fullscreen ? 'pt-10' : ''}>
+            <GameController navigateByStep={handleNavigateStep}
+              onBoardOrientationChanged={onBoardOrientationChanged}
+              currentIndex={currentIndex}
+              total={moves.length}
+              handleMaxSize={toggleFullscreen} />
+          </div>
         </div>
-        <div ref={moveListRef}>
+        <div ref={moveListRef} className='w-[300px]'>
 
-          <MoveList maxHeight={boardWidth} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
+          <MoveList maxHeight={availableHeight} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
           {!fullscreen && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair.result}</div>}
         </div>
       </div>
+      {/* <div className='fixed  bg-slate-700 text-white opacity-90 bottom-[100px] p-5 w-full'>
+        availableWidth = {boardWidth} <br />
+
+        {JSON.stringify(parentRef.current?.getClientRects()[0])}
+
+        <br />
+        {JSON.stringify(moveListRef.current?.getClientRects()[0])}
+      </div> */}
     </div>
   );
 };

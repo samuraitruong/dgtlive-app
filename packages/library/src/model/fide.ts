@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export interface FideSearchPlayerResponse {
   links: {
     first: string;
@@ -18,7 +17,6 @@ export interface FideSearchPlayerResponse {
   players: FidePlayer[];
 }
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export interface FidePlayer {
   lastRatingUpdate?: Date;
   name: string;

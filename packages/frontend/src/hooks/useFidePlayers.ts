@@ -108,12 +108,12 @@ export const useFidePlayers = ({
             setLoading(false);
         }
 
-    }, [user.token, searchName])
+    }, [user.token, searchName, limit, page, sortOrder, sortField])
 
     useEffect(() => {
 
         fetchData();
-    }, [page, limit, sortField, sortOrder, searchName]);
+    }, [fetchData]);
 
     return { data, total, loading, error, updatePlayerWith, fetchData };
 };
