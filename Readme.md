@@ -30,7 +30,7 @@ By default below service will start:
 
 
 ## Build docker
-The 1 standalone docker app will run both backend & front-end using nestjs static server module. IT was confiured so serve static output of front-end app.
+The 1 standalone docker app will run both backend & front-end using nestjs static server module. IT was configured so serve static output of front-end app. refer to dockerfile for details
 ```sh
 docker build -t dgtapp .
 
