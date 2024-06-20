@@ -37,7 +37,7 @@ function MoveList({ moves, onSelect, selectedIndex, maxHeight, delayedMoves }: M
         return ""
     }
     return (
-        <div className="flex flex-col w-[300px] ml-5  overflow-y-auto relative border border-solid border-red" style={{ height: maxHeight + 20 }}>
+        <div className="flex flex-col w-full ml-0 md:ml-5  overflow-y-auto relative border border-solid border-red" style={{ height: maxHeight + 20 }}>
             <div className="flex w-full justify bg-slate-800 p-1 text-white">
                 <div className='w-2/12'>No.</div>
                 <div className="mr-4 w-3/12 cursor-pointer hover:font-bold">White</div>

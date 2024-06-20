@@ -17,7 +17,7 @@ const TimeBarChart = ({ whiteTime, blackTime, maxTime }: TimeBarChartProps) => {
             <div className="flex flex-col gap-0">
                 {/* White Time Bar */}
                 <div className="flex items-center justify-end h-2">
-                    <div className="relative h-full w-full bg-gray-100 border border-gray-200 flex items-center">
+                    <div className="relative h-full w-full bg-stone-300 border border-stone-200 flex items-center">
                         <div
                             className="absolute right-0 h-full bg-white rotate-180"
                             style={{ width: `${whiteWidthPercent}%` }}
@@ -26,7 +26,7 @@ const TimeBarChart = ({ whiteTime, blackTime, maxTime }: TimeBarChartProps) => {
                     <span className="text-3xs pr-2 w-[60px] inline-block text-right">{secondsToMMSS(whiteTime)}</span>
                 </div>
                 <div className="flex items-center justify-end h-2">
-                    <div className="relative h-full w-full bg-gray-100 border border-gray-200 flex items-center">
+                    <div className="relative h-full w-full bg-stone-300 border border-stone-200 flex items-center">
                         <div
                             className="absolute right-0 h-full bg-slate-800 rotate-180"
                             style={{ width: `${blackWidthPercent}%` }}

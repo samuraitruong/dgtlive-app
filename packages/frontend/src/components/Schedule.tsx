@@ -56,7 +56,7 @@ export default function Schedule({ data, onSelect, selectedRound }: ScheduleProp
                         <div className="text-sm font-semibold">{pair.black}</div>
                       </div>
                       <div className="flex justify-center w-1/8 text-center">
-                        <span className="text-sm font-bold">{pair.result}</span>
+                        <span className="text-sm font-bold">{pair?.result}</span>
                       </div>
                       <div className="flex justify-end w-1/8 text-center">
                         <BiSolidChess className="text-xl" />

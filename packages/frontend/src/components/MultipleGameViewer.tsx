@@ -50,7 +50,7 @@ function MiniBoard({ game, onClick, result }: { game: GameEventResponse, gameCou
 
 
     return (
-        <div className={`flex flex-col w-1/3 p-1 mt-5 relative`} ref={parentRef}
+        <div className={`flex flex-col md:w-1/3 p-1 mt-5 relative w-full mb-5 md:mb-0`} ref={parentRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -105,7 +105,7 @@ export function MultipleGameViewer({ gameIds, games, title, onClick }: MultipleG
                     <h1 className="text-3xl font-bold text-center">{title}</h1>
                 </div>
             }
-            <div className={"flex flex-row w-full flex-wrap pt-10"}>
+            <div className={"flex flex-row w-full flex-wrap pt-0 md:pt-10"}>
                 {displayGames.map((game) => <MiniBoard gameCount={gameIds.length} game={game} key={game.game + game.round} result={game.result || "*"} onClick={() => handleMiniGameClick(game)} />)}
 
                 <div className="fixed bottom-5 right-5">

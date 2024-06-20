@@ -20,7 +20,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [fullscreen, toggleFullscreen] = useFullscreen();
-  const { height } = useWindowSize()
+  const { height, width } = useWindowSize()
   const [time, setTime] = useState({ black: -1, white: -1 });
   const [orientation, setOrientation] = useState<BoardOrientation>('white')
   const parentRef = useRef<HTMLDivElement>(null);
@@ -78,17 +78,20 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
       desiredHeight = (height || 500) - 170
     }
 
-    const boardWidth = Math.min(desiredHeight, availableWidth)
+    let boardWidth = Math.min(desiredHeight, availableWidth)
     let availableHeight = boardWidth;
     if (fullscreen) {
       availableHeight = (box1?.height || 0);
     }
+    if (width && width < 672) {
+      boardWidth = width - 14;
+    }
     return { boardWidth, availableHeight }
-  }, [height, fullscreen])
+  }, [height, fullscreen, width])
 
   return (
     <div className={fullscreen ? 'fixed top-[50px] left-0 h-screen w-screen bg-slate-200 z-100 text-black pt-1' : ''}>
-      <div className={fullscreen ? 'flex justify-center border-red-400 border-solid border-1' : 'flex justify-center'} ref={parentRef}>
+      <div className={fullscreen ? 'flex justify-center border-red-400 border-solid border-1' : 'flex  flex-col md:flex-row justify-center p-2 md:p-0'} ref={parentRef}>
         {fullscreen && <div className='flex p-10 items-center justify-center align-middle h-100 flex-col relative'>
 
           <BigPlayerDisplay pair={pair} time={time} color={orientation === 'white' ? 'black' : 'white'} />
@@ -118,10 +121,10 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
               handleMaxSize={toggleFullscreen} />
           </div>
         </div>
-        <div ref={moveListRef} className='w-[300px]'>
+        <div ref={moveListRef} className='w-full md:w-[300px] mt-5 md:mt-0'>
 
           <MoveList maxHeight={availableHeight} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
-          {!fullscreen && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair.result}</div>}
+          {!fullscreen && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair?.result}</div>}
         </div>
       </div>
       {/* <div className='fixed  bg-slate-700 text-white opacity-90 bottom-[100px] p-5 w-full'>

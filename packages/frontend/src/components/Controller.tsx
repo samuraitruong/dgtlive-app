@@ -32,7 +32,7 @@ export default function Controler({ navigateByStep, currentIndex, total, handleM
             <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white" onClick={() => navigateByStep(1)} disabled={currentIndex === total - 1}><GrCaretNext /></button>
             <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white" onClick={() => navigateByStep(Number.MAX_VALUE)}><TbPlayerTrackNext /></button>
             <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white"><LuFlipVertical2 onClick={toggleBoardDirection} /></button>
-            <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white" onClick={handleMaxSize}><LuMaximize /></button>
+            <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white hidden md:inline" onClick={handleMaxSize}><LuMaximize /></button>
         </div>
     )
 }

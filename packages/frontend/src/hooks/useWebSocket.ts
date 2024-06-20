@@ -14,6 +14,7 @@ export function useWebSocket(url: string, path = '/') {
     const socketInstance = useMemo(() => io(url, {
         path: path + "/socket.io",
         transports: ["websocket", "polling"],
+        reconnection: true,
     }), [url, path]);
 
     useEffect(() => {
