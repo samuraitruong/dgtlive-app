@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { EventsModule } from './events/events.module';
@@ -15,6 +20,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { CustomExceptionFilter } from './middleware/app.filter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { FideModule } from './fide/fide.module';
+import { CustomHeaderMiddleware } from './middleware/wasm-header.middleware';
 
 @Module({
   imports: [
@@ -49,10 +55,12 @@ import { FideModule } from './fide/fide.module';
     },
   ],
 })
-export class AppModule {
+export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(FallbackMiddleware)
       .forRoutes({ path: 'tournament/*', method: RequestMethod.ALL });
+
+    consumer.apply(CustomHeaderMiddleware).forRoutes('*');
   }
 }

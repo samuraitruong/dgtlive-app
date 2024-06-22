@@ -9,6 +9,7 @@ import { BoardOrientation } from 'react-chessboard/dist/chessboard/types';
 import PlayerDisplay from './SmallPlayerDisplay';
 import BigPlayerDisplay from './BigPlayerDisplay';
 import { useFullscreen } from '@/hooks/useFullscreen';
+import { useStockfish } from '@/hooks/useStockfish';
 
 interface GameViewerProps {
   data: GameEventResponse
@@ -16,7 +17,7 @@ interface GameViewerProps {
   tournamentName: string;
 }
 
-const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: GameViewerProps) => {
+const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentName }: GameViewerProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [fullscreen, toggleFullscreen] = useFullscreen();
@@ -28,7 +29,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
   const onBoardOrientationChanged = (d: BoardOrientation) => {
     setOrientation((prev) => prev === 'white' ? 'black' : 'white')
   }
-
+  const { engine, bestMoveResult } = useStockfish();
   const handleNavigateStep = (step: number) => {
     let nextStep = currentIndex + step;
     if (step == Number.MIN_VALUE) {
@@ -57,11 +58,18 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
         black: moves[currentIndex]?.time || -1
       })
     }
-  }, [currentIndex, moves])
+
+    const move = moves[currentIndex]
+
+    engine?.findBestMove(move.fen)
+  }, [currentIndex, moves, engine])
+
+  const showBestMove = useMemo(() => !isLive ? bestMoveResult : undefined, [bestMoveResult, isLive])
 
   useEffect(() => {
     setCurrentIndex(moves.length - 1)
   }, [moves])
+
   const { boardWidth, availableHeight } = useMemo(() => {
 
     const box1 = parentRef.current?.getClientRects()[0];
@@ -108,7 +116,7 @@ const GameViewer = ({ data: { moves, delayedMoves }, pair, tournamentName }: Gam
           }
           {/* {fullscreen && <h2 className='mb-10 p-2 text-ellipsis text-wrap text-4xl text-center absolute top-0 font-bold bg-slate-800  text-white'>{tournamentName}</h2>} */}
 
-          <Board move={moves[currentIndex]} boardWidth={boardWidth} direction={orientation} />
+          <Board move={moves[currentIndex]} boardWidth={boardWidth} direction={orientation} bestMove={showBestMove} />
 
           {!fullscreen &&
             <PlayerDisplay pair={pair} time={time} color={orientation} />

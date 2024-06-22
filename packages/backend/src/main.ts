@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { ValidationPipe } from '@nestjs/common';
 import { CustomExceptionFilter } from './middleware/app.filter';
+import { CustomHeaderMiddleware } from './middleware/wasm-header.middleware';
 
 async function bootstrap() {
   const corsOptions: CorsOptions = {
@@ -18,6 +19,7 @@ async function bootstrap() {
   app.enableCors(corsOptions);
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new CustomExceptionFilter());
+  app.use(new CustomHeaderMiddleware().use);
 
   // const gatewayManager = app.get<GatewayManagerService>(GatewayManagerService);
   // gatewayManager.bootstrap();
