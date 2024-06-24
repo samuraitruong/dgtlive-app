@@ -3,12 +3,23 @@ import { StockfishLine } from './Model';
 const round = (n: number, digit = 2) => {
     return +n.toFixed(digit);
 };
-export function calculateWinChange(centipawns: number) {
+export function calculateWinChange1(centipawns: number) {
     const chance = Math.max(
         0,
         Math.min(100, 50 + 50 * (2 / (1 + Math.exp(-0.00368208 * centipawns)) - 1))
     );
     return round(chance);
+}
+
+export function calculateWinChange(centipawns: number) {
+    const k = 0.004; // Steepness of the curve
+    const x0 = 0;    // Midpoint for 50% probability
+
+    const rawChance = 1 / (1 + Math.exp(-k * (centipawns - x0)));
+    const chancePercentage = rawChance * 100;
+
+    // Ensure the chance is clamped between 0 and 100 and rounded
+    return Math.max(0, Math.min(100, Math.round(chancePercentage)));
 }
 
 export function calculateAccuracy(

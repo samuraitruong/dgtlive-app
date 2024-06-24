@@ -94,6 +94,10 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentNam
     if (width && width < 672) {
       boardWidth = width - 14;
     }
+    else if (width && width < 1024) {
+      boardWidth = boardWidth - 300;
+
+    }
     return { boardWidth, availableHeight }
   }, [height, fullscreen, width])
 
@@ -136,7 +140,9 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentNam
         </div>
       </div>
       {/* <div className='fixed  bg-slate-700 text-white opacity-90 bottom-[100px] p-5 w-full'>
-        availableWidth = {boardWidth} <br />
+        boardWidth = {boardWidth} <br />
+
+        w = {width}<br />
 
         {JSON.stringify(parentRef.current?.getClientRects()[0])}
 

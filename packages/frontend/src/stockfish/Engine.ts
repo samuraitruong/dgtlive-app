@@ -203,7 +203,7 @@ export class StockfishEngine {
         await this.waitFor('readyok');
     }
 
-    async findBestMove(position: string, depth = 18) {
+    async findBestMove(position: string, depth = 20) {
         if (this.cache[position]) {
             this.emitter('bestmove', this.cache[position]);
             return this.cache[position];

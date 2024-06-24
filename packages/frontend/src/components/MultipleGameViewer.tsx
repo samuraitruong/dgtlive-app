@@ -50,7 +50,7 @@ function MiniBoard({ game, onClick, result }: { game: GameEventResponse, gameCou
 
 
     return (
-        <div className={`flex flex-col md:w-1/3 p-1 mt-5 relative w-full mb-5 md:mb-0`} ref={parentRef}
+        <div className={`flex flex-col md:w-1/2 lg:w-1/3 p-1 mt-5 relative w-full mb-5 md:mb-0`} ref={parentRef}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -59,7 +59,7 @@ function MiniBoard({ game, onClick, result }: { game: GameEventResponse, gameCou
             <Board move={game.moves[currentIndex]} boardWidth={parentWidth - 20} ></Board>
 
             {result !== '*' && (
-                <div className="absolute inset-0 flex items-center justify-center  bg-opacity-30 opacity-70 text-white text-8xl font-bold">
+                <div className="absolute inset-0 flex items-center justify-center  bg-opacity-50 opacity-70 text-slate-700 text-8xl font-bold">
                     {result}
                 </div>
             )}
