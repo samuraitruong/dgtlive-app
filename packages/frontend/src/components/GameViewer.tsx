@@ -60,9 +60,10 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentNam
     }
 
     const move = moves[currentIndex]
-
-    engine?.findBestMove(move.fen)
-  }, [currentIndex, moves, engine])
+    if (move && !isLive) {
+      engine?.findBestMove(move.fen)
+    }
+  }, [currentIndex, moves, engine, isLive])
 
   const showBestMove = useMemo(() => !isLive ? bestMoveResult : undefined, [bestMoveResult, isLive])
 

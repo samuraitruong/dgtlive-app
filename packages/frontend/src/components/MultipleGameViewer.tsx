@@ -54,6 +54,7 @@ function MiniBoard({ game, onClick, result }: { game: GameEventResponse, gameCou
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
+            {game.isLive && <div className="absolute flex top-8 right-4 bg-green-600 p-1 rounded-sm z-50 text-white font-xs opacity-45">live</div>}
             <div className="pr-3">
                 <SmallPlayerDisplay time={time} pair={game.pair} color="black" icon={false} /></div>
             <Board move={game.moves[currentIndex]} boardWidth={parentWidth - 20} ></Board>

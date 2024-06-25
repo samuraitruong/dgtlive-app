@@ -68,6 +68,10 @@ export class LiveChessTournament {
                 break;
             }
         }
-        return { moves, live: data.live, startedAt: data.firstMove, result: data.result };
+        let live = data.live
+        if (live && (data.result === 'BLACKWIN' || data.result === 'WHITEWIN') || data.result === 'DRAW') {
+            live = false
+        }
+        return { moves, live, startedAt: data.firstMove, result: data.result };
     }
 }

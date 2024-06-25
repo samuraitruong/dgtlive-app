@@ -39,10 +39,12 @@ export class BaseGateway
     this.broadcast('tournament', t);
   }
   public async intervalCheck() {
+    console.log('Live game to check %d', this.liveGames.length);
     for await (const liveGame of this.liveGames) {
       const game = liveGame.data;
       const data = await this.eventsService.loadGame(game);
       game.isLive = data.isLive;
+      liveGame.data = game;
       const newHash = hashObject(data);
       liveGame.lastFetch = new Date().getTime();
       if (liveGame.hash != newHash) {

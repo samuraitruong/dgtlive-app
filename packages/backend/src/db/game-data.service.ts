@@ -17,7 +17,6 @@ export class GameDataService {
   async upsert(createGameDataDto: any): Promise<GameData> {
     const { liveChessId, game, round } = createGameDataDto;
 
-    console.log({ liveChessId, game, round });
     return this.gameDataModel
       .findOneAndReplace({ liveChessId, game, round }, createGameDataDto, {
         new: true,

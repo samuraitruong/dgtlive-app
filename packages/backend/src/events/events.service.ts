@@ -55,7 +55,7 @@ export class EventsService {
       game.game,
     );
     let previousMovedAt = startedAt;
-    let totalTIme = 0;
+    //let totalTIme = 0;
     const extractTime = (t: string) => {
       if (!t) {
         return { time: 0, moveTime: 0 };
@@ -63,7 +63,7 @@ export class EventsService {
       const [time, spent] = t.split('+');
 
       previousMovedAt = previousMovedAt + (+spent || 0) * 1000;
-      totalTIme += +spent || 0;
+      //totalTIme += +spent || 0;
 
       const item = {
         time: +time,
@@ -93,11 +93,11 @@ export class EventsService {
         arrow: [x[3], x[4]],
       })),
     };
-    console.log(
-      'Total time spend until now',
-      totalTIme,
-      previousMovedAt - startedAt,
-    );
+    // console.log(
+    //   'Total time spend until now',
+    //   totalTIme,
+    //   previousMovedAt - startedAt,
+    // );
     //save the game to database
     this.gameDataService.upsert({ ...t, liveChessId: this.tournamentId });
     if (t.moves.length > 4) {
@@ -110,26 +110,26 @@ export class EventsService {
       // delay by time
       const epochNowInMs = moment().unix().valueOf() * 1000;
       const cutoffTime = epochNowInMs - this.options.delayedTimeInSec * 1000;
-      console.log(
-        'before cut off',
-        t.moves.length,
-        epochNowInMs,
-        this.options.delayedTimeInSec,
-      );
+      // console.log(
+      //   'before cut off',
+      //   t.moves.length,
+      //   epochNowInMs,
+      //   this.options.delayedTimeInSec,
+      // );
       if (live && cutoffTime < epochNowInMs) {
         const debug = t.moves.filter((x) => x.movedAt > cutoffTime);
-        console.log(
-          'filtered',
-          debug.map((x) => ({
-            at: moment(x.movedAt).format(),
-            diff: epochNowInMs - x.movedAt,
-          })),
-        );
+        // console.log(
+        //   'filtered',
+        //   debug.map((x) => ({
+        //     at: moment(x.movedAt).format(),
+        //     diff: epochNowInMs - x.movedAt,
+        //   })),
+        // );
         t.moves = t.moves.filter((x) => x.movedAt <= cutoffTime);
         t.delayedMoves = debug.length;
         t.pointInTime = cutoffTime;
       }
-      console.log('actual move display', t.moves.length);
+      // console.log('actual move display', t.moves.length);
     }
     if (!live) {
       this.cacheManager.set(
@@ -163,10 +163,12 @@ export class EventsService {
         ]);
         if (black && black.id) {
           pair.black.fideid = black.id;
+          pair.black.elo = +black.ratings?.std;
           pair.black.title = black.title;
         }
 
         if (white && white.id) {
+          pair.white.elo = +white.ratings?.std;
           pair.white.fideid = white.id;
           pair.white.title = white.title;
         }
@@ -184,8 +186,12 @@ export class EventsService {
         date: p.date,
         live: p.pairings.some((t) => t.live),
         pairs: p.pairings.map((p) => ({
-          black: p.black.fname + ', ' + p.black.lname,
-          white: p.white.fname + ', ' + p.white.lname,
+          black:
+            `${p.black.fname}, ${p.black.lname}` +
+            (p.black.elo ? ` (${p.black.elo})` : ''),
+          white:
+            `${p.white.fname}, ${p.white.lname}` +
+            (p.white.elo ? ` (${p.white.elo})` : ''),
           result: mapGameResult(p.result),
           live: p.live,
         })),

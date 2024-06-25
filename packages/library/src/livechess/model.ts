@@ -42,8 +42,14 @@ export interface Player {
     federation: string;
     gender: string;
     fideid: string;
+    elo?: number;
 }
-
+export interface ClockData {
+    white: number;
+    black: number;
+    run: boolean;
+    time: number;
+}
 
 export interface GameData {
     live: boolean;
@@ -52,6 +58,6 @@ export interface GameData {
     chess960: number;
     result: string;
     comment: string;
-    clock: string;
+    clock: string | ClockData;
     moves: string[]
 }
