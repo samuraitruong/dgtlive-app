@@ -8,7 +8,7 @@ export default function BigPlayerDisplay({ pair, time, color, reverse = false }:
         <div className="flex items-center justify-center text-4xl">
             <div className={"flex justify-between " + (reverse ? 'flex-col-reverse' : 'flex-col')}>
                 <div className='font-bold mb-5 whitespace-nowrap'>
-                    {color === 'white' ? <FaChessKing className='inline' /> : <FaRegChessKing className='inline' />}{pair[color]}
+                    {color === 'white' ? <FaRegChessKing className='inline' /> : <FaChessKing className='inline' />}{pair[color]}
                 </div>
                 <div className='flex justify-around mt-2 mb-2'>
                     <Clock time={time[color]} size="text-4xl"></Clock>
