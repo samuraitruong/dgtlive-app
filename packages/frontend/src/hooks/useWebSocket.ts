@@ -7,6 +7,7 @@ export function useWebSocket(url: string, path = '/') {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [readyState, setReadyState] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>()
     const [lastMessage, setLastMessage] = useState<string>();
     const [games, setGames] = useState<GameMap>({});
     const [tournament, setTournament] = useState<Tournament>();
@@ -35,6 +36,8 @@ export function useWebSocket(url: string, path = '/') {
             });
 
             socketInstance.on("error", (error) => {
+                setError(error?.message || 'Unexpected error occured')
+                setLoading(false);
                 // ...
                 console.error(error)
             });
@@ -75,6 +78,7 @@ export function useWebSocket(url: string, path = '/') {
         return () => {
             console.log("use socket hook unmounting");
             if (socketInstance) {
+                setLoading(false);
                 socketInstance.disconnect();
             }
         };
@@ -89,6 +93,7 @@ export function useWebSocket(url: string, path = '/') {
         tournament,
         lastMessage,
         readyState,
+        error,
         games,
     };
 }

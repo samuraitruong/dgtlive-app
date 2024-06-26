@@ -7,16 +7,21 @@ interface AuthContextType {
     loading?: boolean
     user: any; // Replace `any` with your user type
     verifyToken: (token: string) => void;
-    setUser: React.Dispatch<React.SetStateAction<any>> | null; // Adjust the type accordingly
+    setUser: React.Dispatch<React.SetStateAction<any>> | null;
+    logout: () => void
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, setUser: null, verifyToken: () => { }, loading: true });
-
+const AuthContext = createContext<AuthContextType>({ user: null, setUser: null, verifyToken: () => { }, loading: true, logout: () => { } });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
+    const logout = () => {
+        localStorage.removeItem('token');
+        setUser(null)
+
+    }
     const verifyToken = (token: string) => {
         fetch(`${API_URL}/api/auth/me`, {
             method: 'GET',
@@ -55,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [router]);
 
     return (
-        <AuthContext.Provider value={{ user, setUser, verifyToken, loading }}>
+        <AuthContext.Provider value={{ user, setUser, verifyToken, loading, logout }}>
             {children}
         </AuthContext.Provider>
     );

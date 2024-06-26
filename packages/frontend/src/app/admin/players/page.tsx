@@ -50,7 +50,7 @@ function FidePlayersPage() {
 
     if (loading) return <Loading />
     return (
-        <div className="w-full px-4 bg-slate-600 h-screen">
+        <div className="w-full">
             <h1 className="text-2xl font-bold mb-4">FIDE Players</h1>
 
             <div className="mb-4 flex">
@@ -73,7 +73,7 @@ function FidePlayersPage() {
                 <p className='text-red p-10 border border-red-400'>{error}</p>
             ) : (
                 <>
-                    <table className="min-w-full border-collapse">
+                    <table className="min-w-full border-collapse bg-white">
                         <thead>
                             <tr>
                                 <th

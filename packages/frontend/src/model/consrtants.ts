@@ -1,6 +1,7 @@
 const constants = {
     EventNames: {
-        Hello: 'hello'
+        Hello: 'hello',
+        Game: 'game'
     }
 }
 export default constants

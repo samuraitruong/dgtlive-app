@@ -3,6 +3,8 @@ export function mapGameResult(result: string) {
         return "*"
     }
     const resultmap: { [x: string]: string } = {
+        "WHITEFORFAIT": '1-0',
+        "BLACKFORFAIT": '0-1',
         "BLACKWIN": "0-1",
         "WHITEWIN": "1-0",
         "DRAW": "1/2-1/2",

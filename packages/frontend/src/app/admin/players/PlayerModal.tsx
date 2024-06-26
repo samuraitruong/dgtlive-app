@@ -1,5 +1,3 @@
-// src/components/PlayerModal.tsx
-
 import React, { useState } from 'react';
 import { FidePlayer } from 'library'
 
@@ -24,7 +22,7 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onSave }) =>
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50 z-50">
             <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full text-black">
-                <h2 className="text-xl mb-4">Player Details1</h2>
+                <h2 className="text-xl mb-4">Player Details</h2>
                 <div>
                     <p><strong>Name:</strong> {player.name}</p>
                     <p><strong>Country:</strong> {player.country}</p>

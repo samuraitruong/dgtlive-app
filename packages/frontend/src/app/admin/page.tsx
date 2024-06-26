@@ -50,18 +50,14 @@ function GameIdChanner({ type, title }: { type: string, title: string }) {
 function Admin() {
   const { user } = useAuth();
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between bg-gray-100 text-black">
-      <h2 className="p-10 text-6xl">Welcome {user.username}</h2>
-      <div className="flex items-center  flex-col justify-center h-screen">
-        <GameIdChanner type="junior" title="Set Junior Tournament ID"></GameIdChanner>
+    <div className="flex items-center  flex-col justify-center h-screen">
+      <GameIdChanner type="junior" title="Set Junior Tournament ID"></GameIdChanner>
 
-        <GameIdChanner type="senior" title="Set Senior Tournament ID"></GameIdChanner>
-        <div className="flex justify-between mt-5">
-          <Link href='/admin/manage' className="bg-blue-500 hover:bg-blue-700  mr-5 text-white font-bold py-2 px-4 rounded flex items-center">Manage</Link>
-          <Link href='/' className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded flex items-center">Cancel</Link>
-        </div>
+      <GameIdChanner type="senior" title="Set Senior Tournament ID"></GameIdChanner>
+      <div className="flex justify-between mt-5">
+        <Link href='/' className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded flex items-center">Cancel</Link>
       </div>
-    </main>
+    </div>
   );
 }
 

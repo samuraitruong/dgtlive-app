@@ -41,9 +41,9 @@ const Login: React.FC<{ history?: any }> = ({ history }) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-300 text-black">
-      <div className="w-full md:w-1/3">
-        <h2 className="text-2xl mb-4">Login</h2>
+    <div className="flex justify-center items-center h-screen bg-slate-900 text-black shadow-lg fixed top-0 w-full left-0">
+      <div className="w-full md:w-1/3 bg-white shadow-sm p-5 rounded-lg">
+        <h2 className="text-2xl mb-5 w-full text-center">Admin Control Panel</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1">Username:</label>

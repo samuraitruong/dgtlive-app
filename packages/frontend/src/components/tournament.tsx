@@ -24,7 +24,6 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         return category
     }, [category, pathParmas]);
     const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)
-    const [messageHistory, setMessageHistory] = useState<MessageEvent<any>[]>([]);
     const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string>();
     const [selectedRound, setSelectedRound] = useState<number>(0);
@@ -35,16 +34,14 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
             setSelectedGame(undefined)
             const roundPairs = tournament?.rounds[round - 1];
             var gamesPairs = roundPairs?.pairs.map((x, i) => {
-
-
-                sendMessage('game', { round, game: i + 1 })
+                sendMessage(consrtants.EventNames.Game, { round, game: i + 1 })
                 return `${round}_${i + 1}`
             })
             setMultipleGameIds(gamesPairs as any);
             return;
         }
         setMultipleGameIds([])
-        sendMessage('game', { round, game })
+        sendMessage(consrtants.EventNames.Game, { round, game })
         setSelectedGame(`${round}_${game}`)
         const pair = tournament?.rounds[round - 1].pairs[game - 1]
         setSelectedPair(pair)

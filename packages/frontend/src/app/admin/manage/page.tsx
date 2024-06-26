@@ -3,7 +3,6 @@ import { useState } from "react";
 import Loading from "@/components/Loading";
 import Link from 'next/link'
 import withAuth from "@/auth/withAuth";
-import { useAuth } from "@/auth/authContext";
 import useData, { RowData } from "@/hooks/useData";
 import { API_URL } from "@/config";
 import Form from "./form";
@@ -11,7 +10,6 @@ import Form from "./form";
 
 
 function ManageAdmin() {
-  const { user } = useAuth();
   const { data, updateItem, addItem, error, deleteItem, isLoading } = useData(API_URL);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentRow, setCurrentRow] = useState<RowData | undefined>();
@@ -48,8 +46,8 @@ function ManageAdmin() {
     return <Loading />
   }
   return (
-    <main className="flex min-h-screen flex-col items-center  bg-gray-100 text-black p-3">
-      <h2 className="p-10 text-6xl">Welcome {user.username}</h2>
+    <>
+      <h1 className="text-2xl font-bold mb-4">Manage Tournaments</h1>
       <div className="w-full text-right">
         <button
           className="bg-blue-500 text-white px-4 py-2 rounded mb-4 float-right"
@@ -59,8 +57,8 @@ function ManageAdmin() {
         </button>
       </div>
       <table className="min-w-full bg-white border">
-        <thead>
-          <tr>
+        <thead >
+          <tr >
             <th className="py-2 px-4 border-b">Name</th>
             <th className="py-2 px-4 border-b">Slug</th>
             <th className="py-2 px-4 border-b">Live Chess ID</th>
@@ -98,7 +96,7 @@ function ManageAdmin() {
       </table>
 
       {isModalOpen && <Form data={currentRow} onEvent={handleFormEvent} errorMessage={error} />}
-    </main>
+    </>
   );
 };
 
