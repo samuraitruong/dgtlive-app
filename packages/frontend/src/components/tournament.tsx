@@ -23,6 +23,8 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         }
         return category
     }, [category, pathParmas]);
+
+    console.log("pathParmas", pathParmas, socketPath)
     const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)
     const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string>();
