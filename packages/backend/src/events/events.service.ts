@@ -163,12 +163,12 @@ export class EventsService {
         ]);
         if (black && black.id) {
           pair.black.fideid = black.id;
-          pair.black.elo = +black.ratings?.std;
+          pair.black.elo = black.ratings?.std ? +black.ratings?.std : undefined;
           pair.black.title = black.title;
         }
 
         if (white && white.id) {
-          pair.white.elo = +white.ratings?.std;
+          pair.white.elo = white.ratings?.std ? +white.ratings?.std : undefined;
           pair.white.fideid = white.id;
           pair.white.title = white.title;
         }
@@ -186,12 +186,18 @@ export class EventsService {
         date: p.date,
         live: p.pairings.some((t) => t.live),
         pairs: p.pairings.map((p) => ({
-          black:
-            `${p.black.fname}, ${p.black.lname}` +
-            (p.black.elo ? ` (${p.black.elo})` : ''),
-          white:
-            `${p.white.fname}, ${p.white.lname}` +
-            (p.white.elo ? ` (${p.white.elo})` : ''),
+          black: {
+            name: `${p.black.fname}, ${p.black.lname}`,
+            elo: p.black.elo?.toString(),
+            fideId: p.black.fideid,
+            title: p.black.title,
+          },
+          white: {
+            title: p.black.title,
+            name: `${p.white.fname}, ${p.white.lname}`,
+            elo: p.white.elo?.toString(),
+            fideId: p.white.fideid,
+          },
           result: mapGameResult(p.result),
           live: p.live,
         })),

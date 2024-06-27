@@ -10,7 +10,9 @@ export default function PlayerDisplay({ pair, time, color, icon = true }: { icon
 
                 {color === 'white' && icon && <FaRegChessKing className='inline' />}
                 {color === 'black' && icon && <FaChessKing className='inline' />}
-                <span>{pair[color]}</span>
+                {pair[color].title && <span className="text-sm">({pair[color].title || ''})</span>}
+                <span>{pair[color].name} </span>
+                {pair[color].elo && <span className="text-sm">({pair[color].elo || ''})</span>}
             </div>
             <div className='flex justify-around'>
                 <Clock time={time[color]} ></Clock>

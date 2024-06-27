@@ -3,13 +3,30 @@ import { Document } from 'mongoose';
 
 export type GameDataDocument = GameData & Document;
 
-@Schema({ _id: false })
-class Pair {
+@Schema()
+export class Player {
   @Prop({ required: true })
-  black: string;
+  name: string;
 
-  @Prop({ required: true })
-  white: string;
+  @Prop({ required: false })
+  elo: string;
+
+  @Prop({ required: false })
+  title: string;
+
+  @Prop({ required: false })
+  fideId: string;
+}
+
+export const PlayerSchema = SchemaFactory.createForClass(Player);
+
+@Schema()
+export class Pair {
+  @Prop({ required: true, type: PlayerSchema })
+  black: Player;
+
+  @Prop({ required: true, type: PlayerSchema })
+  white: Player;
 
   @Prop({ required: true })
   result: string;

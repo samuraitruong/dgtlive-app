@@ -11,9 +11,15 @@ export interface Round {
 
 }
 
+export interface Player {
+    name: string,
+    fideId?: string;
+    elo?: number;
+    title?: string
+}
 export interface Pair {
-    white: string;
-    black: string;
+    white: Player;
+    black: Player;
     result: string;
     live: boolean
 }

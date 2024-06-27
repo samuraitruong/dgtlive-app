@@ -1,4 +1,4 @@
-import { Round } from 'library/src/model/tournament';
+import type { Round } from 'library/src/model/tournament';
 import { BiSolidChess } from "react-icons/bi";
 import { CiStreamOn } from "react-icons/ci";
 import React, { useMemo, useState } from 'react';
@@ -52,8 +52,8 @@ export default function Schedule({ data, onSelect, selectedRound }: ScheduleProp
                   <li key={pairIndex} className="mb-2 cursor-pointer hover:bg-slate-400 p-2 border rounded-lg">
                     <div className="flex justify-between items-center" onClick={() => onSelect(item.index || 0 + 1, pairIndex + 1)}>
                       <div className="flex flex-col w-3/4">
-                        <div className="text-sm font-semibold">{pair.white}</div>
-                        <div className="text-sm font-semibold">{pair.black}</div>
+                        <div className="text-sm font-semibold">{pair.white?.name}</div>
+                        <div className="text-sm font-semibold">{pair.black?.name}</div>
                       </div>
                       <div className="flex justify-center w-1/8 text-center">
                         <span className="text-sm font-bold">{pair?.result}</span>
