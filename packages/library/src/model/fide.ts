@@ -20,7 +20,7 @@ export interface FideSearchPlayerResponse {
 export interface FidePlayer {
   lastRatingUpdate?: Date;
   name: string;
-  title: string | null;
+  title?: string | null;
   id: string;
   table: string;
   country: string;

@@ -79,8 +79,8 @@ export class FideService {
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const unpopulateRatingPlayers = await this.fidePlayerService.query({
         id: { $exists: true },
-        ratings: { $exists: false },
         $or: [
+          { ratings: { $exists: false } },
           { lastRatingUpdate: { $lt: oneDayAgo } },
           { lastRatingUpdate: { $exists: false } },
         ],
@@ -112,6 +112,18 @@ export class FideService {
     }
   }
 
+  async syncFilePlayerRating(id: string) {
+    const player = await this.fidePlayerService.findById(id);
+    if (player && player.id) {
+      const extrasPlayerInfo = await this.getFideRating(player.id);
+      if (extrasPlayerInfo) {
+        Object.assign(player, extrasPlayerInfo);
+        player.lastRatingUpdate = new Date();
+        await player.save(); // Save
+      }
+    }
+    return player;
+  }
   async getFideRating(id: string) {
     const url = `https://ratings.fide.com/profile/${id}`;
     this.logger.log(`Fetching FIDE rating from URL: ${url}`);

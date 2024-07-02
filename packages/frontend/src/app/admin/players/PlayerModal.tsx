@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FidePlayer } from 'library'
+import { FidePlayer } from 'library';
 
 interface PlayerModalProps {
     player: FidePlayer;
@@ -28,26 +28,22 @@ const PlayerModal: React.FC<PlayerModalProps> = ({ player, onClose, onSave }) =>
                     <p><strong>Country:</strong> {player.country}</p>
                     <p><strong>Ratings:</strong> {player.ratings?.std}</p>
                 </div>
-                {player.id ? (
-                    <p><strong>ID:</strong> {player.id}</p>
-                ) : (
-                    <div className="mt-4">
-                        <label htmlFor="id" className="block mb-2">Update ID:</label>
-                        <input
-                            id="id"
-                            type="text"
-                            value={newId}
-                            onChange={handleIdChange}
-                            className="w-full p-2 border rounded"
-                        />
-                        <button
-                            onClick={handleSave}
-                            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                        >
-                            Save
-                        </button>
-                    </div>
-                )}
+                <div className="mt-4">
+                    <label htmlFor="id" className="block mb-2">Player ID:</label>
+                    <input
+                        id="id"
+                        type="text"
+                        value={newId}
+                        onChange={handleIdChange}
+                        className="w-full p-2 border rounded"
+                    />
+                    <button
+                        onClick={handleSave}
+                        className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                        Save
+                    </button>
+                </div>
                 <button onClick={onClose} className="mt-4 bg-gray-300 px-4 py-2 rounded">
                     Close
                 </button>

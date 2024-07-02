@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
+  Post,
   Query,
   UseGuards,
   UsePipes,
@@ -14,11 +17,15 @@ import { AuthGuard } from '../auth/auth.guard';
 import { SearchFidePlayerDto } from './dto/player-search.dto';
 import { ParseFilterPipe } from 'src/pipes/parse-filter.pipe';
 import { FidePlayer } from '../db/fide-player.schema';
+import { FideService } from './fide.service';
 
 @Controller('player')
 @UseGuards(AuthGuard)
 export class FidePlayerController {
-  constructor(private readonly fidePlayerService: FidePlayerService) {}
+  constructor(
+    private readonly fidePlayerService: FidePlayerService,
+    private readonly fideService: FideService,
+  ) {}
 
   @Patch('/:id')
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -26,6 +33,24 @@ export class FidePlayerController {
     const raw = await this.fidePlayerService.patchPlayerData(id, data);
 
     return this.cleanPlayer(raw);
+  }
+
+  @Post('/:id/sync')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async syncPlayerData(@Param() id: string) {
+    const raw = await this.fideService.syncFilePlayerRating(id);
+    if (!raw) {
+      throw new NotFoundException('Player not exists');
+    }
+    return this.cleanPlayer(raw);
+  }
+
+  @Delete('/:id')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async deletePlayer(@Param() id: string) {
+    await this.fidePlayerService.deleteFidePlayer(id);
+
+    return true;
   }
 
   @Get()

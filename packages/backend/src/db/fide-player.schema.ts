@@ -66,6 +66,9 @@ export class FidePlayer {
 
   @Prop()
   lastname: string;
+
+  @Prop({ default: false, required: false })
+  flagged: boolean;
 }
 
 const FidePlayerSchema = SchemaFactory.createForClass(FidePlayer);

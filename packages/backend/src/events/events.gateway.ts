@@ -37,7 +37,10 @@ export class JuniorEventsGateway extends BaseGateway {
   async bootstrap() {
     const data = await this.tournamentRegister.findOneBy({ slug: 'junior' });
     if (data) {
-      await this.replaceTournamenIdOnFly(data.liveChessId);
+      await this.replaceTournamenIdOnFly(data.liveChessId, {
+        delayedMoves: data.delayMoves,
+        delayedTimeInSec: data.delayTimes,
+      });
     }
   }
 }

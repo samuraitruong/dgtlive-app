@@ -25,6 +25,10 @@ export class FidePlayerService {
     return this.fidePlayerModel.findOne({ id }).exec();
   }
 
+  async findById(id: string): Promise<FidePlayerDocument> {
+    return this.fidePlayerModel.findById(new ObjectId(id)).exec();
+  }
+
   async patchPlayerData(
     _id: string,
     playerData: Partial<FidePlayer>,
@@ -44,7 +48,9 @@ export class FidePlayerService {
   }
 
   async deleteFidePlayer(id: string): Promise<FidePlayer> {
-    return this.fidePlayerModel.findOneAndDelete({ id }).exec();
+    return this.fidePlayerModel
+      .findOneAndDelete({ _id: new ObjectId(id) })
+      .exec();
   }
 
   async cleanupDuplicates() {

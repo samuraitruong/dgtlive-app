@@ -13,6 +13,7 @@ import { GameEventResponse } from 'library';
 import { UseFilters } from '@nestjs/common';
 import { SocketExceptionFilter } from './socket.exception.filter';
 import { hashObject } from 'src/util';
+import { EventServiceOptions } from './dto/event-option';
 
 export interface LiveGame {
   lastFetch?: number;
@@ -120,8 +121,14 @@ export class BaseGateway
     client.error(error.message);
   }
 
-  public async replaceTournamenIdOnFly(tournamentId: string) {
+  public async replaceTournamenIdOnFly(
+    tournamentId: string,
+    options?: EventServiceOptions,
+  ) {
     if (tournamentId != this.eventsService.tournamentId) {
+      if (options) {
+        this.eventsService.setConfig(options);
+      }
       const result = await this.eventsService.setGameId(tournamentId);
       await this.refreshTournament();
       // TODO: remove live games

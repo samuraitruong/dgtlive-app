@@ -3,8 +3,11 @@ import withAuth from '@/auth/withAuth';
 import Loading from '@/components/Loading';
 import React, { useState } from 'react';
 import PlayerModal from './PlayerModal';
-import type { FidePlayer } from 'library';
+import type { FidePlayer, Player } from 'library';
 import { useFidePlayers } from '@/hooks/useFidePlayers';
+import { MdDeleteForever } from "react-icons/md";
+import { RxUpdate } from "react-icons/rx";
+import { CiEdit } from "react-icons/ci";
 
 function FidePlayersPage() {
     const [page, setPage] = useState(1);
@@ -16,7 +19,7 @@ function FidePlayersPage() {
 
     const [selectedPlayer, setSelectedPlayer] = useState<FidePlayer>()
 
-    const { data, total, loading, error, updatePlayerWith, fetchData } = useFidePlayers({
+    const { data, total, loading, error, updatePlayerWith, fetchData, deletePlayer, syncPlayer } = useFidePlayers({
         page,
         limit,
         sortField,
@@ -44,6 +47,16 @@ function FidePlayersPage() {
         if (selectedPlayer && (selectedPlayer as any)._id) {
             updatePlayerWith((selectedPlayer as any)._id, { id })
         }
+    }
+
+    const handleDeleteClick = async (id: string) => {
+        await deletePlayer(id)
+        fetchData();
+    }
+
+    const handleSyncClick = async (playerId: string) => {
+        await syncPlayer(playerId)
+        fetchData();
     }
 
     const totalPages = Math.ceil(total / limit);
@@ -107,18 +120,49 @@ function FidePlayersPage() {
                                     className="cursor-pointer px-4 py-2 border"
                                 >
                                     Ratings
+
+                                    <div className='flex w-full justify-between'>
+                                        <span> std</span>
+                                        <span>rapid </span>
+                                        <span> blitz</span>
+                                    </div>
+
                                 </th>
+                                <th className='cursor-pointer px-4 py-2 border text-center'></th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.map((player) => (
-                                <tr key={player.id} onClick={() => setSelectedPlayer(player as any)}>
-                                    <td className="border px-4 py-2">{player.id}</td>
+                                <tr key={player.id}>
+                                    <td className="border px-4 py-2">
+
+                                        {player.id && <a href={"https://ratings.fide.com/profile/" + player.id} target='_blank'>{player.id}</a>}
+
+                                    </td>
                                     <td className="border px-4 py-2">{player.name}</td>
                                     <td className="border px-4 py-2">{player.title}</td>
                                     <td className="border px-4 py-2">{player.birthYear}</td>
                                     <td className="border px-4 py-2">
-                                        {player.ratings?.std} | {player.ratings?.rapid} | {player.ratings?.blitz}
+                                        <div className='flex w-full justify-between'>
+                                            <span> {player.ratings?.std} </span>
+                                            <span> {player.ratings?.rapid} </span>
+                                            <span> {player.ratings?.blitz} </span>
+                                        </div>
+
+                                    </td>
+                                    <td className='border px-4 py-2 flex justify-arround space-x-2 align-middle'>
+                                        <button className='z-50 px-2 py-1 rounded-sm bg-red-500 text-white text-sm' onClick={() => handleDeleteClick(player._id)} >
+                                            <MdDeleteForever className='inline' /> Delete
+                                        </button>
+
+                                        <button className='z-50 px-2 py-1 rounded-sm bg-green-500 text-white text-sm' onClick={() => setSelectedPlayer(player as any)} >
+                                            <CiEdit className='inline' /> Edit
+                                        </button>
+
+                                        <button className='z-50 px-2 py-1 rounded-sm bg-blue-500 text-white text-sm' onClick={() => handleSyncClick(player._id)} >
+                                            <RxUpdate className='inline' /> Update
+                                        </button>
+
 
                                     </td>
                                 </tr>
@@ -146,9 +190,10 @@ function FidePlayersPage() {
                         </button>
                     </div>
                 </>
-            )}
+            )
+            }
             {selectedPlayer && <PlayerModal player={selectedPlayer} onClose={() => setSelectedPlayer(undefined)} onSave={handleSave} />}
-        </div>
+        </div >
     );
 };
 

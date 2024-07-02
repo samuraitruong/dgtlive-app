@@ -32,6 +32,9 @@ export class EventsService {
     );
   }
 
+  public setConfig(options: EventServiceOptions) {
+    this.options = options;
+  }
   async setGameId(tournamentId: string) {
     const dgtLiveChess = new LiveChessTournament(tournamentId);
     const verify = dgtLiveChess.fetchTournament();

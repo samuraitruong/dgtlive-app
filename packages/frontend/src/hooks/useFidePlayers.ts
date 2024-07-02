@@ -11,9 +11,10 @@ interface PlayerRating {
 }
 
 interface FidePlayer {
+    _id: string;
     name: string;
     fideTitle?: string | null;
-    title?: string | null;
+    title?: string | null | undefined;
     id?: string;
     table?: string;
     country?: string;
@@ -41,6 +42,8 @@ interface UseFidePlayersResult {
     error: string | null;
     updatePlayerWith: (id: string, player: Partial<FidePlayer>) => Promise<void>;
     fetchData: () => void
+    deletePlayer: (id: string) => Promise<boolean>
+    syncPlayer: (id: string) => Promise<boolean>
 }
 
 export const useFidePlayers = ({
@@ -80,6 +83,53 @@ export const useFidePlayers = ({
         user
     ])
 
+    const deletePlayer = useCallback(async (id: string) => {
+        setLoading(true);
+        setError('')
+        const response = await fetch(
+            `${API_URL}/api/player/${id}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${user.token}`
+                }
+            }
+        );
+        setLoading(false);
+        if (!response.ok) {
+
+            setError('Unable to delete user')
+        }
+        return response.ok
+
+    }, [
+        user
+    ])
+
+    const syncPlayer = useCallback(async (id: string) => {
+        setLoading(true);
+        setError('')
+        const response = await fetch(
+            `${API_URL}/api/player/${id}/sync`,
+            {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    authorization: `Bearer ${user.token}`
+                }
+            }
+        );
+        setLoading(false);
+        if (!response.ok) {
+
+            setError('Unable to delete user')
+        }
+        return response.ok
+
+    }, [
+        user
+    ])
     const fetchData = useCallback(async () => {
         setLoading(true);
         setError(null);
@@ -115,5 +165,5 @@ export const useFidePlayers = ({
         fetchData();
     }, [fetchData]);
 
-    return { data, total, loading, error, updatePlayerWith, fetchData };
+    return { data, total, loading, error, updatePlayerWith, fetchData, deletePlayer, syncPlayer };
 };
