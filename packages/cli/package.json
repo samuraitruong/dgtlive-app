@@ -1,0 +1,23 @@
+{
+  "name": "dgtcli",
+  "version": "1.0.0",
+  "description": "Simple cli to extras data from dgt live",
+  "main": "bin/main.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "bin": {
+    "dgtcli": "./bin/main.js"
+  },
+  "keywords": [],
+  "author": "samuraitruong@hotmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "commander": "^12.1.0",
+    "moment": "^2.30.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.10"
+  }
+}
