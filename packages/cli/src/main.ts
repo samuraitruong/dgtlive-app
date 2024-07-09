@@ -107,7 +107,7 @@ function generatePgn(tournament: Tournament, pair: Pair, game: Game, outputFolde
     return pgn;
 }
 
-async function fetchMe(tournamentId: string, outputFolder: string): Promise<void> {
+async function fetchMe(tournamentId: string, outputFolder: string, round: string, board: string): Promise<void> {
     const tournament = await getTournament(tournamentId);
     console.log(tournament);
 
@@ -115,6 +115,7 @@ async function fetchMe(tournamentId: string, outputFolder: string): Promise<void
         let index = 1;
         const pairings = await getPairings(tournamentId, round);
         for await (const p of pairings) {
+
             const game = await getGame(tournamentId, round, index++);
             const pgn = generatePgn(tournament, p, game, outputFolder);
             console.log(pgn);
@@ -131,9 +132,11 @@ const program = new Command();
 program
     .option('-t, --tournament-id <id>', 'tournament ID')
     .option('-o, --output-folder <folder>', 'output folder', 'data')
+    .option('-r, --round <round>', 'round', '')
+    .option('-b, --board <board>', 'board', '')
     .action(async (options) => {
         if (options.tournamentId) {
-            await fetchMe(options.tournamentId, options.outputFolder);
+            await fetchMe(options.tournamentId, options.outputFolder, options.round, options.board);
         } else {
             console.error("Please provide a tournament ID with -t or --tournament-id");
         }
