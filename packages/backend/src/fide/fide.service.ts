@@ -79,11 +79,13 @@ export class FideService {
       const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
       const unpopulateRatingPlayers = await this.fidePlayerService.query({
         id: { $exists: true },
+
         $or: [
           { ratings: { $exists: false } },
           { lastRatingUpdate: { $lt: oneDayAgo } },
           { lastRatingUpdate: { $exists: false } },
         ],
+        errorCount: { $lt: 10 },
       });
       this.logger.log(
         `Populating rating for player count: ${unpopulateRatingPlayers?.length}`,
@@ -155,7 +157,10 @@ export class FideService {
       );
       const user = data.players[0];
       if (user) {
-        await this.fidePlayerService.upsertFidePlayer({ ...user });
+        await this.fidePlayerService.upsertFidePlayer({
+          ...(existingPlayer || {}),
+          ...user,
+        });
         this.logger.log(
           `Fetched and updated player ${user.id} from FIDE. search name =${name}`,
         );
