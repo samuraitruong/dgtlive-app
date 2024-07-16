@@ -97,12 +97,17 @@ export class FideService {
             player.lastRatingUpdate = new Date();
             await player.save(); // Save the updated player
             this.logger.log(`Updated player ${player.id}`);
+          } else {
+            throw new Error('No FIDE user found for id ' + player.id);
           }
         } catch (error) {
           this.logger.error(
             `Error populating rating for player ${player.id}`,
             error.stack,
           );
+          player.errorCount = player.errorCount || 0;
+          player.errorCount++;
+          player.save();
         }
       }
     } catch (error) {
@@ -130,6 +135,7 @@ export class FideService {
 
     try {
       const { data: html } = await firstValueFrom(this.httpService.get(url));
+      if (html.includes('No record found please check ID number')) return null;
       const data = this.extractUserInfo(html);
       this.logger.log(`Fetched rating for player ${id}`);
       return data;
@@ -204,6 +210,8 @@ export class FideService {
       .toArray()
       .map((x) => $(x).text().trim());
     const ratingValue = (s: string) => {
+      if (!s) return 'unrated';
+
       const v = s.split(' ').pop();
       if (v === 'rated') return 'unrated';
       return v;
