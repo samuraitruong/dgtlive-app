@@ -82,6 +82,10 @@ export class EventsService {
     if (cacheData === null || cacheData === undefined) {
       cacheData = await this.hello();
     }
+    if (!cacheData) {
+      console.warn('Error refresh tournamnt data');
+      return;
+    }
     const pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
 
     const t: GameEventResponse = {
@@ -102,7 +106,10 @@ export class EventsService {
     //   previousMovedAt - startedAt,
     // );
     //save the game to database
-    this.gameDataService.upsert({ ...t, liveChessId: this.tournamentId });
+    if (live) {
+      this.gameDataService.upsert({ ...t, liveChessId: this.tournamentId });
+    }
+
     if (t.moves.length > 4) {
       const delayMoves = this.options.delayedMoves;
       if (live && t.moves.length > delayMoves && delayMoves > 0) {

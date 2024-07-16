@@ -36,22 +36,30 @@ export class BaseGateway
   }
 
   public async refreshTournament() {
-    const t = await this.eventsService.hello(true);
-    this.broadcast('tournament', t);
+    try {
+      const t = await this.eventsService.hello(true);
+      this.broadcast('tournament', t);
+    } catch (error) {
+      console.warn(error);
+    }
   }
   public async intervalCheck() {
     console.log('Live game to check %d', this.liveGames.length);
     for await (const liveGame of this.liveGames) {
-      const game = liveGame.data;
-      const data = await this.eventsService.loadGame(game);
-      game.isLive = data.isLive;
-      liveGame.data = game;
-      const newHash = hashObject(data);
-      liveGame.lastFetch = new Date().getTime();
-      if (liveGame.hash != newHash) {
-        console.log('broadcasing game to client');
-        this.broadcast('game', data);
-        liveGame.hash = newHash;
+      try {
+        const game = liveGame.data;
+        const data = await this.eventsService.loadGame(game);
+        game.isLive = data.isLive;
+        liveGame.data = game;
+        const newHash = hashObject(data);
+        liveGame.lastFetch = new Date().getTime();
+        if (liveGame.hash != newHash) {
+          console.log('broadcasing game to client');
+          this.broadcast('game', data);
+          liveGame.hash = newHash;
+        }
+      } catch (err) {
+        console.warn(err);
       }
     }
     this.liveGames = this.liveGames.filter((x) => x.data.isLive);
