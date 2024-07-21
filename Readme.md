@@ -17,6 +17,9 @@ PORT=3001
 JUNIOR_TOURNAMENT_ID=[DGT TournamentID]
 SENIOR_TOURNAMENT_ID=[DGT TournamentID]
 DELAY_MOVE=2
+MONGO_URI=mongo connection string
+AUTH_SECRET=secret
+
 ```
 ### Run local
 ```sh

@@ -104,7 +104,7 @@ export class FideService {
           }
         } catch (error) {
           this.logger.error(
-            `Error populating rating for player ${player.id}`,
+            `Error populating rating for player ${player.id} ${error.message}`,
             error.stack,
           );
           player.errorCount = player.errorCount || 0;
@@ -139,7 +139,7 @@ export class FideService {
       const { data: html } = await firstValueFrom(this.httpService.get(url));
       if (html.includes('No record found please check ID number')) return null;
       const data = this.extractUserInfo(html);
-      this.logger.log(`Fetched rating for player ${id}`);
+      this.logger.log(`Fetched rating for player ${id} (${data.name})`);
       return data;
     } catch (error) {
       this.logger.error(`Failed to fetch rating from URL: ${url}`, error.stack);

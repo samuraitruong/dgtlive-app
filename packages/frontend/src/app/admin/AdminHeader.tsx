@@ -17,10 +17,10 @@ export default function AdminHeader() {
                     <Link href="/admin" passHref>
                         Admin
                     </Link>
-                    <Link href="./manage" passHref>
+                    <Link href="/admin/manage" passHref>
                         Manage Tournament
                     </Link>
-                    <Link href="./players" passHref>
+                    <Link href="admin/players" passHref>
                         Players
                     </Link>
 
