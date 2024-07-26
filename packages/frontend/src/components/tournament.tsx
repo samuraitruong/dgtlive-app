@@ -74,16 +74,27 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         onSelectGame(round, game)
     }
 
+    const isStarted = useMemo(() => {
+        if (!tournament) {
+            return false;
+        }
+        return tournament.rounds.flatMap(x => x.pairs).length > 0;
+    }, [tournament]);
+
+
+    console.log(tournament)
     if (!readyState || !tournament || loading) {
         return <Loading />
     }
+
     return (
         <div className="mx-auto mt-0 w-full">
             <div className='pt-2 pb-2 bg-slate-800 text-white'>
                 <h1 className="text-3xl font-boldbg-black-50 text-center">{tournament?.name}</h1>
 
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-3">
+
+            {isStarted ? <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-3">
                 <div className="md:col-span-3 pl-2">
                     {tournament && <Schedule data={tournament.rounds} onSelect={onSelectGame} selectedRound={selectedRound} />}
                 </div>
@@ -91,7 +102,9 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                     {games && multipleGameId && <MultipleGameViewer games={games} gameIds={multipleGameId} title={tournament.name} onClick={handleMiniGameClick} />}
                     {games && selectedGame && games[selectedGame] && <GameViewer tournamentName={tournament.name} data={games[selectedGame]} pair={selectedPair as Pair} />}
                 </div>
-            </div>
+            </div> : <div className='m-10 text-center p-12 border-solid bg-yellow-200 text-lg  rounded-sm'>This tournament has not started yet. Please come back later.</div>
+            }
+
 
         </div>
     )
