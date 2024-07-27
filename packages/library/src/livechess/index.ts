@@ -70,7 +70,7 @@ export class LiveChessTournament {
         }
         let live = data.live
         if (live && (data.result === 'BLACKWIN' || data.result === 'WHITEWIN') || data.result === 'DRAW') {
-            live = false
+            live = true
         }
         return { moves, live, startedAt: data.firstMove, result: data.result };
     }
