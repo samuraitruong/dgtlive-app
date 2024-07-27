@@ -15,7 +15,7 @@ interface MultipleGameViewerProps {
     onClick: (t: GameEventResponse) => void
 }
 
-function MiniBoard({ game, onClick, result }: { game: GameEventResponse, gameCount: number, onClick: () => void, result: string }) {
+function MiniBoard({ game, onClick, result, isLive }: { isLive: boolean, game: GameEventResponse, gameCount: number, onClick: () => void, result: string }) {
     const [currentIndex, setCurrentIndex] = useState(game.moves.length - 1)
     const parentRef = useRef<HTMLDivElement>(null);
     const [parentWidth, setParentWidth] = useState(200);
@@ -59,7 +59,7 @@ function MiniBoard({ game, onClick, result }: { game: GameEventResponse, gameCou
                 <SmallPlayerDisplay time={time} pair={game.pair} color="black" icon={false} /></div>
             <Board move={game.moves[currentIndex]} boardWidth={parentWidth - 20} ></Board>
 
-            {result !== '*' && (
+            {result !== '*' && !isLive && (
                 <div className="absolute inset-0 flex items-center justify-center  bg-opacity-50 opacity-70 text-slate-700 text-8xl font-bold">
                     {result}
                 </div>
@@ -107,7 +107,7 @@ export function MultipleGameViewer({ gameIds, games, title, onClick }: MultipleG
                 </div>
             }
             <div className={"flex flex-row w-full flex-wrap pt-0 md:pt-10"}>
-                {displayGames.map((game) => <MiniBoard gameCount={gameIds.length} game={game} key={game.game + game.round} result={game.result || "*"} onClick={() => handleMiniGameClick(game)} />)}
+                {displayGames.map((game) => <MiniBoard isLive={game.isLive} gameCount={gameIds.length} game={game} key={game.game + game.round} result={game.result || "*"} onClick={() => handleMiniGameClick(game)} />)}
 
                 <div className="fixed bottom-5 right-5">
                     <FullscreenButton isFullscreen={isFullscreen} toggleFullscreen={toggleFullscreen} />

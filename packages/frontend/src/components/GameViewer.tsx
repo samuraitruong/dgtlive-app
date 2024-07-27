@@ -137,7 +137,7 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentNam
         <div ref={moveListRef} className='w-full md:w-[300px] mt-5 md:mt-0'>
 
           <MoveList maxHeight={availableHeight} moves={moves} onSelect={(i) => setCurrentIndex(i)} selectedIndex={currentIndex} delayedMoves={delayedMoves} />
-          {!fullscreen && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair?.result}</div>}
+          {!fullscreen && !isLive && <div className='text-3xl mt-5 w-full bottom-0 font-bold text-center'>{pair?.result}</div>}
         </div>
       </div>
       {/* <div className='fixed  bg-slate-700 text-white opacity-90 bottom-[100px] p-5 w-full'>
