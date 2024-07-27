@@ -69,8 +69,8 @@ export class LiveChessTournament {
             }
         }
         let live = data.live
-        if (live && (data.result === 'BLACKWIN' || data.result === 'WHITEWIN') || data.result === 'DRAW') {
-            live = true
+        if (live && (data.result !== 'BLACKWIN' && data.result !== 'WHITEWIN') && data.result !== 'DRAW') {
+            live = false
         }
         return { moves, live, startedAt: data.firstMove, result: data.result };
     }

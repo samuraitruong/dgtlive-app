@@ -27,7 +27,7 @@ export class BaseGateway
 {
   @WebSocketServer() public server: any;
   public liveGames: LiveGame[] = [];
-
+  public tournament: any;
   wsClients = [];
 
   constructor(public readonly eventsService: EventsService) {
@@ -90,9 +90,10 @@ export class BaseGateway
 
   @SubscribeMessage('hello')
   async hello() {
+    this.tournament = await this.eventsService.hello();
     return {
       event: 'hello',
-      data: await this.eventsService.hello(),
+      data: this.tournament,
     };
   }
 
