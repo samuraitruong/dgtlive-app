@@ -53,7 +53,7 @@ export class EventsService {
     if (tour) {
       return tour;
     }
-    const { moves, live, startedAt, result } = await this.game.fetchGame(
+    const { moves, live, startedAt, result, clock } = await this.game.fetchGame(
       game.round,
       game.game,
     );
@@ -85,7 +85,7 @@ export class EventsService {
       cacheData = await this.hello();
     }
     if (!cacheData) {
-      console.warn('Error refresh tournamnt data');
+      console.warn('%s - Error refresh tournamnt data', this.tournamentId);
       return;
     }
     const pair = cacheData.rounds[game.round - 1].pairs[game.game - 1] as Pair;
@@ -102,6 +102,9 @@ export class EventsService {
         arrow: [x[3], x[4]],
       })),
     };
+    if (live) {
+      t.clock = clock;
+    }
     // console.log(
     //   'Total time spend until now',
     //   totalTIme,
@@ -156,8 +159,10 @@ export class EventsService {
   async hello(force = false) {
     if (!force) {
       const cacheData = await this.cacheManager.get(this.tournamentId);
-      console.log('Return tournament data from cache');
-      return cacheData;
+      if (cacheData) {
+        console.log('Return tournament data from cache');
+        return cacheData;
+      }
     }
 
     const t = await this.game.fetchTournament();

@@ -2,7 +2,7 @@ import axios from "axios";
 import { Chess } from 'chess.js'
 import { GameData, LookupResultData, RoundPairingData, TournamentData } from "./model";
 // import fs from 'fs'
-
+const internalcache: { [x: string]: string } = {};
 const axiosInstance = axios.create();
 
 // Add a response interceptor
@@ -54,6 +54,7 @@ export class LiveChessTournament {
         const { data } = await axiosInstance.get<GameData>(url);
         // fs.writeFileSync('debug.json', JSON.stringify(data, null, 2))
         const chess = new Chess()
+
         const moves = [];
         for (const move of data.moves) {
             try {
@@ -76,6 +77,6 @@ export class LiveChessTournament {
         if (!live && data.result === "*" || data.result === null) {
             live = true
         }
-        return { moves, live, startedAt: data.firstMove, result: data.result };
+        return { moves, live, startedAt: data.firstMove, result: data.result, clock: data.clock };
     }
 }

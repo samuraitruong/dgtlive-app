@@ -11,6 +11,10 @@ import { MultipleGameViewer } from './MultipleGameViewer';
 import { BACKEND_URL } from '@/config';
 import { useRouter, useParams } from 'next/navigation';
 
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+
 interface TournamentProps {
     category: string
 }
@@ -25,7 +29,7 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         return category
     }, [category, pathParmas.slug]);
 
-    const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)
+    const { sendMessage, readyState, tournament, games, loading, error, connectedTime } = useWebSocket(socketUrl, socketPath)
     const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string>();
     const [selectedRound, setSelectedRound] = useState<number>(0);
@@ -50,7 +54,6 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         setSelectedPair(pair)
         setSelectedRound(round)
     }, [sendMessage, tournament?.rounds]);
-
     useEffect(() => {
 
         if (readyState && !tournament) {
@@ -69,6 +72,18 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
             }
         }
     }, [tournament, multipleGameId?.length, onSelectGame, selectedGame]);
+
+    useEffect(() => {
+        toast(error, { position: 'top-right', })
+    }, [error])
+
+    useEffect(() => {
+        toast("reconnecting...", { position: 'top-right', })
+        if (selectedRound) {
+            onSelectGame(selectedRound, -1)
+        }
+    }, [connectedTime])
+
 
     const handleMiniGameClick = (g: GameEventResponse) => {
         const { round, game } = g;
@@ -103,7 +118,18 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                 </div>
             </div> : <div className='m-10 text-center p-12 border-solid bg-orange-200 text-lg  rounded-sm'>This tournament has not started yet. Please come back later.</div>
             }
-
+            <ToastContainer
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+                transition={Bounce} />
 
         </div>
     )

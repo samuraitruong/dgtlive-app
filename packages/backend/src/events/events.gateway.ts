@@ -30,6 +30,7 @@ export class JuniorEventsGateway extends BaseGateway {
         delayedTimeInSec: config.game.delayTimeInSeconds,
       },
     );
+
     service.setGameId(configuration().game.juniorTournamentId);
     super(service);
     this.bootstrap();

@@ -1,3 +1,5 @@
+import { ClockData } from "../livechess/model";
+
 export interface Tournament {
     name: string;
     location: string;
@@ -46,4 +48,5 @@ export interface GameEventResponse {
     game: number;
     moves: Move[];
     result?: string;
+    clock?: ClockData | string;
 }

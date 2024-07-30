@@ -6,6 +6,7 @@ import { FaRegPlayCircle } from "react-icons/fa";
 import { } from '@uidotdev/usehooks'
 import { useFullscreen } from "@/hooks/useFullscreen";
 import { FullscreenButton } from "./FullscreenButton";
+import { ClockData } from "library/dist/livechess/model";
 
 interface MultipleGameViewerProps {
     games: GameMap,
@@ -23,6 +24,12 @@ function MiniBoard({ game, onClick, result, isLive }: { isLive: boolean, game: G
 
 
     const time = useMemo(() => {
+        if (game.clock) {
+            const { white, black } = game.clock as ClockData;
+            return {
+                white: white, black
+            }
+        }
         const currentMove = game.moves[game.moves.length - 1];
         const previousMove = game.moves[game.moves.length - 2];
         if (game.moves.length % 2 === 1) {
@@ -30,7 +37,6 @@ function MiniBoard({ game, onClick, result, isLive }: { isLive: boolean, game: G
         }
         return { white: previousMove?.time || -1, black: currentMove?.time || 0 }
     }, [game])
-
     useEffect(() => {
         setCurrentIndex(game.moves.length - 1)
     }, [game])

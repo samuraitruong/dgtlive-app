@@ -5,9 +5,9 @@ import { Socket, io } from "socket.io-client";
 export function useWebSocket(url: string, path = '/') {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [readyState, setReadyState] = useState<boolean>(false);
+    const [connectedTime, setConnectedTime] = useState<Date>(new Date());
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>()
-    const [lastMessage, setLastMessage] = useState<string>();
     const [games, setGames] = useState<GameMap>({});
     const [tournament, setTournament] = useState<Tournament>();
     const [messageHistory, setMessageHistory] = useState<any>({})
@@ -79,7 +79,7 @@ export function useWebSocket(url: string, path = '/') {
 
             socketInstance.on('connect', () => {
                 setReadyState(true);
-
+                setConnectedTime(new Date());
                 console.log("socket reconnect", messageHistoryRef.current);
                 // socketRef.current?.emit('hello', {});
                 for (const key in messageHistoryRef.current) {
@@ -104,18 +104,17 @@ export function useWebSocket(url: string, path = '/') {
     }, [socketInstance]);
 
     return {
+        connectedTime,
         loading,
-        sendMessage: (type: string, data: any) => {
-            setLoading(true);
-            console.log("sending", type, data)
+        sendMessage: (type: string, data: any, silent = false) => {
+            if (!silent)
+                setLoading(true);
             if (type == "game") {
                 setMessageHistory((prev: any) => ({ ...prev, [data.round + "_" + data.game]: data }))
             }
-            console.log(messageHistory)
             socket?.emit(type, data);
         },
         tournament,
-        lastMessage,
         readyState,
         error,
         games,

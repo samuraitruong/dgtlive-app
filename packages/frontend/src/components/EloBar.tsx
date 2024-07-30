@@ -44,7 +44,6 @@ export function EloBar({ bestMoveResult, height, direction }: EloBarProps) {
         return (direction == 'black' ? ' rotate-180' : '')
     }, [direction])
 
-    console.log(direction)
     return (
         <div
             className={'elo-bar sm:relative  absolute w-[24px] left-1 bg-blue-100 shadow-sm' + className}

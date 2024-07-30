@@ -34,7 +34,7 @@ export function useStockfish() {
                         sortBy(mateMoves, (x) => x.score.value);
                         sortBy(cpMoves, (x) => x.score.value, 'desc');
                         const bestLines = [...mateMoves, ...cpMoves]; //.splice(0, 5);
-                        console.log(bestLines);
+                        // console.log(bestLines);
                     }
                 })
             );
