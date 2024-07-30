@@ -18,18 +18,19 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
     const pathParmas = useParams<{ slug: string }>();
     const [socketUrl, setSocketUrl] = useState(BACKEND_URL);
     const socketPath = useMemo(() => {
+
         if (pathParmas.slug && pathParmas.slug !== category) {
             return "/" + pathParmas.slug
         }
         return category
-    }, [category, pathParmas]);
+    }, [category, pathParmas.slug]);
 
-    console.log("pathParmas", pathParmas, socketPath)
     const { sendMessage, readyState, tournament, games, loading } = useWebSocket(socketUrl, socketPath)
     const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string>();
     const [selectedRound, setSelectedRound] = useState<number>(0);
     const [selectedPair, setSelectedPair] = useState<Pair>();
+
     const onSelectGame = useCallback((round: number, game: number) => {
 
         if (game === -1) {
@@ -82,7 +83,6 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
     }, [tournament]);
 
 
-    console.log(tournament)
     if (!readyState || !tournament || loading) {
         return <Loading />
     }

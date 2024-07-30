@@ -28,7 +28,7 @@ export class BaseGateway
   @WebSocketServer() public server: any;
   public liveGames: LiveGame[] = [];
   public tournament: any;
-  wsClients = [];
+  wsClients: { [x: string]: any } = {};
 
   constructor(public readonly eventsService: EventsService) {
     setInterval(() => this.intervalCheck(), 5000);
@@ -40,26 +40,34 @@ export class BaseGateway
       const t = await this.eventsService.hello(true);
       this.broadcast('tournament', t);
     } catch (error) {
-      console.warn(error);
+      console.warn('error happen when refresh tournament', error);
     }
   }
   public async intervalCheck() {
-    console.log('Live game to check %d', this.liveGames.length);
+    console.log(
+      '[%s] - Live game to check %d',
+      this.tournament?.name,
+      this.liveGames.length,
+    );
     for await (const liveGame of this.liveGames) {
       try {
         const game = liveGame.data;
         const data = await this.eventsService.loadGame(game);
-        game.isLive = data.isLive;
-        liveGame.data = game;
-        const newHash = hashObject(data);
-        liveGame.lastFetch = new Date().getTime();
-        if (liveGame.hash != newHash) {
-          console.log('broadcasing game to client');
-          this.broadcast('game', data);
-          liveGame.hash = newHash;
+        if (data) {
+          game.isLive = data.isLive;
+          liveGame.data = game;
+          const newHash = hashObject(data);
+          liveGame.lastFetch = new Date().getTime();
+          if (liveGame.hash != newHash) {
+            console.log('broadcasing game to client');
+            this.broadcast('game', data);
+            liveGame.hash = newHash;
+          }
+        } else {
+          console.warn('Unable to load game', game);
         }
       } catch (err) {
-        console.warn(err);
+        console.warn('error running interval', err);
       }
     }
     this.liveGames = this.liveGames.filter((x) => x.data.isLive);
@@ -70,48 +78,88 @@ export class BaseGateway
   }
 
   handleConnection(client: any) {
-    this.wsClients.push(client);
+    this.wsClients[client.id] = client;
+    console.log(
+      'New client connected %s Client list count %d',
+      client.id,
+      Object.keys(this.wsClients).length,
+    );
   }
 
   handleDisconnect(client) {
-    for (let i = 0; i < this.wsClients.length; i++) {
-      if (this.wsClients[i] === client) {
-        this.wsClients.splice(i, 1);
-        break;
-      }
-    }
-    this.broadcast('disconnect', {});
+    console.log('ws client disconnected', client.id);
+
+    // for (let i = 0; i < this.wsClients.length; i++) {
+    //   if (this.wsClients[i] === client) {
+    //     this.wsClients.splice(i, 1);
+    //     break;
+    //   }
+    // }
+    delete this.wsClients[client.id];
+
+    this.broadcast('disconnect', { clientId: client.id });
   }
   public broadcast(event, data: any) {
-    for (const c of this.wsClients) {
+    for (const c of Object.values(this.wsClients)) {
       c.send({ event, data });
     }
   }
 
   @SubscribeMessage('hello')
   async hello() {
+    try {
+      this.tournament = await this.eventsService.hello();
+      return {
+        event: 'hello',
+        data: this.tournament,
+      };
+    } catch (err) {
+      return {
+        event: 'error',
+        data: { message: 'internal server error' },
+      };
+    }
+  }
+
+  @SubscribeMessage('ping')
+  async ping() {
     this.tournament = await this.eventsService.hello();
     return {
-      event: 'hello',
-      data: this.tournament,
+      event: 'ping',
+      data: 'pong',
     };
   }
 
   @SubscribeMessage('game')
   async game(@MessageBody() game: LoadGameDto) {
-    const data = await this.eventsService.loadGame(game);
-    if (data.isLive) {
-      const findGame = this.liveGames.find(
-        (x) => x.data.game == data.game && x.data.round == data.round,
-      );
-      if (!findGame) {
-        this.liveGames.push({ data });
+    console.log('client event sent', game);
+    try {
+      const data = await this.eventsService.loadGame(game);
+      if (data) {
+        if (data.isLive) {
+          const findGame = this.liveGames.find(
+            (x) => x.data.game == data.game && x.data.round == data.round,
+          );
+          if (!findGame) {
+            this.liveGames.push({ data });
+          }
+        }
+        return {
+          event: 'game',
+          data,
+        };
+      } else {
+        return {
+          event: 'error',
+          data: 'Could not load game',
+        };
       }
+    } catch (err) {
+      return {
+        event: 'error',
+        data: { message: 'internal server error' },
+      };
     }
-    return {
-      event: 'game',
-      data,
-    };
   }
 
   @SubscribeMessage('admin')

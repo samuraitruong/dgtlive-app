@@ -109,7 +109,6 @@ function generatePgn(tournament: Tournament, pair: Pair, game: Game, outputFolde
 
 async function fetchMe(tournamentId: string, outputFolder: string, round: string, board: string): Promise<void> {
     const tournament = await getTournament(tournamentId);
-    console.log(tournament);
 
     const fetchRound = async (round: number) => {
         let index = 1;

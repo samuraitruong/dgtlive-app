@@ -3,7 +3,6 @@ import { useMemo, useEffect, useRef, useState } from "react";
 import { Socket, io } from "socket.io-client";
 
 export function useWebSocket(url: string, path = '/') {
-    const socketRef = useRef<Socket | null>(null);
     const [socket, setSocket] = useState<Socket | null>(null);
     const [readyState, setReadyState] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -11,6 +10,14 @@ export function useWebSocket(url: string, path = '/') {
     const [lastMessage, setLastMessage] = useState<string>();
     const [games, setGames] = useState<GameMap>({});
     const [tournament, setTournament] = useState<Tournament>();
+    const [messageHistory, setMessageHistory] = useState<any>({})
+
+    const messageHistoryRef = useRef(messageHistory);
+    const socketRef = useRef<Socket | null>(socket);
+
+    useEffect(() => {
+        messageHistoryRef.current = messageHistory;
+    }, [messageHistory]);
 
     const socketInstance = useMemo(() => io(url, {
         path: path + "/socket.io",
@@ -19,8 +26,12 @@ export function useWebSocket(url: string, path = '/') {
     }), [url, path]);
 
     useEffect(() => {
-        setSocket(socketInstance);
+        const timeout = setTimeout(() => {
+            setSocket(socketInstance);
+
+        }, 1000)
         return () => {
+            clearTimeout(timeout);
             if (socketInstance) {
                 socketInstance.disconnect();
             }
@@ -68,6 +79,14 @@ export function useWebSocket(url: string, path = '/') {
 
             socketInstance.on('connect', () => {
                 setReadyState(true);
+
+                console.log("socket reconnect", messageHistoryRef.current);
+                // socketRef.current?.emit('hello', {});
+                for (const key in messageHistoryRef.current) {
+                    console.log("resend data", messageHistoryRef.current[key])
+                    socketRef.current?.emit('game', messageHistoryRef.current[key]);
+                }
+
             });
             socketInstance.on('disconect', () => {
                 setReadyState(false);
@@ -88,6 +107,11 @@ export function useWebSocket(url: string, path = '/') {
         loading,
         sendMessage: (type: string, data: any) => {
             setLoading(true);
+            console.log("sending", type, data)
+            if (type == "game") {
+                setMessageHistory((prev: any) => ({ ...prev, [data.round + "_" + data.game]: data }))
+            }
+            console.log(messageHistory)
             socket?.emit(type, data);
         },
         tournament,

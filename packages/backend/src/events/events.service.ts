@@ -57,6 +57,8 @@ export class EventsService {
       game.round,
       game.game,
     );
+
+    // console.log("is live from data test again", live, result)
     let previousMovedAt = startedAt;
     //let totalTIme = 0;
     const extractTime = (t: string) => {

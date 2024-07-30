@@ -93,10 +93,9 @@ function generatePgn(tournament, pair, game, outputFolder) {
     fs_1.default.writeFileSync(filename, pgn);
     return pgn;
 }
-function fetchMe(tournamentId, outputFolder) {
+function fetchMe(tournamentId, outputFolder, round, board) {
     return __awaiter(this, void 0, void 0, function* () {
         const tournament = yield getTournament(tournamentId);
-        console.log(tournament);
         const fetchRound = (round) => __awaiter(this, void 0, void 0, function* () {
             var _a, e_1, _b, _c;
             let index = 1;
@@ -127,9 +126,11 @@ const program = new commander_1.Command();
 program
     .option('-t, --tournament-id <id>', 'tournament ID')
     .option('-o, --output-folder <folder>', 'output folder', 'data')
+    .option('-r, --round <round>', 'round', '')
+    .option('-b, --board <board>', 'board', '')
     .action((options) => __awaiter(void 0, void 0, void 0, function* () {
     if (options.tournamentId) {
-        yield fetchMe(options.tournamentId, options.outputFolder);
+        yield fetchMe(options.tournamentId, options.outputFolder, options.round, options.board);
     }
     else {
         console.error("Please provide a tournament ID with -t or --tournament-id");

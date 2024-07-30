@@ -43,7 +43,6 @@ function FidePlayersPage() {
         fetchData();
     };
     const handleSave = (id: string) => {
-        console.log(id, selectedPlayer)
         if (selectedPlayer && (selectedPlayer as any)._id) {
             updatePlayerWith((selectedPlayer as any)._id, { id })
         }

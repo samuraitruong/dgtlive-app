@@ -34,8 +34,10 @@ export class JuniorEventsGateway extends BaseGateway {
     super(service);
     this.bootstrap();
   }
+
   async bootstrap() {
     const data = await this.tournamentRegister.findOneBy({ slug: 'junior' });
+
     if (data) {
       await this.replaceTournamenIdOnFly(data.liveChessId, {
         delayedMoves: data.delayMoves,
