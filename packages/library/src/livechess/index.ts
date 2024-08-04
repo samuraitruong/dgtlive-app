@@ -2,7 +2,6 @@ import axios from "axios";
 import { Chess } from 'chess.js'
 import { GameData, LookupResultData, RoundPairingData, TournamentData } from "./model";
 // import fs from 'fs'
-const internalcache: { [x: string]: string } = {};
 const axiosInstance = axios.create();
 
 // Add a response interceptor
