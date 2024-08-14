@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { FidePlayer, FidePlayerDocument } from './fide-player.schema';
+import { FidePlayer, FidePlayerDocument } from './schema/fide-player.schema';
 import { ObjectId } from 'mongodb';
 
 @Injectable()

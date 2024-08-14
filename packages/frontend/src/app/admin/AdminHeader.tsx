@@ -18,12 +18,14 @@ export default function AdminHeader() {
                         Admin
                     </Link>
                     <Link href="/admin/manage" passHref>
-                        Manage Tournament
+                        Tournaments
                     </Link>
                     <Link href="/admin/players" passHref>
                         Players
                     </Link>
-
+                    <Link href="/admin/sponsors" passHref>
+                        Sponsors
+                    </Link>
                 </nav>
             </div>
             <div className="flex items-center space-x-4">

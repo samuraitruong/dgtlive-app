@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import {
   TournamentData,
   TournamentDataDocument,
-} from './tournament-data.schema';
+} from './schema/tournament-data.schema';
 
 @Injectable()
 export class TournamentDataService {

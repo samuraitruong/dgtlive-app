@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { GameData, GameDataSchema } from './game-data.schema';
+import { GameData, GameDataSchema } from './schema/game-data.schema';
 import { GameDataService } from './game-data.service';
-import { TournamentData, TournamentDataSchema } from './tournament-data.schema';
+import {
+  TournamentData,
+  TournamentDataSchema,
+} from './schema/tournament-data.schema';
 import { TournamentDataService } from './tournament-data.service';
-import { FidePlayer, FidePlayerSchema } from './fide-player.schema';
+import { FidePlayer, FidePlayerSchema } from './schema/fide-player.schema';
 import { FidePlayerService } from './fide-player.service';
 
 @Module({

@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { FidePlayerService } from '../db/fide-player.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import configuration from '../config/configuration';
-import { FidePlayer } from '../db/fide-player.schema';
+import { FidePlayer } from '../db/schema/fide-player.schema';
 import { FideSearchPlayerResponse } from 'library';
 
 @Injectable()

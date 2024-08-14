@@ -13,12 +13,17 @@ import { useRouter, useParams } from 'next/navigation';
 
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AdsPanel from './AdsPannel';
+import useAdsData from '@/hooks/useAdsData';
 
 
 interface TournamentProps {
     category: string
 }
+
+
 export default function Tournament({ category = 'junior' }: TournamentProps) {
+    const { data: ads } = useAdsData(category)
     const pathParmas = useParams<{ slug: string }>();
     const [socketUrl, setSocketUrl] = useState(BACKEND_URL);
     const socketPath = useMemo(() => {
@@ -130,7 +135,12 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                 pauseOnHover
                 theme="colored"
                 transition={Bounce} />
-
+            <AdsPanel
+                ads={ads}
+                location="right"
+                // animation="animate-bounce"
+                showFrequency={5000}
+            />
         </div>
     )
 }

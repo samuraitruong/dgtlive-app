@@ -16,7 +16,7 @@ import { FidePlayerService } from '../db/fide-player.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { SearchFidePlayerDto } from './dto/player-search.dto';
 import { ParseFilterPipe } from 'src/pipes/parse-filter.pipe';
-import { FidePlayer } from '../db/fide-player.schema';
+import { FidePlayer } from '../db/schema/fide-player.schema';
 import { FideService } from './fide.service';
 
 @Controller('player')
