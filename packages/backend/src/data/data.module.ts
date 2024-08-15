@@ -5,6 +5,8 @@ import { AuthModule } from 'src/auth/auth.module';
 import { TournamentRegisterSchema } from 'src/db/tournament';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PublicDataController } from './public.controller';
+import { SponsorController } from './sponsor.controller';
+import { DatabaseModule } from 'src/db/db.module';
 
 @Module({
   imports: [
@@ -12,8 +14,9 @@ import { PublicDataController } from './public.controller';
       { name: 'TournamentRegister', schema: TournamentRegisterSchema },
     ]),
     AuthModule,
+    DatabaseModule,
   ],
-  controllers: [DataController, PublicDataController],
+  controllers: [DataController, PublicDataController, SponsorController],
   providers: [DataService],
   exports: [DataService],
 })

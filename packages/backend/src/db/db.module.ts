@@ -9,12 +9,15 @@ import {
 import { TournamentDataService } from './tournament-data.service';
 import { FidePlayer, FidePlayerSchema } from './schema/fide-player.schema';
 import { FidePlayerService } from './fide-player.service';
+import { SponsorService } from './sponsor.service';
+import { Sponsor, SponsorSchema } from './schema/sponsor.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: GameData.name, schema: GameDataSchema },
     ]),
+    MongooseModule.forFeature([{ name: Sponsor.name, schema: SponsorSchema }]),
     MongooseModule.forFeature([
       { name: TournamentData.name, schema: TournamentDataSchema },
     ]),
@@ -23,7 +26,17 @@ import { FidePlayerService } from './fide-player.service';
     ]),
   ],
   controllers: [],
-  providers: [GameDataService, TournamentDataService, FidePlayerService],
-  exports: [GameDataService, TournamentDataService, FidePlayerService],
+  providers: [
+    GameDataService,
+    TournamentDataService,
+    FidePlayerService,
+    SponsorService,
+  ],
+  exports: [
+    GameDataService,
+    TournamentDataService,
+    FidePlayerService,
+    SponsorService,
+  ],
 })
 export class DatabaseModule {}

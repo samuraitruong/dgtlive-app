@@ -8,7 +8,7 @@ interface FormProps {
 }
 
 function Form({ data, onEvent, errorMessage }: FormProps) {
-    const [currentRow, setCurrentRow] = useState<SponsorData | undefined>(data);
+    const [currentRow, setCurrentRow] = useState<SponsorData | undefined>(data || {} as any);
 
     useEffect(() => {
         if (data !== currentRow) {
@@ -32,13 +32,13 @@ function Form({ data, onEvent, errorMessage }: FormProps) {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-8 rounded shadow-md w-1/3">
-                <h2 className="text-xl mb-3">Row Details</h2>
+                <h2 className="text-xl mb-3">Sponsor</h2>
                 <div className="mb-3">
-                    <label className="block mb-1">Live Chess ID</label>
+                    <label className="block mb-1">Name</label>
                     <input
                         type="text"
-                        name="liveChessId"
-                        value={currentRow?.id || ''}
+                        name="name"
+                        value={currentRow?.name || ''}
                         onChange={handleChange}
                         className="w-full border px-2 py-1"
                     />
@@ -47,28 +47,39 @@ function Form({ data, onEvent, errorMessage }: FormProps) {
                     <label className="block mb-1">Website</label>
                     <input
                         type="text"
-                        name="slug"
+                        name="website"
                         value={currentRow?.website || ''}
                         onChange={handleChange}
                         className="w-full border px-2 py-1"
                     />
                 </div>
+
                 <div className="mb-3">
-                    <label className="block mb-1">Delay Moves</label>
+                    <label className="block mb-1">Description</label>
                     <input
-                        type="number"
-                        name="delayMoves"
-                        value={currentRow?.name || 0}
+                        name="description"
+                        value={currentRow?.description || ''}
+                        onChange={handleChange}
+                        className="w-full border px-2 py-1"
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="block mb-1">Logo</label>
+                    <input
+                        type="text"
+                        name="logoUrl"
+                        value={currentRow?.logoUrl}
                         onChange={handleChange}
                         className="w-full border px-2 py-1"
                     />
                 </div>
                 <div className="mb-3">
-                    <label className="block mb-1">Delay Time</label>
+                    <label className="block mb-1">Tournament</label>
                     <input
-                        type="number"
-                        name="delayTimes"
-                        value={currentRow?.logoUrl || 0}
+                        type="text"
+                        name="tournament"
+                        value={currentRow?.tournament}
                         onChange={handleChange}
                         className="w-full border px-2 py-1"
                     />

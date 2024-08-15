@@ -10,10 +10,16 @@ export class Sponsor {
   logoUrl: string;
 
   @Prop({ required: false })
-  desciption: string;
+  website: string;
+
+  @Prop({ required: false })
+  description: string;
 
   @Prop({ required: false })
   tournaments: string[];
+
+  @Prop({ required: false })
+  isActive: boolean;
 }
 
 export type SponsorDocument = Sponsor & Document;

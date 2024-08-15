@@ -14,11 +14,15 @@ import axios from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Ads } from 'library';
+import { SponsorService } from 'src/db/sponsor.service';
 
 @Controller('public')
 export class PublicDataController {
   private readonly cacheDir = path.resolve(__dirname, '..', '__cache');
-  constructor(private readonly dataService: DataService) {
+  constructor(
+    private readonly dataService: DataService,
+    private readonly sponsorService: SponsorService,
+  ) {
     if (!fs.existsSync(this.cacheDir)) {
       fs.mkdirSync(this.cacheDir);
     }
@@ -70,24 +74,33 @@ export class PublicDataController {
   }
 
   @Get('/ads/:tournamentName')
-  getAds(
+  async getAds(
     @Param('tournamentName') tournamentName: string,
     @Req() req: Request,
-  ): Ads[] {
+  ): Promise<Ads[]> {
     // Mock data based on the tournament name
     const proxyUrl = `${req.protocol}://${req.get('Host')}/api/public/img?url=`;
-    const ads: { [key: string]: Ads[] } = {
-      bitw: [
-        {
-          name: 'Bendigo Bank',
-          image:
-            proxyUrl +
-            'https://www.rbm.org.au/wp-content/uploads/2022/02/Bendigo-Bank-370x209.jpeg',
-          url: 'https://www.bendigobank.com.au/',
-        },
-      ],
-    };
+    // const ads: { [key: string]: Ads[] } = {
+    //   bitw: [
+    //     {
+    //       name: 'Bendigo Bank',
+    //       image:
+    //         proxyUrl +
+    //         'https://www.rbm.org.au/wp-content/uploads/2022/02/Bendigo-Bank-370x209.jpeg',
+    //       url: 'https://www.bendigobank.com.au/',
+    //     },
+    //   ],
+    // };
 
-    return ads[tournamentName] || [];
+    const sponsors = await this.sponsorService.findAll({
+      isActive: true,
+      tournaments: { $in: [tournamentName] },
+    });
+    console.log('sponsors', sponsors);
+    return sponsors.map(({ name, logoUrl, website }) => ({
+      name,
+      image: proxyUrl + logoUrl,
+      url: website,
+    }));
   }
 }

@@ -2,11 +2,14 @@ import { useAuth } from '@/auth/authContext';
 import { useState, useEffect, useCallback } from 'react';
 
 export interface SponsorData {
-    id: string;
+    _id: string;
     name: string;
     logoUrl: string;
     website: string;
+    tournament: string;
+    tournaments?: string[];
     isActive: boolean;
+    description?: string;
 }
 
 interface UseSponsorDataHook {
@@ -30,7 +33,7 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
     const loadData = useCallback(async () => {
         setIsLoading(true);
         try {
-            const response = await fetch(`${url}/api/sponsor`, {
+            const response = await fetch(`${url}/api/sponsors`, {
                 headers: {
                     authorization: 'Bearer ' + user.token
                 }
@@ -39,6 +42,9 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
                 throw new Error('Failed to fetch sponsor data');
             }
             const result = await response.json();
+            for (const item of result) {
+                item.tournament = item.tournaments?.join(', ')
+            }
             setData(result);
         } catch (error: any) {
             setError(error.message);
@@ -51,14 +57,14 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
     const addItem = useCallback(async (item: SponsorData) => {
         setIsLoading(true);
         setError(undefined);
-        const updateUrl = `${url}/api/sponsor`;
+        const updateUrl = `${url}/api/sponsors`;
         const res = await fetch(updateUrl, {
             method: 'POST',
             headers: {
                 authorization: `Bearer ${user.token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(item),
+            body: JSON.stringify({ ...item, tournaments: item.tournament.split(',') }),
         });
         setIsLoading(false);
         if (res.ok) {
@@ -73,14 +79,14 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
     const updateItem = useCallback(async (item: SponsorData) => {
         setIsLoading(true);
         setError(undefined);
-        const updateUrl = `${url}/api/sponsor/${item.id}`;
+        const updateUrl = `${url}/api/sponsors/${item._id}`;
         const res = await fetch(updateUrl, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 "Content-Type": "application/json",
                 authorization: `Bearer ${user.token}`,
             },
-            body: JSON.stringify(item),
+            body: JSON.stringify({ ...item, tournaments: item.tournament.split(','), tournament: undefined }),
         });
         setIsLoading(false);
         if (res.ok) {
@@ -94,7 +100,7 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
     const deleteItem = useCallback(async (id: string) => {
         setIsLoading(true);
         setError(undefined);
-        const updateUrl = `${url}/api/sponsor/${id}`;
+        const updateUrl = `${url}/api/sponsors/${id}`;
         const res = await fetch(updateUrl, {
             method: 'DELETE',
             headers: {

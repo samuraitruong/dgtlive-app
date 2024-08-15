@@ -15,8 +15,8 @@ export class SponsorService {
     return newSponsor.save();
   }
 
-  async findAll(): Promise<Sponsor[]> {
-    return this.sponsorModel.find().exec();
+  async findAll(filter?: any): Promise<Sponsor[]> {
+    return this.sponsorModel.find(filter || {}).exec();
   }
 
   async findOne(id: string): Promise<Sponsor> {

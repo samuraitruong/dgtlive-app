@@ -7,15 +7,13 @@ import { API_URL } from "@/config";
 import SponsorForm from "./form";
 import useSponsorData, { SponsorData } from "@/hooks/useSponsorData";
 
-
-
 function SponsorAdmin() {
   const { data, updateItem, addItem, error, deleteItem, isLoading } = useSponsorData(API_URL);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentRow, setCurrentRow] = useState<SponsorData | undefined>();
+  const [currentRow, setCurrentRow] = useState<SponsorData | undefined>({} as any);
 
   const handleOpenModal = (row?: SponsorData) => {
-    // setCurrentRow(row || { id: '', name: '', slug: '', liveChessId: '', delayMoves: 0, delayTimes: 0, isActive: true });
+    setCurrentRow(row || { _id: '', name: '', description: '', website: '', logoUrl: '', tournament: '', isActive: true });
     setIsModalOpen(true);
   };
 
@@ -30,7 +28,7 @@ function SponsorAdmin() {
       handleCloseModal();
     }
     if (ev === "save") {
-      if (data?.id) {
+      if (data?._id) {
         // update
         updateItem({ ...data } as any).then(() => setIsModalOpen(false))
       }
@@ -60,28 +58,24 @@ function SponsorAdmin() {
         <thead >
           <tr >
             <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Slug</th>
-            <th className="py-2 px-4 border-b">Live Chess ID</th>
-            <th className="py-2 px-4 border-b">Delay Moves</th>
-            <th className="py-2 px-4 border-b">Delay Times</th>
+            <th className="py-2 px-4 border-b">Logo</th>
+            <th className="py-2 px-4 border-b">Website</th>
+            <th className="py-2 px-4 border-b">Description</th>
+            <th className="py-2 px-4 border-b">Tournament</th>
             <th className="py-2 px-4 border-b">&nbsp;</th>
           </tr>
         </thead>
         <tbody>
           {data.map(row => (
-            <tr key={row.id} className={"cursor-pointer" + (!row.isActive ? "bg-slate-500 opacity-50" : "")}>
-              <td className="py-2 px-4 border-b">{row.id}</td>
+            <tr key={row._id} className={"cursor-pointer" + (!row.isActive ? "bg-slate-500 opacity-50" : "")}>
               <td className="py-2 px-4 border-b">{row.name}</td>
               <td className="py-2 px-4 border-b">{row.logoUrl}</td>
-
+              <td className="py-2 px-4 border-b">{row.website}</td>
+              <td className="py-2 px-4 border-b">{row.description}</td>
+              <td className="py-2 px-4 border-b">{row.tournaments?.join(',')}</td>
               <td className="py-2 px-4 border-b">
                 <button className="ml-5 round-sm bg-green-400 p-1 z-50 text-white rounded-sm hover:text-green-700" onClick={() => handleOpenModal(row)}>Edit</button>
-
-
-                <button className="ml-5 round-sm bg-red-400 p-1 z-50 text-white rounded-sm hover:text-red-700" onClick={(e) => handleDeleteClick(e, row.id)}>Delete</button>
-                {row.isActive &&
-                  <Link className="ml-5 round-sm bg-blue-400 p-1 z-50 text-white rounded-sm hover:text-red-700" href={'/tournament/' + row.name}>Open</Link>
-                }
+                <button className="ml-5 round-sm bg-red-400 p-1 z-50 text-white rounded-sm hover:text-red-700" onClick={(e) => handleDeleteClick(e, row._id)}>Delete</button>
               </td>
             </tr>
           ))}
