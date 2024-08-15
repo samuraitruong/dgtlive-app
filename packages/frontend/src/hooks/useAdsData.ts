@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BACKEND_URL } from '@/config';
+import { API_URL } from '@/config';
 
 interface Ad {
     name: string;
@@ -13,7 +13,7 @@ const useAdsData = (tournamentName: string): { data: Ad[] } => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const response = await fetch(`${BACKEND_URL}/api/public/ads/${tournamentName.split('/').pop()}`);
+                const response = await fetch(`${API_URL}/api/public/ads/${tournamentName.split('/').pop()}`);
                 if (response.ok) {
                     const data: Ad[] = await response.json();
                     setAds(data);
