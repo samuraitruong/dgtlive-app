@@ -11,7 +11,11 @@ export class SponsorService {
   ) {}
 
   async create(createSponsorDto: CreateSponsorDto): Promise<Sponsor> {
-    const newSponsor = new this.sponsorModel(createSponsorDto);
+    console.log('createSponsorDto', createSponsorDto);
+    const newSponsor = new this.sponsorModel({
+      ...createSponsorDto,
+      _id: undefined,
+    });
     return newSponsor.save();
   }
 

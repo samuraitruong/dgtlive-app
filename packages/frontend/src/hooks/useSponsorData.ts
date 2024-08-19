@@ -64,7 +64,7 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
                 authorization: `Bearer ${user.token}`,
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...item, tournaments: item.tournament.split(',') }),
+            body: JSON.stringify({ ...item, tournaments: item.tournament.split(','), tournament: undefined }),
         });
         setIsLoading(false);
         if (res.ok) {

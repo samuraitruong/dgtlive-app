@@ -1,6 +1,9 @@
 import axios from "axios";
 import { Chess } from 'chess.js'
 import { GameData, LookupResultData, RoundPairingData, TournamentData } from "./model";
+
+import axiosRetry from 'axios-retry';
+
 // import fs from 'fs'
 const axiosInstance = axios.create();
 
@@ -16,6 +19,8 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+axiosRetry(axiosInstance, { retries: 3 })
 
 export class LiveChessTournament {
     private lookupResult?: LookupResultData = undefined;
