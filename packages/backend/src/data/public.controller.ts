@@ -29,11 +29,19 @@ export class PublicDataController {
   }
 
   @Get()
-  async findAll() {
+  async findAll(@Query() query?: { isActive: boolean }) {
     const allData = await this.dataService.findAll();
-    return allData
-      .filter((x) => x.isActive)
-      .map((x) => ({ name: x.name, slug: x.slug }));
+    if (query.isActive) {
+      return allData
+        .filter((x) => x.isActive)
+        .map((x) => ({ name: x.name, slug: x.slug, isActive: x.isActive }));
+    }
+
+    return allData.map((x) => ({
+      name: x.name,
+      slug: x.slug,
+      isActive: x.isActive,
+    }));
   }
 
   @Get('/img')
@@ -97,10 +105,11 @@ export class PublicDataController {
       tournaments: { $in: [tournamentName] },
     });
     console.log('sponsors', sponsors);
-    return sponsors.map(({ name, logoUrl, website }) => ({
+    return sponsors.map(({ name, logoUrl, website, description }) => ({
       name,
       image: proxyUrl + logoUrl,
       url: website,
+      description,
     }));
   }
 }

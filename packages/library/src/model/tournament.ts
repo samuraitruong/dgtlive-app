@@ -50,3 +50,10 @@ export interface GameEventResponse {
     result?: string;
     clock?: ClockData | string;
 }
+
+// Define the structure of the data you're fetching
+export interface PublicData {
+    name: string;
+    slug: string;
+    isActive: boolean;
+}

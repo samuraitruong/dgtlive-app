@@ -27,12 +27,21 @@ export default function TournamentList() {
             <ul className="divide-y divide-gray-200 mt-5">
                 {data.map((item) => (
                     <li key={item.slug} className="p-4 hover:text-bold">
-                        <Link href={'/tournament/' + item.slug}>
-                            <div className="flex justify-between items-center">
-                                <span className="font-large text-lg">{item.name}</span>
-                                <span className="text-gray-200">{item.slug}</span>
-                            </div>
-                        </Link>
+                        {item.isActive ?
+                            <Link href={'/tournament/' + item.slug}>
+                                <div className="flex justify-between items-center">
+                                    <span className="font-large text-lg">{item.name}</span>
+                                    <span className="text-gray-200">{item.slug}</span>
+                                </div>
+                            </Link>
+                            :
+                            <Link href={'/offline/' + item.slug}>
+                                <div className="flex justify-between items-center">
+                                    <span className="font-large text-lg">{item.name}</span>
+                                    <span className="text-gray-200">{item.slug}</span>
+                                </div>
+                            </Link>
+                        }
                     </li>
                 ))}
             </ul>

@@ -1,10 +1,6 @@
+import { PublicData } from 'library';
 import { useState, useEffect, useCallback } from 'react';
 
-// Define the structure of the data you're fetching
-interface PublicData {
-    name: string;
-    slug: string;
-}
 
 const usePublicData = (apiUrl: string) => {
     const [data, setData] = useState<PublicData[]>([]);

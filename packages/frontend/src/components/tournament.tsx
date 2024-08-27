@@ -19,10 +19,11 @@ import useAdsData from '@/hooks/useAdsData';
 
 interface TournamentProps {
     category: string
+    useOffline?: boolean
 }
 
 
-export default function Tournament({ category = 'junior' }: TournamentProps) {
+export default function Tournament({ category = 'junior', useOffline }: TournamentProps) {
     const { data: ads } = useAdsData(category)
     const pathParmas = useParams<{ slug: string }>();
     const [socketUrl, setSocketUrl] = useState(BACKEND_URL);
@@ -33,7 +34,7 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
         }
         return category
     }, [category, pathParmas.slug]);
-
+    console.log(useOffline)
     const { sendMessage, readyState, tournament, games, loading, error, connectedTime } = useWebSocket(socketUrl, socketPath)
     const [multipleGameId, setMultipleGameIds] = useState<string[]>([]);
     const [selectedGame, setSelectedGame] = useState<string>();
@@ -137,9 +138,9 @@ export default function Tournament({ category = 'junior' }: TournamentProps) {
                 transition={Bounce} />
             <AdsPanel
                 ads={ads}
-                location="right"
+                location="bottom"
                 // animation="animate-bounce"
-                showFrequency={5000}
+                showFrequency={1200}
             />
         </div>
     )

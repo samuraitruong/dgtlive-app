@@ -44,7 +44,7 @@ const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => 
                 }`}
         >
             <button
-                className="absolute top-[-10px] right-0 ml-auto bg-red-500 text-white rounded-full p-1 w-[35px]"
+                className="z-50 absolute top-[-10px] right-0 ml-auto bg-red-500 text-white rounded-full p-1 w-[35px]"
                 onClick={handleClose}
             >
                 ✕
@@ -53,6 +53,7 @@ const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => 
                 <a
                     key={index}
                     href={ad.url}
+                    title={ad.description}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex flex-row items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
