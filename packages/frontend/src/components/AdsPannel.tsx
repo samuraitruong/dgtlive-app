@@ -1,8 +1,6 @@
 import { Ads } from "library";
 import React, { useState, useEffect } from "react";
 
-
-
 interface AdsPanelProps {
     ads: Ads[];
     location: "top" | "right" | "bottom" | "left";
@@ -23,7 +21,7 @@ const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => 
 
     useEffect(() => {
         if (!isVisible) {
-            const timer = setTimeout(() => setIsVisible(true), showFrequency);
+            const timer = setTimeout(() => setIsVisible(true), showFrequency * 1000);
             return () => clearTimeout(timer);
         }
     }, [isVisible, showFrequency]);
@@ -39,7 +37,7 @@ const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => 
 
     return (
         <div
-            className={` fixed ${locationClasses[location]} bg-white shadow-lg p-2 rounded-lg flex flex-col space-y-4
+            className={`fixed  px-5 py-2 ${locationClasses[location]} bg-white shadow-lg p-2 rounded-lg flex flex-row space-y-4
         transition-transform duration-300 ease-in-out ${isClosing ? "transform scale-90 opacity-0" : "transform scale-100 opacity-100"
                 }`}
         >
@@ -56,9 +54,9 @@ const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => 
                     title={ad.description}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex flex-row items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
+                    className="items-center space-x-2 hover:bg-gray-100 p-2 rounded-md"
                 >
-                    <img crossOrigin='anonymous' src={ad.image} alt={ad.name} width={100} className="w-[130px] rounded-md" />
+                    <img crossOrigin="anonymous" src={ad.image} alt={ad.name} width={100} className="w-[130px] rounded-md" />
                 </a>
             ))}
         </div>
