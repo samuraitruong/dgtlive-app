@@ -15,6 +15,7 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdsPanel from './AdsPannel';
 import useAdsData from '@/hooks/useAdsData';
+import Head from 'next/head';
 
 
 interface TournamentProps {
@@ -110,6 +111,9 @@ export default function Tournament({ category = 'junior', useOffline }: Tourname
 
     return (
         <div className="mx-auto mt-0 w-full">
+            <Head>
+                <title>{tournament?.name}</title>
+            </Head>
             <div className='pt-2 pb-2 bg-slate-800 text-white'>
                 <h1 className="text-3xl font-boldbg-black-50 text-center">{tournament?.name}</h1>
             </div>
