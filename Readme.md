@@ -47,8 +47,6 @@ docker run -e JUNIOR_TOURNAMENT_ID=c8087bf5-e192-4624-bc68-c0da149e0d4d  -e SENI
 
 
 
-
-
 ```
 
 ## Screenshot
