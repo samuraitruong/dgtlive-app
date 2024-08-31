@@ -210,7 +210,7 @@ export class EventsService {
             title: p.black.title,
           },
           white: {
-            title: p.black.title,
+            title: p.white.title,
             name: `${p.white.fname}, ${p.white.lname}`,
             elo: p.white.elo?.toString(),
             fideId: p.white.fideid,
