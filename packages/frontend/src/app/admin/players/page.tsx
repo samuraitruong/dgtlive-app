@@ -150,15 +150,15 @@ function FidePlayersPage() {
 
                                     </td>
                                     <td className='border px-4 py-2 flex justify-arround space-x-2 align-middle'>
-                                        <button className='z-50 px-2 py-1 rounded-sm bg-red-500 text-white text-sm' onClick={() => handleDeleteClick(player._id)} >
+                                        <button className='z-40 px-2 py-1 rounded-sm bg-red-500 text-white text-sm' onClick={() => handleDeleteClick(player._id)} >
                                             <MdDeleteForever className='inline' /> Delete
                                         </button>
 
-                                        <button className='z-50 px-2 py-1 rounded-sm bg-green-500 text-white text-sm' onClick={() => setSelectedPlayer(player as any)} >
+                                        <button className='z-40 px-2 py-1 rounded-sm bg-green-500 text-white text-sm' onClick={() => setSelectedPlayer(player as any)} >
                                             <CiEdit className='inline' /> Edit
                                         </button>
 
-                                        <button className='z-50 px-2 py-1 rounded-sm bg-blue-500 text-white text-sm' onClick={() => handleSyncClick(player._id)} >
+                                        <button className='z-40 px-2 py-1 rounded-sm bg-blue-500 text-white text-sm' onClick={() => handleSyncClick(player._id)} >
                                             <RxUpdate className='inline' /> Update
                                         </button>
 

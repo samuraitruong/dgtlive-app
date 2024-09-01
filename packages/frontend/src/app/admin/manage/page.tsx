@@ -82,12 +82,12 @@ function ManageAdmin() {
               <td className="py-2 px-4 border-b">
               </td>
               <td className="py-2 px-4 border-b">
-                <button className="ml-5 round-sm bg-green-400 p-1 z-50 text-white rounded-sm hover:text-green-700" onClick={() => handleOpenModal(row)}>Edit</button>
+                <button className="ml-5 round-sm bg-green-400 p-1 z-40 text-white rounded-sm hover:text-green-700" onClick={() => handleOpenModal(row)}>Edit</button>
 
 
-                <button className="ml-5 round-sm bg-red-400 p-1 z-50 text-white rounded-sm hover:text-red-700" onClick={(e) => handleDeleteClick(e, row.id)}>Delete</button>
+                <button className="ml-5 round-sm bg-red-400 p-1 z-40 text-white rounded-sm hover:text-red-700" onClick={(e) => handleDeleteClick(e, row.id)}>Delete</button>
                 {row.isActive &&
-                  <Link className="ml-5 round-sm bg-blue-400 p-1 z-50 text-white rounded-sm hover:text-red-700" href={'/tournament/' + row.slug}>Open</Link>
+                  <Link className="ml-5 round-sm bg-blue-400 p-1 z-40 text-white rounded-sm hover:text-red-700" href={'/tournament/' + row.slug}>Open</Link>
                 }
               </td>
             </tr>

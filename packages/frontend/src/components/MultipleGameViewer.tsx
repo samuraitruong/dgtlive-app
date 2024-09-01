@@ -60,7 +60,7 @@ function MiniBoard({ game, onClick, result, isLive }: { isLive: boolean, game: G
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            {game.isLive && <div className="absolute flex top-8 right-4 bg-green-600 p-1 rounded-sm z-50 text-white font-xs opacity-45">live</div>}
+            {game.isLive && <div className="absolute flex top-8 right-4 bg-green-600 p-1 rounded-sm z-40 text-white font-xs opacity-45">live</div>}
             <div className="pr-3">
                 <SmallPlayerDisplay time={time} pair={game.pair} color="black" icon={false} /></div>
             <Board move={game.moves[currentIndex]} boardWidth={parentWidth - 20} ></Board>
@@ -76,7 +76,7 @@ function MiniBoard({ game, onClick, result, isLive }: { isLive: boolean, game: G
             </div>
 
             {isHovered && (
-                <div className="absolute inset-0 flex items-center justify-center z-50">
+                <div className="absolute inset-0 flex items-center justify-center z-40">
                     <div className="p-10 bg-white text-black rounded-lg shadow-md opacity-70">
                         <div className="flex gap-4">
                             <button className="m-3"><FaRegPlayCircle className="text-6xl text-blue-800" onClick={onClick} /></button>
@@ -106,7 +106,7 @@ export function MultipleGameViewer({ gameIds, games, title, onClick }: MultipleG
     }
 
     return (
-        <div className={isFullscreen ? "fixed top-0 left-0 h-screen w-screen z-50 bg-white p-5 overflow-y-auto" : ""}>
+        <div className={isFullscreen ? "fixed top-0 left-0 h-screen w-screen z-40 bg-white p-5 overflow-y-auto" : ""}>
             {isFullscreen &&
                 <div className='fixed top-0 left-0  w-full pt-2 pb-2 bg-slate-800 text-white'>
                     <h1 className="text-3xl font-bold text-center">{title}</h1>
