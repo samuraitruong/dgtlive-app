@@ -10,6 +10,7 @@ import PlayerDisplay from './SmallPlayerDisplay';
 import BigPlayerDisplay from './BigPlayerDisplay';
 import { useFullscreen } from '@/hooks/useFullscreen';
 import { useStockfish } from '@/hooks/useStockfish';
+import { Chess } from "chess.js";
 
 interface GameViewerProps {
   data: GameEventResponse
@@ -17,7 +18,8 @@ interface GameViewerProps {
   tournamentName: string;
 }
 
-const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentName }: GameViewerProps) => {
+const GameViewer = ({ data: { moves, delayedMoves, isLive, round }, pair, tournamentName }: GameViewerProps) => {
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [fullscreen, toggleFullscreen] = useFullscreen();
@@ -102,6 +104,36 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentNam
     return { boardWidth, availableHeight }
   }, [height, fullscreen, width])
 
+  const downloadPgn = () => {
+    console.log(moves, pair, tournamentName)
+    const chess = new Chess();
+    chess.header("Event", tournamentName);
+    chess.header("Site", "");
+    chess.header("Board", "");
+    chess.header("Date", "");
+    chess.header("Round", round.toString());
+    chess.header("White", pair.white.name);
+    chess.header("Black", pair.black.name);
+
+    chess.header("WhiteElo", pair.white.elo as unknown as string);
+    chess.header("BlackElo", pair.black.elo as unknown as string);
+    chess.header("Result", pair.result)
+    for (const m of moves) {
+      chess.move(m.san);
+    }
+
+    const blob = new Blob([chess.pgn()], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${pair.white.name}-${pair.black.name} ${pair.result}.pgn`;
+    a.click();
+
+    URL.revokeObjectURL(url); // Clean up the URL object
+
+  }
+
   return (
     <div className={fullscreen ? 'fixed top-[50px] left-0 h-screen w-screen bg-slate-200 z-100 text-black pt-1' : ''}>
       <div className={fullscreen ? 'flex justify-center border-red-400 border-solid border-1' : 'flex  flex-col md:flex-row justify-center p-2 md:p-0'} ref={parentRef}>
@@ -127,7 +159,9 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive }, pair, tournamentNam
             <PlayerDisplay pair={pair} time={time} color={orientation} />
           }
           <div className={fullscreen ? 'pt-10' : ''}>
-            <GameController navigateByStep={handleNavigateStep}
+            <GameController
+              handleDownload={downloadPgn}
+              navigateByStep={handleNavigateStep}
               onBoardOrientationChanged={onBoardOrientationChanged}
               currentIndex={currentIndex}
               total={moves.length}

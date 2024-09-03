@@ -13,6 +13,7 @@ import { EventServiceOptions } from './dto/event-option';
 import { TournamentDataService } from '../db/tournament-data.service';
 import { GameDataService } from 'src/db/game-data.service';
 import { FideService } from 'src/fide/fide.service';
+import { TournamentData } from 'src/db/schema/tournament-data.schema';
 
 export class EventsService {
   public tournamentId: string;
@@ -194,7 +195,7 @@ export class EventsService {
     });
     const rounds = await Promise.all(fetchTask);
 
-    const data = {
+    const data: Partial<TournamentData> = {
       name: t.name,
       location: t.location,
 

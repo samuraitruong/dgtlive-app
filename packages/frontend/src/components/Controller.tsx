@@ -6,14 +6,17 @@ import { LuMaximize } from "react-icons/lu";
 import { LuFlipVertical2 } from "react-icons/lu";
 import { useState } from "react";
 import { BoardOrientation } from "react-chessboard/dist/chessboard/types";
+import { FaCloudDownloadAlt } from "react-icons/fa";
+import AuthorizedView from "./AuthorizedView";
 interface ControlerProps {
+    handleDownload: () => void;
     handleMaxSize: () => void;
     navigateByStep: (step: number) => void,
     onBoardOrientationChanged: (direction: BoardOrientation) => void;
     currentIndex: number;
     total: number;
 }
-export default function Controler({ navigateByStep, currentIndex, total, handleMaxSize, onBoardOrientationChanged }: ControlerProps) {
+export default function Controler({ handleDownload, navigateByStep, currentIndex, total, handleMaxSize, onBoardOrientationChanged }: ControlerProps) {
     const [orientation, setOrientation] = useState<BoardOrientation>('white');
     const toggleBoardDirection = () => {
         if (orientation == 'white') {
@@ -33,6 +36,9 @@ export default function Controler({ navigateByStep, currentIndex, total, handleM
             <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white" onClick={() => navigateByStep(Number.MAX_VALUE)}><TbPlayerTrackNext /></button>
             <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white"><LuFlipVertical2 onClick={toggleBoardDirection} /></button>
             <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white hidden md:inline" onClick={handleMaxSize}><LuMaximize /></button>
+            <AuthorizedView>
+                <button className="hover:bg-blue-700 hover:rounded-full p-1 hover:text-white hidden md:inline" onClick={handleDownload}><FaCloudDownloadAlt /></button>
+            </AuthorizedView>
         </div>
     )
 }
