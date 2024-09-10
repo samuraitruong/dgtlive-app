@@ -11,17 +11,19 @@ import BigPlayerDisplay from './BigPlayerDisplay';
 import { useFullscreen } from '@/hooks/useFullscreen';
 import { useStockfish } from '@/hooks/useStockfish';
 import { Chess } from "chess.js";
+import { Tournament } from 'library';
 
 interface GameViewerProps {
   data: GameEventResponse
   pair: Pair,
-  tournamentName: string;
+  tournament: Tournament
 }
 
-const GameViewer = ({ data: { moves, delayedMoves, isLive, round }, pair, tournamentName }: GameViewerProps) => {
+const GameViewer = (props: GameViewerProps) => {
 
+  console.log("props", props)
+  const { data: { moves, delayedMoves, isLive, round, game }, pair, tournament } = props;
   const [currentIndex, setCurrentIndex] = useState(0);
-
   const [fullscreen, toggleFullscreen] = useFullscreen();
   const { height, width } = useWindowSize()
   const [time, setTime] = useState({ black: -1, white: -1 });
@@ -105,12 +107,11 @@ const GameViewer = ({ data: { moves, delayedMoves, isLive, round }, pair, tourna
   }, [height, fullscreen, width])
 
   const downloadPgn = () => {
-    console.log(moves, pair, tournamentName)
     const chess = new Chess();
-    chess.header("Event", tournamentName);
-    chess.header("Site", "");
-    chess.header("Board", "");
-    chess.header("Date", "");
+    chess.header("Event", tournament.name);
+    chess.header("Site", tournament.location);
+    chess.header("Board", game.toString());
+    chess.header("Date", tournament.rounds[round - 1].date);
     chess.header("Round", round.toString());
     chess.header("White", pair.white.name);
     chess.header("Black", pair.black.name);

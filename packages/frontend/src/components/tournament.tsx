@@ -9,7 +9,7 @@ import { GameEventResponse, Pair } from 'library';
 import Loading from './Loading';
 import { MultipleGameViewer } from './MultipleGameViewer';
 import { BACKEND_URL } from '@/config';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -124,7 +124,7 @@ export default function Tournament({ category = 'junior', useOffline }: Tourname
                 </div>
                 <div className="md:col-span-9 xs:col-span-12">
                     {games && multipleGameId && <MultipleGameViewer games={games} gameIds={multipleGameId} title={tournament.name} onClick={handleMiniGameClick} />}
-                    {games && selectedGame && games[selectedGame] && <GameViewer tournamentName={tournament.name} data={games[selectedGame]} pair={selectedPair as Pair} />}
+                    {games && selectedGame && games[selectedGame] && <GameViewer tournament={tournament} data={games[selectedGame]} pair={selectedPair as Pair} />}
                 </div>
             </div> : <div className='m-10 text-center p-12 border-solid bg-orange-200 text-lg  rounded-sm'>This tournament has not started yet. Please come back later.</div>
             }
