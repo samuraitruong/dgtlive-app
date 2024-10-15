@@ -53,8 +53,6 @@ export class LiveChessTournament {
         }
         const url = `https://${this.lookupResult.host}/get/${this.tournamentId}/round-${round}/game-${game}.json?poll`
 
-        console.log("fetch game", url)
-
         const { data } = await axiosInstance.get<GameData>(url);
         // fs.writeFileSync('debug.json', JSON.stringify(data, null, 2))
         const chess = new Chess()
@@ -75,10 +73,12 @@ export class LiveChessTournament {
         }
         data.result = data.result || "*"
         let live = data.live
-        if (live && (data.result !== 'BLACKWIN' && data.result !== 'WHITEWIN') && data.result !== 'DRAW') {
+        const gameEndedResults = ['BLACKWIN', 'WHITEWIN', 'DRAW'];
+        if (live && data.result && !gameEndedResults.includes(data.result)) {
             live = false
         }
-        if (!live && data.result === "*" || data.result === null) {
+
+        if (!live && (data.result === "*" || data.result === null)) {
             live = true
         }
         return { moves, live, startedAt: data.firstMove, result: data.result, clock: data.clock };

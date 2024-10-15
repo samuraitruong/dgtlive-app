@@ -70,7 +70,7 @@ const useSponsorData = (url: string): UseSponsorDataHook => {
         if (res.ok) {
             loadData();
         } else {
-            console.log(await res.json());
+            //  console.log(await res.json());
             setError('Unable to create sponsor data');
         }
     }, [loadData, url, user.token]);

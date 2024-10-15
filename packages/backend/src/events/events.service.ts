@@ -49,6 +49,7 @@ export class EventsService {
   }
 
   async loadGame(game: LoadGameDto): Promise<GameEventResponse> {
+    console.log('loadgame', game);
     const cacheKey = `${this.tournamentId}-${game.round}-${game.game}`;
     const tour = await this.cacheManager.get<GameEventResponse>(cacheKey);
     if (tour) {
@@ -167,32 +168,37 @@ export class EventsService {
     }
 
     const t = await this.game.fetchTournament();
+    const fetchTask = t.rounds
+      .filter((x) => x.count > 0)
+      .map(async (r, index) => {
+        const rPairs = await this.game.fetchRound(index + 1);
+        for await (const pair of rPairs.pairings) {
+          const [white, black] = await Promise.all([
+            this.fideService.searchUser(
+              `${pair.white.lname}, ${pair.white.fname}`,
+            ),
+            this.fideService.searchUser(
+              `${pair.black.lname}, ${pair.black.fname}`,
+            ),
+          ]);
+          if (black && black.id) {
+            pair.black.fideid = black.id;
+            pair.black.elo = black.ratings?.std
+              ? +black.ratings?.std
+              : undefined;
+            pair.black.title = black.title;
+          }
 
-    const fetchTask = t.rounds.map(async (r, index) => {
-      const rPairs = await this.game.fetchRound(index + 1);
-      for await (const pair of rPairs.pairings) {
-        const [white, black] = await Promise.all([
-          this.fideService.searchUser(
-            `${pair.white.lname}, ${pair.white.fname}`,
-          ),
-          this.fideService.searchUser(
-            `${pair.black.lname}, ${pair.black.fname}`,
-          ),
-        ]);
-        if (black && black.id) {
-          pair.black.fideid = black.id;
-          pair.black.elo = black.ratings?.std ? +black.ratings?.std : undefined;
-          pair.black.title = black.title;
+          if (white && white.id) {
+            pair.white.elo = white.ratings?.std
+              ? +white.ratings?.std
+              : undefined;
+            pair.white.fideid = white.id;
+            pair.white.title = white.title;
+          }
         }
-
-        if (white && white.id) {
-          pair.white.elo = white.ratings?.std ? +white.ratings?.std : undefined;
-          pair.white.fideid = white.id;
-          pair.white.title = white.title;
-        }
-      }
-      return rPairs;
-    });
+        return rPairs;
+      });
     const rounds = await Promise.all(fetchTask);
 
     const data: Partial<TournamentData> = {

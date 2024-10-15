@@ -83,7 +83,7 @@ export function useWebSocket(url: string, path = '/') {
                 console.log("socket reconnect", messageHistoryRef.current);
                 // socketRef.current?.emit('hello', {});
                 for (const key in messageHistoryRef.current) {
-                    console.log("resend data", messageHistoryRef.current[key])
+                    // console.log("resend data", messageHistoryRef.current[key])
                     socketRef.current?.emit('game', messageHistoryRef.current[key]);
                 }
 

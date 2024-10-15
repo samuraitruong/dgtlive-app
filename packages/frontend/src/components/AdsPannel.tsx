@@ -5,26 +5,38 @@ interface AdsPanelProps {
     ads: Ads[];
     location: "top" | "right" | "bottom" | "left";
     showFrequency: number; // Time in milliseconds before the panel shows again after being closed
+    closeDuration?: number; // Time in milliseconds that the panel remains closed after being dismissed (default: 1 day)
 }
 
-const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => {
+const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency, closeDuration = 86400000 }) => {
     const [isVisible, setIsVisible] = useState(true);
     const [isClosing, setIsClosing] = useState(false);
+
+    useEffect(() => {
+        const lastClosed = localStorage.getItem('adsPanelLastClosed');
+        if (lastClosed) {
+            const timeSinceLastClosed = Date.now() - parseInt(lastClosed, 10);
+            if (timeSinceLastClosed < closeDuration) {
+                setIsVisible(false);
+            }
+        }
+    }, [closeDuration]);
 
     const handleClose = () => {
         setIsClosing(true);
         setTimeout(() => {
             setIsVisible(false);
             setIsClosing(false);
+            localStorage.setItem('adsPanelLastClosed', Date.now().toString());
         }, 300); // Duration matches the transition duration
     };
 
-    useEffect(() => {
-        if (!isVisible) {
-            const timer = setTimeout(() => setIsVisible(true), showFrequency * 1000);
-            return () => clearTimeout(timer);
-        }
-    }, [isVisible, showFrequency]);
+    // useEffect(() => {
+    //     if (!isVisible) {
+    //         const timer = setTimeout(() => setIsVisible(true), showFrequency * 1000);
+    //         return () => clearTimeout(timer);
+    //     }
+    // }, [isVisible, showFrequency]);
 
     const locationClasses = {
         top: "top-0 left-1/2 transform -translate-x-1/2",
@@ -37,7 +49,7 @@ const AdsPanel: React.FC<AdsPanelProps> = ({ ads, location, showFrequency }) => 
 
     return (
         <div
-            className={`fixed  px-5 py-2 ${locationClasses[location]} bg-white shadow-lg p-2 rounded-lg flex flex-row space-y-4
+            className={`fixed px-5 py-2 ${locationClasses[location]} bg-white shadow-lg p-2 rounded-lg flex flex-row space-y-4
         transition-transform duration-300 ease-in-out ${isClosing ? "transform scale-90 opacity-0" : "transform scale-100 opacity-100"
                 }`}
         >
