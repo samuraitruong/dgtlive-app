@@ -69,4 +69,4 @@ Tournament view
 
 ## Live example
 
-Please visit https://hbcclive.fly.dev/ or https://hbcclive.fly.dev/senior.html
+Please visit https://hbcclive.fly.dev/ or https://hbcclive.fly.dev/open.html

@@ -9,7 +9,7 @@ import { GameDataService } from 'src/db/game-data.service';
 import { FideService } from 'src/fide/fide.service';
 import { DataService } from 'src/data/data.service';
 
-@WebSocketGateway({ path: '/senior' })
+@WebSocketGateway({ path: '/open' })
 export class SeniorEventsGateway extends BaseGateway {
   constructor(
     @Inject(CACHE_MANAGER) cacheManager: Cache,
