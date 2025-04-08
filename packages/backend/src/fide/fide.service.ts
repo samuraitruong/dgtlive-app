@@ -211,37 +211,30 @@ export class FideService {
 
   private extractUserInfo(html: string): Partial<FidePlayer> {
     const $ = cheerio.load(html);
-    const [std, rapid, blitz] = $('.profile-top-rating-data')
-      .toArray()
-      .map((x) => $(x).text().trim());
-    const ratingValue = (s: string) => {
-      if (!s) return 'unrated';
 
-      const v = s.split(' ').pop();
-      if (v === 'rated') return 'unrated';
-      return v;
+    const ratingValue = (s: string) => {
+      const textValue = $(`.profile-${s}.profile-game p:first`).text();
+      if (!textValue) return 'unrated';
+
+      if (textValue === 'rated') return 'unrated';
+      return textValue;
     };
     const ratings = {
-      std: ratingValue(std),
-      rapid: ratingValue(rapid),
-      blitz: ratingValue(blitz),
+      std: ratingValue('standart'),
+      rapid: ratingValue('rapid'),
+      blitz: ratingValue('blitz'),
     };
-    const [rank, federation, id, birthYear, gender, fideTitle] = $(
-      '.profile-top-info__block__row__data',
-    )
-      .toArray()
-      .map((t) => $(t).text().trim());
-
-    return {
-      name: $('.profile-top-title').text().trim(),
-      rank,
-      birthYear,
-      federation,
-      gender,
-      id,
-      fideTitle,
+    const t = {
+      name: $('h1.player-title').text().trim(),
+      rank: $('.profile-rank-row:first p:first').text().trim(),
+      birthYear: $('.profile-info-byear').text().trim(),
+      federation: $('.profile-info-country').text().trim(),
+      gender: $('.profile-info-sex ').text().trim(),
+      id: $('.profile-info-id').text().trim(),
+      fideTitle: $('.profile-info-title').text().trim(),
       ratings,
     };
+    return t;
   }
 
   async getRating(name: string): Promise<number> {
