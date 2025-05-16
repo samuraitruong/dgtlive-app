@@ -1,5 +1,5 @@
 # Stage 1: Build Stage
-FROM node:20 as build
+FROM node:24 as build
 RUN npm install -g pnpm
 WORKDIR /app
 
@@ -14,7 +14,7 @@ ENV NEXTJS_BUILD_API_URL=https://hbcclive.fly.dev/api/public
 RUN npm run build-publish
 
 # Stage 2: Production Stage
-FROM node:20-alpine
+FROM node:24 as production
 
 WORKDIR /app
 
