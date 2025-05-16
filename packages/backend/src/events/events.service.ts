@@ -49,7 +49,7 @@ export class EventsService {
   }
 
   async loadGame(game: LoadGameDto): Promise<GameEventResponse> {
-    console.log('loadgame', game);
+    // console.log('loadgame', game);
     const cacheKey = `${this.tournamentId}-${game.round}-${game.game}`;
     const tour = await this.cacheManager.get<GameEventResponse>(cacheKey);
     if (tour) {

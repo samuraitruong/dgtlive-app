@@ -87,7 +87,7 @@ export class BaseGateway
   }
 
   handleDisconnect(client) {
-    console.log('ws client disconnected', client.id);
+    // console.log('ws client disconnected', client.id);
 
     // for (let i = 0; i < this.wsClients.length; i++) {
     //   if (this.wsClients[i] === client) {
@@ -133,7 +133,7 @@ export class BaseGateway
 
   @SubscribeMessage('game')
   async game(@MessageBody() game: LoadGameDto) {
-    console.log('client event sent', game);
+    //console.log('client event sent', game);
     try {
       const data = await this.eventsService.loadGame(game);
       if (data) {
