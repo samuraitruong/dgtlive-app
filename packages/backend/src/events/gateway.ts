@@ -114,6 +114,7 @@ export class BaseGateway
         data: this.tournament,
       };
     } catch (err) {
+      console.log(err);
       return {
         event: 'error',
         data: { message: 'internal server error' },
@@ -155,6 +156,7 @@ export class BaseGateway
         };
       }
     } catch (err) {
+      console.log(err);
       return {
         event: 'error',
         data: { message: 'internal server error' },

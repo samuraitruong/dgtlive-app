@@ -27,6 +27,9 @@ export class AuthService {
       await this.userModel.create({ username, password: hash });
       return { message: 'User registered successfully' };
     } catch (error) {
+      this.logger.error(
+        `An error occurred while registering user ${username}: ${error.message}`,
+      );
       throw new Error('An error occurred while registering the user');
     }
   }
