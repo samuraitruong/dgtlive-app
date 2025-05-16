@@ -1,5 +1,5 @@
 # Stage 1: Build Stage
-FROM node:20 as build
+FROM node:20 AS build
 RUN npm install -g pnpm
 WORKDIR /app
 
