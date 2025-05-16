@@ -14,7 +14,7 @@ ENV NEXTJS_BUILD_API_URL=https://hbcclive.fly.dev/api/public
 RUN npm run build-publish
 
 # Stage 2: Production Stage
-FROM node:24 as production
+FROM node:24
 
 WORKDIR /app
 
