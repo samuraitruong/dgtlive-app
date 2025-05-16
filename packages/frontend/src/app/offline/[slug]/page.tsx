@@ -24,7 +24,11 @@ export async function generateStaticParams() {
     }));
   } catch (error) {
     console.error("Error fetching data:", error);
-    return [];
+    return [
+      {
+        slug: "default",
+      },
+    ];
   }
 }
 export const dynamicParams = true;
