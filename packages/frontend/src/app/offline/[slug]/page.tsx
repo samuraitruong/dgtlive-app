@@ -8,14 +8,23 @@ export default function Home({ params }: { params: { slug: string } }) {
   );
 }
 export async function generateStaticParams() {
-  const apiUrl = process.env.NEXTJS_BUILD_API_URL || 'http://localhost:3001/api/public?all=true'
-  const posts = await fetch(apiUrl).then((res) => res.json())
-  const tournaments = [
-    ...posts, {
-      slug: 'default'
-    }]
-  return tournaments.map((t) => ({
-    slug: t.slug,
-  }))
+  const apiUrl =
+    process.env.NEXTJS_BUILD_API_URL ||
+    "http://localhost:3001/api/public?all=true";
+  try {
+    const posts = await fetch(apiUrl).then((res) => res.json());
+    const tournaments = [
+      ...posts,
+      {
+        slug: "default",
+      },
+    ];
+    return tournaments.map((t) => ({
+      slug: t.slug,
+    }));
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return [];
+  }
 }
-export const dynamicParams = true 
+export const dynamicParams = true;
